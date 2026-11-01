@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  postgres:
+    container_name: tiktok-postgres
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_DB: tiktok_studio
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tiktok-net
+
+  redis:
+    container_name: tiktok-redis
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tiktok-net
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  tiktok-net:
+    driver: bridge

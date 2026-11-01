@@ -1,6 +1,7 @@
-# Product Requirements Document (PRD) — TikTok Auto-Studio
+# Product Requirements Document (Cahier des Exigences Produit) — TikTok Auto-Studio
 
 > **Nom du Projet :** TikTok Auto-Studio  
+> **Document :** Product Requirements Document (Spécifications Fonctionnelles Exhaustives)  
 > **Version :** 1.0.0  
 > **Statut :** Validé — Spécification de Référence  
 > **Auteur(s) :** Principal Software Architect & Staff Fullstack AI Engineer  
@@ -18,7 +19,10 @@ La croissance sur TikTok impose un rythme soutenu de 1 à 3 publications quotidi
 
 ### 1.2 Proposition de Valeur
 **TikTok Auto-Studio** est la première plateforme SaaS d'automatisation clé-en-main connectée directement aux **APIs officielles certifiées de TikTok (Login Kit & Content Posting API v2)** :
-- **Studio IA Multimodal en 3 Clics :** Une simple idée ou un sujet est transformé en un post complet (carrousel photo ou vidéo 9:16 montée avec Ken Burns, voix-off et sous-titres animés `.ass`) en moins de 60 secondes.
+- **Studio IA Omnimodal en 3 Clics (Gemini Omni) :** Une simple idée ou un sujet est transformé en un post complet en moins de 60 secondes :
+  * Carrousel photo 9:16 percutant (Gemini Omni / Imagen 3 avec conversion stricte JPEG 95% conforme TikTok).
+  * Vidéo verticale native 9:16 générée directement par Gemini Omni.
+  * Vidéo composite montée avec animation Ken Burns, voix-off et sous-titres dynamiques `.ass` via FFmpeg.
 - **Pilotage Zéro Application Mobile :** Programmation de publications différées sans aucune notification mobile de validation requise.
 - **Conformité & Sérénité Totales :** Chiffrement militaire des jetons (AES-256-GCM), respect strict des quotas, marquage légal IA (`is_aigc: true`) et hébergement sur CDN validé par TikTok.
 

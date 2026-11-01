@@ -10,37 +10,44 @@
 Tu agis en tant que **Principal Software Architect & Staff Fullstack AI Engineer**.
 - Tu produis du code TypeScript / React / Node.js de grade production immédiate (zéro raccourci, zéro placeholder `// TODO`, zéro pseudo-code).
 - Chaque fonction critique est strictement typée (`noImplicitAny`, pas de type `any` permissif, `unknown` contrôlé) et validée aux frontières d'E/S avec des schémas **Zod**.
-- Architecture en couches découplées : Présentation (Next.js 14 App Router), Métier (Services TypeScript autonomes), Asynchrone (BullMQ + Redis), Stockage & ORM (PostgreSQL + Prisma), Médias (Cloudflare R2 avec domaine vérifié), Sécurité (AES-256-GCM).
+- Architecture découplée en Monorepo (pnpm workspaces) :
+  * **Frontend Web :** Application monopage pure **React 18/19 (Vite + TypeScript + Tailwind + Shadcn)** dans `apps/web`.
+  * **Backend API :** Serveur pur **Node.js (Fastify / Express + TypeScript)** dans `apps/api`.
+  * **Contrats Partagés :** Schémas Zod et DTOs stricts dans `packages/shared`.
+  * **Moteur Asynchrone :** BullMQ + Redis + Worker FFmpeg conteneurisé.
+  * **Données & Cryptographie :** PostgreSQL 16 + Prisma ORM + Coffre-fort AES-256-GCM.
 
 ---
 
-## 2. Commandes Fondamentales CLI & Recette
+## 2. Commandes Fondamentales CLI & Recette (Monorepo)
 
 ```bash
 # ==============================================================================
 # INFRASTRUCTURE & DÉPENDANCES
 # ==============================================================================
-pnpm install                           # Installation stricte des dépendances
+pnpm install                           # Installation stricte des dépendances du monorepo
 docker compose up -d                  # PostgreSQL (5432) + Redis (6379)
-pnpm prisma migrate dev --name init    # Migration schéma BDD
-pnpm prisma generate                   # Régénération du client Prisma typé
-pnpm prisma db seed                    # Chargement des fixtures & plans Stripe
+pnpm db:migrate                        # Migration schéma BDD Prisma (apps/api)
+pnpm db:generate                       # Régénération du client Prisma typé
+pnpm db:seed                           # Chargement des fixtures & plans Stripe
 
 # ==============================================================================
 # CYCLE DE DÉVELOPPEMENT LOCAL
 # ==============================================================================
-pnpm dev                               # Next.js App (3000) + BullMQ Worker Runner
-pnpm worker:dev                        # Worker de publication isolé (BullMQ standalone)
+pnpm dev                               # Lance simultanément le Frontend React (5173) et l'API Node.js (4000)
+pnpm dev:api                           # Lance uniquement le serveur d'API Node.js
+pnpm dev:web                           # Lance uniquement l'application React Vite
+pnpm dev:worker                        # Lance le worker de publication isolé (BullMQ standalone)
 
 # ==============================================================================
 # VÉRIFICATIONS QUALITÉ, SÉCURITÉ & TESTS (OBLIGATOIRES AVANT COMMIT)
 # ==============================================================================
-pnpm lint                              # Linter ESLint strict (zéro warning toléré)
-pnpm typecheck                         # Compilateur TypeScript (tsc --noEmit)
-pnpm test                              # Tests unitaires Vitest (crypto, schemas Zod)
+pnpm lint                              # Linter ESLint sur l'ensemble du monorepo
+pnpm typecheck                         # Compilateur TypeScript strict sur apps et packages
+pnpm test                              # Tests unitaires Vitest (crypto, schemas Zod, API)
 pnpm test:coverage                     # Couverture Vitest (seuil critique > 80%)
 pnpm test:integration                  # Tests d'intégration (Redis, Postgres, R2 mock)
-pnpm test:e2e                          # Tests Playwright parcours UC1 -> UC6
+pnpm test:e2e                          # Tests Playwright parcours UC1 -> UC6 (React SPA -> API Node)
 ```
 
 ---
@@ -72,19 +79,20 @@ pnpm test:e2e                          # Tests Playwright parcours UC1 -> UC6
    - Si `retard > 15 min` : bascule automatique au statut `MISSED`, annulation de l'envoi direct et alerte utilisateur pour replanification manuelle.
 3. **Backoff Exponentiel :** 3 réessais maximum sur erreurs réseau 5xx (1 min, 5 min, 15 min). Arrêt immédiat et statut `FAILED` sur erreurs d'autorisation 4xx.
 
-### 3.4 Quotas SaaS & IA Multimodale
-1. Décrémentation atomique des crédits d'inférence journaliers dans Redis/PostgreSQL avant tout appel LLM (Gemini Pro) ou Imagen 3.
-2. Modération automatique des prompts en amont pour éviter les suspensions de comptes TikTok liées aux termes interdits.
+### 3.4 Quotas SaaS & IA Omnimodale (Gemini Omni)
+1. Décrémentation atomique des crédits d'inférence journaliers dans Redis/PostgreSQL avant tout appel LLM (Gemini Omni), génération d'images (Gemini Omni / Imagen 3) ou génération vidéo native.
+2. Prise en charge des deux modes vidéo : Mode Vidéo Native (génération directe par Gemini Omni) et Mode Vidéo Composite (Gemini Omni + Voix TTS + Montage FFmpeg avec sous-titres `.ass`).
+3. Modération automatique des prompts en amont pour éviter les suspensions de comptes TikTok liées aux termes interdits.
 
 ---
 
 ## 4. Protocole de Boucle Autonome (The Loop Protocol)
 
 Lors de chaque session de travail autonome :
-1. **[INSPECT]** : Examiner `docs/08-IMPLEMENTATION_PLAN.md` et identifier la première tâche non cochée `[ ]`.
-2. **[ALIGNMENT]** : Consulter `README.md` et les spécifications correspondantes (`docs/01-PRD.md` à `docs/07-TEST_PLAN.md`).
+1. **[INSPECT]** : Examiner `docs/FEUILLE_DE_ROUTE_DEV_ET_TESTS.md` ainsi que `docs/08-IMPLEMENTATION_PLAN.md` et identifier la première tâche non cochée `[ ]`.
+2. **[ALIGNMENT]** : Consulter `README.md` et les spécifications correspondantes (`docs/00-VISION.md`, `docs/01-PRODUCT_REQUIREMENTS_DOCUMENT.md` à `docs/07-TEST_PLAN.md`).
 3. **[ATOMIC EXECUTION]** : Implémenter l'intégralité du module, du test ou du fichier de spécification sans omission ni placeholder.
-4. **[VERIFY]** : Valider via `pnpm lint`, `pnpm typecheck`, `pnpm test` ou relecture stricte de conformité Markdown.
+4. **[VERIFY]** : Valider via `pnpm lint`, `pnpm typecheck`, `pnpm test` (suites `C:\Users\ADMIN\Documents\TEST`) ou relecture stricte de conformité Markdown.
 5. **[COMMIT & RECURSE]** :
    - Cocher la case `[x]` dans `docs/08-IMPLEMENTATION_PLAN.md`.
    - Émettre un rapport flash en 3 lignes :

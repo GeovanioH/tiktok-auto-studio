@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@tiktok-studio/shared": ["./packages/shared/src"],
+      "@tiktok-studio/api/*": ["./apps/api/src/*"],
+      "@/*": ["./apps/api/src/*"]
+    }
+  },
+  "include": [
+    "apps/**/*",
+    "packages/**/*",
+    "vitest.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/dist"
+  ]
+}

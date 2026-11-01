@@ -1,6 +1,7 @@
-# Technical Requirements Document (TRD) — TikTok Auto-Studio
+# Technical Requirements Document (Spécifications Techniques d'Architecture) — TikTok Auto-Studio
 
 > **Nom du Projet :** TikTok Auto-Studio  
+> **Document :** Technical Requirements Document (Architecture, Stack & Protocoles)  
 > **Version :** 1.0.0  
 > **Statut :** Validé — Spécification d'Architecture Technique  
 > **Auteur(s) :** Principal Software Architect & Staff Fullstack AI Engineer  
@@ -8,21 +9,23 @@
 
 ---
 
-## 1. Stack Technologique & Justifications d'Ingénierie
+## 1. Stack Technologique & Justifications d'Ingénierie (Monorepo Découplé)
 
 | Couche | Technologie Retenue | Justification Technique & Rôle |
 | :--- | :--- | :--- |
-| **Framework Web & API** | **Next.js 14+ (App Router)** | Rendu hybride SSR/RSC pour le dashboard, API Routes Edge & Node.js, optimisations bundle client, typage natif TypeScript. |
-| **Langage & Typage** | **TypeScript 5.x (Strict Mode)** | Sécurité de typage statique intégrale (`noImplicitAny: true`, `strictNullChecks: true`), zéro ambiguïté sur les interfaces d'E/S. |
-| **Composants UI & Design** | **TailwindCSS v3 + Shadcn/ui + Lucide Icons** | Design system modulaire, composable, responsive, adapté à la timeline vidéo et aux prévisualisations 9:16. |
-| **Validation des Données** | **Zod 3.x** | Validation stricte à l'exécution de toutes les requêtes HTTP, des variables d'environnement et des réponses JSON des LLMs. |
+| **Frontend Web (SPA)** | **React 18/19 + Vite + TypeScript** | Application monopage ultra-véloce (`apps/web`), montage instantané, Hot Module Replacement (HMR) immédiat, bundle optimisé. |
+| **Routage & Gestion d'État Client** | **React Router v6 + TanStack Query** | Routage déclaratif côté client, cache et synchronisation asynchrone des données serveur sans requêtes superflues. |
+| **Serveur Backend HTTP** | **Node.js 20+ LTS (Fastify / Express)** | Serveur d'API dédié haute performance (`apps/api`), gestion native des flux asynchrones, middleware CORS avec `credentials: true`. |
+| **Langage & Typage Strict** | **TypeScript 5.x (Strict Mode)** | Typage statique de bout en bout (`noImplicitAny`, `strictNullChecks`), code partagé entre front et back via `packages/shared`. |
+| **Composants UI & Design** | **TailwindCSS v3 + Shadcn/ui + Lucide Icons** | Design system modulaire sombre, composable, responsive, adapté à la timeline vidéo et aux prévisualisations 9:16. |
+| **Validation des Données** | **Zod 3.x (Package Partagé)** | Validation stricte aux frontières réseau : formulaires client React, requêtes HTTP API Node.js et réponses JSON IA. |
 | **ORM & Modélisation** | **Prisma ORM 5.x** | Abstraction typée pour PostgreSQL, migrations déclaratives déterministes, gestion fluide des transactions ACID. |
 | **Base de Données Relationnelle** | **PostgreSQL 16** | Persistance relationnelle pour les utilisateurs, comptes TikTok, métadonnées des posts, audits logs et quotas. |
 | **File d'Attente & Cache** | **Redis 7.x + BullMQ 5.x** | Planification temporelle à haute précision, gestion des verrous distribués (Redlock), backoff exponentiel et déduplication par `jobId`. |
 | **Stockage Médias & CDN** | **Cloudflare R2 (S3-compatible)** | Zéro coût d'egress, liaison directe avec un sous-domaine vérifié DNS auprès de TikTok (`assets.mondomaine-verifie.com`), latence globale minime. |
-| **Moteur Vidéo Headless** | **Worker FFmpeg 6.x (Dockerisé)** | Génération de vidéos verticales 9:16 : animation dynamique Ken Burns, mixage audio voix-off + musique, gravure des sous-titres `.ass`. |
-| **LLM & Structuration JSON** | **Google Gemini 1.5 Pro / Flash** | Génération du hook, script 3 à 5 scènes, légende et 5 hashtags SEO tendance en JSON strict typé via `responseSchema`. |
-| **Génération Visuelle** | **Google Imagen 3 (via Gemini API)** | Rendu d'images photoréalistes verticales 9:16 (1080x1920) avec post-traitement de conversion PNG vers JPEG/WEBP. |
+| **Moteur Vidéo Composite & Subtitles** | **Worker FFmpeg 6.x (Dockerisé)** | Concaténation de scènes, animation Ken Burns pour mode composite, mixage audio voix-off + musique, gravure des sous-titres `.ass`. |
+| **IA Omnimodale (Texte, Image & Vidéo)** | **Google Gemini Omni** | Génération de bout en bout : scripts structurés JSON Zod, génération d'images 9:16 et génération native de vidéos verticales fluides. |
+| **Génération Visuelle Dédiée** | **Google Imagen 3 (via Gemini API)** | Rendu d'images photoréalistes verticales 9:16 (1080x1920) pour carrousels avec post-traitement de conversion PNG vers JPEG/WEBP. |
 | **Synthèse Vocale (TTS)** | **Gemini Speech / ElevenLabs API** | Audio MP3 voix française/anglaise naturelle synchronisée avec les timestamps des sous-titres. |
 | **Chiffrement au Repos** | **Node.js Crypto (AES-256-GCM)** | Chiffrement symétrique authentifié des tokens TikTok (clé 256 bits, IV 96 bits, Auth Tag 128 bits). |
 
@@ -32,23 +35,29 @@
 
 ```mermaid
 flowchart TD
-    subgraph Client ["Navigateur Client (React / Next.js)"]
+    subgraph Client ["Frontend React SPA (Vite - Port 5173)"]
         UI_Studio["Studio 3-Clics & Prévisu 9:16"]
         UI_Calendar["Calendrier de Programmation"]
-        UI_Settings["Gestion Comptes & Clés"]
+        UI_Settings["Gestion Comptes & Paramètres"]
+        API_Client["Client Axios / TanStack Query (withCredentials: true)"]
+        
+        UI_Studio --> API_Client
+        UI_Calendar --> API_Client
+        UI_Settings --> API_Client
     end
 
-    subgraph API_Gateway ["Next.js App Server (Node.js Runtime)"]
-        Middleware["Auth & Rate Limiting Middleware"]
-        Router["App Router (REST & Server Actions)"]
-        ZodValidator["Validateur Zod (Payloads & Envs)"]
+    subgraph API_Gateway ["Backend Node.js API (Fastify / Express - Port 4000)"]
+        CorsMiddleware["CORS Handler (Origin: localhost:5173 / Whitelist)"]
+        AuthMiddleware["Session Middleware (Cookies HttpOnly SameSite=Lax/Strict)"]
+        Router["REST Router (/auth, /ai, /posts, /media)"]
+        ZodValidator["Validateur Zod (Package Shared)"]
         CryptoEngine["Crypto Engine (AES-256-GCM)"]
     end
 
-    subgraph Business_Services ["Couche Services Métier"]
+    subgraph Business_Services ["Couche Services Métier (Node.js)"]
         TikTokService["TikTok API Client (v2 OAuth & Publish)"]
-        AIService["AI Orchestrator (Gemini + Imagen 3)"]
-        StorageService["S3 / R2 Asset Manager (Conversion JPEG)"]
+        AIService["AI Orchestrator (Google Gemini Omni & Imagen 3)"]
+        StorageService["S3 / R2 Asset Manager (Conversion JPEG Sharp)"]
         QuotaService["Sliding Window Quotas Engine"]
     end
 
@@ -65,8 +74,26 @@ flowchart TD
         TikTokEndpoints["API Officielle TikTok v2"]
     end
 
-    Client -->|HTTPS / WSS| Middleware
-    Middleware --> Router
+    Client -->|HTTPS / REST (CORS + Credentials)| CorsMiddleware
+    CorsMiddleware --> AuthMiddleware
+    AuthMiddleware --> Router
+    Router --> ZodValidator
+    ZodValidator --> Business_Services
+    Business_Services --> CryptoEngine
+    Business_Services --> PostgresDB
+    Business_Services --> StorageService
+    StorageService --> R2Bucket
+
+    Business_Services -->|Enqueue Job (delay, jobId)| BullMQQueue
+    BullMQQueue --> RedisStore
+    RedisStore --> PublishWorker
+    RedisStore --> FFmpegWorker
+
+    PublishWorker --> CryptoEngine
+    PublishWorker --> TikTokService
+    TikTokService --> TikTokEndpoints
+    FFmpegWorker --> StorageService
+```
     Router --> ZodValidator
     ZodValidator --> Business_Services
     Business_Services --> CryptoEngine

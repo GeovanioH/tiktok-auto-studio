@@ -39,56 +39,62 @@ Gérer une présence active sur TikTok exige une régularité extrême (1 à 3 p
 
 ---
 
-## 2. Architecture Technique Globale
+## 2. Architecture Technique Globale (Découplée Node.js & React)
 
-L'application repose sur une architecture moderne en couches découplées, garantissant robustesse, sécurité des secrets et scalabilité.
+L'application repose sur une **architecture découplée moderne (Monorepo)** séparant hermétiquement le frontend web (SPA React haute vélocité) et le backend d'ingénierie (serveur d'API Node.js et workers asynchrones).
 
 ```mermaid
 flowchart TD
-    subgraph ClientLayer ["Couche Présentation (Client)"]
+    subgraph ClientLayer ["Couche Présentation (Frontend React SPA)"]
         Browser["Navigateur Web (Desktop / Mobile)"]
-        DashboardUI["Dashboard & Calendrier Interactif (Next.js App Router)"]
-        StudioUI["Studio 3-Clics & Prévisualisation Vidéo"]
-        Browser --> DashboardUI
-        Browser --> StudioUI
+        ReactApp["Application React 18/19 (Vite + TypeScript)"]
+        TailwindShadcn["Design System (TailwindCSS + Shadcn/ui)"]
+        TanStackQuery["Cache Client & Requêtage (TanStack Query)"]
+        Preview916["Studio 3-Clics & Prévisualisation 9:16"]
+        
+        Browser --> ReactApp
+        ReactApp --> TailwindShadcn
+        ReactApp --> TanStackQuery
+        ReactApp --> Preview916
     end
 
-    subgraph AppLayer ["Couche Applicative (Next.js & API)"]
-        NextServer["Serveur Web & API Routes (Next.js 14+)"]
-        AuthMiddleware["Middleware Session (Cookies HttpOnly SameSite=Strict)"]
+    subgraph ApiLayer ["Couche Serveur & API (Backend Node.js)"]
+        NodeServer["Serveur HTTP Node.js (Fastify / Express + TypeScript)"]
+        CorsMiddleware["Middleware CORS (Credentials & Whitelist Frontend)"]
+        AuthMiddleware["Middleware Session (Cookies HttpOnly SameSite=Lax/Strict)"]
         CryptoService["Service Cryptographique (AES-256-GCM)"]
-        ValidationPipe["Validation Stricte des Entrées (Zod)"]
+        ValidationPipe["Validation Stricte des Entrées (Zod Shared Package)"]
         
-        DashboardUI -->|HTTPS / REST| NextServer
-        StudioUI -->|HTTPS / REST| NextServer
-        NextServer --> AuthMiddleware
-        NextServer --> CryptoService
-        NextServer --> ValidationPipe
+        TanStackQuery -->|HTTPS / REST (withCredentials)| CorsMiddleware
+        CorsMiddleware --> NodeServer
+        NodeServer --> AuthMiddleware
+        NodeServer --> CryptoService
+        NodeServer --> ValidationPipe
     end
 
-    subgraph ServiceLayer ["Couche Métier & Orchestration IA"]
+    subgraph ServiceLayer ["Couche Métier & Orchestration IA (Node.js)"]
         TikTokClient["Client Officiel API TikTok (v2)"]
-        AIEngine["Orchestrateur IA (LLM + Image Gen)"]
+        GeminiOmniEngine["Orchestrateur IA Omnimodal (Google Gemini Omni)"]
         FFmpegWorker["Moteur de Montage Vidéo (FFmpeg)"]
-        QuotasManager["Gestionnaire de Quotas & Modération"]
+        QuotasManager["Gestionnaire de Quotas Journaliers"]
         
-        NextServer --> TikTokClient
-        NextServer --> AIEngine
-        AIEngine --> QuotasManager
-        AIEngine --> FFmpegWorker
+        NodeServer --> TikTokClient
+        NodeServer --> GeminiOmniEngine
+        GeminiOmniEngine --> QuotasManager
+        GeminiOmniEngine --> FFmpegWorker
     end
 
     subgraph DataLayer ["Couche Données & Persistance"]
-        Postgres[(PostgreSQL - Données Métier & Tokens Chiffrés)]
-        Redis[(Redis - Cache de Sessions & Files BullMQ)]
-        S3Storage[(Cloudflare R2 / AWS S3 - Domaine Vérifié TikTok)]
+        Postgres[(PostgreSQL 16 - Données Métier & Tokens Chiffrés)]
+        Redis[(Redis 7 - Cache de Sessions & Files BullMQ)]
+        S3Storage[(Cloudflare R2 - Domaine Vérifié TikTok)]
         
-        NextServer -->|Prisma ORM| Postgres
-        NextServer --> Redis
+        NodeServer -->|Prisma ORM| Postgres
+        NodeServer --> Redis
         FFmpegWorker -->|Upload CDN| S3Storage
     end
 
-    subgraph WorkerLayer ["Couche Asynchrone & Arrière-Plan"]
+    subgraph WorkerLayer ["Couche Asynchrone & Arrière-Plan (Worker Node.js)"]
         BullMQWorker["Worker Planificateur (Scheduler BullMQ)"]
         RetryManager["Gestionnaire de Pannes & Backoff Exponentiel"]
         
@@ -308,18 +314,26 @@ Conformément aux politiques de transparence de TikTok et aux réglementations i
 
 ---
 
-## 5. Pipeline Multimodal d'IA Générative en 3 Clics
+## 5. Pipeline Multimodal d'IA Générative en 3 Clics (Gemini Omni)
 
-Le moteur d'IA interne orchestre 4 modèles complémentaires pour transformer une idée abstraite en un asset multimédia de qualité studio.
+Le moteur d'IA interne exploite l'architecture omnimodale de **Google Gemini Omni** couplée à des modèles spécialisés pour couvrir aussi bien la génération d'images haute fidélité que la génération et le montage de vidéos verticales natives.
 
-### 5.1 Découpage des Responsabilités des Modèles
+### 5.1 Architecture Double Pipeline : Vidéo Native Omni vs Montage Hybride
+
+Le Studio propose deux modes de génération vidéo et un mode carrousel :
+1. **Mode Vidéo Native (Gemini Omni) :** Génération directe de séquences vidéo verticales 9:16 par le modèle omnimodal, avec motion fluide, cohérence temporelle et mouvements de caméra réalistes.
+2. **Mode Vidéo Composite Studio (Gemini Omni + FFmpeg) :** Génération des scènes visuelles 9:16 par Gemini Omni / Imagen 3, synchronisation avec la voix-off TTS et animation dynamique Ken Burns avec gravure des sous-titres animés `.ass`.
+3. **Mode Carrousel Photos (Gemini Omni / Imagen 3 + Sharp) :** Génération de séries de visuels 9:16 convertis automatiquement en JPEG qualité 95 pour conformité TikTok.
+
+### 5.2 Découpage des Responsabilités des Modèles
 
 | Rôle | Modèle Retenu | Mission Spécifique | Format de Sortie |
 | :--- | :--- | :--- | :--- |
-| **Génération Textuelle & Structuration** | Google Gemini (Gemini Multimodal / Pro) | Création d'une accroche (*Hook*), découpage du script en 3 à 5 scènes visuelles, rédaction de la légende et sélection de 5 hashtags SEO tendance. | Objet JSON typé strict (via Zod schema). |
-| **Génération Visuelle** | Google Imagen 3 (via Gemini API) | Génération d'images photoréalistes percutantes au ratio vertical strict 9:16 (1080 $\times$ 1920 pixels). | Images JPEG / WebP haute fidélité (conversion automatique si PNG généré). |
-| **Synthèse Vocale (TTS)** | Gemini Speech / ElevenLabs | Génération de la voix-off rythmée et engageante à partir du script généré. | Fichier audio MP3 44.1kHz. |
-| **Moteur d'Assemblage Vidéo** | Worker FFmpeg local / conteneurisé | Fusion des flux : juxtaposition des scènes visuelles avec effet zoom dynamique (*Ken Burns*), mixage de la voix-off et incrustation des sous-titres animés. | Fichier vidéo MP4 (Codec H.264, AAC). |
+| **Génération & Structuration Omnimodale** | **Google Gemini Omni** | Analyse du prompt, hook viral, découpage en scènes temporelles, légende SEO, tags et directives de mise en scène. | Objet JSON typé strict (schéma Zod). |
+| **Génération Vidéo Native** | **Google Gemini Omni (Video Engine)** | Génération directe de clips vidéo verticaux 9:16 cinématographiques avec animation et continuité de mouvement. | Fichier vidéo MP4 (H.264, 1080x1920, 30 fps). |
+| **Génération Visuelle (Images & Carrousels)** | **Google Gemini Omni & Imagen 3** | Rendu de visuels photoréalistes verticaux 9:16 (1080x1920) pour carrousels et scènes composites. | JPEG / WEBP (conversion automatique via Sharp, PNG rejeté). |
+| **Synthèse Vocale & Audio** | **Gemini Speech / ElevenLabs** | Génération de la voix-off naturelle synchronisée avec extraction des timestamps mot-à-mot. | Audio MP3 stéréo 44.1kHz. |
+| **Moteur d'Assemblage & Sous-titrage** | **Worker FFmpeg (Dockerisé)** | Concaténation de flux, animation Ken Burns pour le mode composite, mixage audio et gravure de sous-titres dynamiques `.ass`. | Fichier vidéo final MP4 (H.264 / AAC 192k). |
 
 ### 5.2 Algorithme de Montage FFmpeg Automatisé
 Pour chaque scène générée :
@@ -497,11 +511,12 @@ Créez un fichier `.env.local` (développement) et configurez votre gestionnaire
 
 ```bash
 # ==============================================================================
-# CONFIGURATION SERVEUR & URLS
+# CONFIGURATION SERVEURS & URLS (MONOREPO NODE.JS + REACT)
 # ==============================================================================
 NODE_ENV="development" # ou "production"
-PORT=3000
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
+PORT=4000 # Port du serveur API Node.js (Fastify / Express)
+API_URL="http://localhost:4000"
+FRONTEND_URL="http://localhost:5173" # Port du client React (Vite SPA)
 
 # ==============================================================================
 # BASE DE DONNÉES & CACHE DISTRIBUÉ
@@ -521,7 +536,7 @@ JWT_SECRET="remplacer_par_un_secret_jwt_aleatoire_de_minimum_32_caracteres"
 # ==============================================================================
 TIKTOK_CLIENT_KEY="votre_tiktok_client_key"
 TIKTOK_CLIENT_SECRET="votre_tiktok_client_secret"
-TIKTOK_REDIRECT_URI="http://localhost:3000/api/auth/tiktok/callback"
+TIKTOK_REDIRECT_URI="http://localhost:4000/api/auth/tiktok/callback"
 
 # ==============================================================================
 # HÉBERGEMENT MÉDIAS S3 / CLOUDFLARE R2 (Domaine vérifié TikTok obligatoire)
@@ -575,16 +590,16 @@ cp .env.example .env.local
 # (Éditez .env.local avec vos vraies clés)
 
 # Étape 5 : Appliquer les migrations de base de données via Prisma
-pnpm prisma migrate dev --name init_schema
+pnpm db:migrate
 
 # Étape 6 : Générer le client Prisma typé
-pnpm prisma generate
+pnpm db:generate
 
-# Étape 7 : Lancer simultanément l'application Next.js et le worker BullMQ
+# Étape 7 : Lancer simultanément l'API Node.js et le client React Vite
 pnpm dev
 ```
 
-L'application est immédiatement accessible à l'adresse [http://localhost:3000](http://localhost:3000).
+L'application web React est immédiatement accessible à l'adresse [http://localhost:5173](http://localhost:5173) et l'API Node.js à l'adresse [http://localhost:4000](http://localhost:4000).
 
 ---
 
@@ -641,35 +656,52 @@ timeline
 tiktok-auto-studio/
 ├── README.md                      # Documentation exhaustive à 360° (Ce fichier)
 ├── CLAUDE.md                      # Mémoire d'ingénierie et protocole pour l'agent IA
+├── pnpm-workspace.yaml            # Déclaration du monorepo (apps/*, packages/*)
+├── package.json                   # Scripts racine du monorepo
 ├── docker-compose.yml             # Conteneurs PostgreSQL et Redis locaux
-├── package.json                   # Dépendances du projet (Next.js, Prisma, BullMQ...)
-├── prisma/
-│   ├── schema.prisma              # Schéma de base de données relationnel
-│   └── migrations/                # Historique des migrations SQL
-├── docs/                          # Les 9 fichiers de spécification détaillés
-│   ├── 01-PRD.md                  # Exigences produit & User Stories
-│   ├── 02-TRD.md                  # Spécifications techniques & SLAs
+├── docs/                          # Socle de spécification exhaustif
+│   ├── 00-VISION.md               # Vision produit, manifeste & North Star Metric
+│   ├── 01-PRODUCT_REQUIREMENTS_DOCUMENT.md   # Product Requirements Document (Exigences & User Stories)
+│   ├── 02-TECHNICAL_REQUIREMENTS_DOCUMENT.md # Technical Requirements Document (Architecture & SLAs)
 │   ├── 03-APP_FLOW.md             # Parcours UX & machine à états
 │   ├── 04-BACKEND_SCHEMA.md       # Schéma BDD & relations détaillées
 │   ├── 05-SECURITY.md             # Chiffrement & conformité TikTok
 │   ├── 06-API_SPEC.md             # Spécifications des endpoints OpenAPI
 │   ├── 07-TEST_PLAN.md            # Plan de recette & mocks
 │   ├── 08-IMPLEMENTATION_PLAN.md  # Roadmap de développement par tâches
-│   └── 09-ROADMAP.md              # Vision stratégique V1 à V2
-├── src/
-│   ├── app/                       # Routes Next.js App Router (Pages & API)
-│   │   ├── (auth)/                # Pages de connexion / inscription
-│   │   ├── (dashboard)/           # Interface studio, calendrier et paramètres
-│   │   └── api/                   # API Routes (TikTok OAuth, Webhooks, IA...)
-│   ├── components/                # Composants UI React (Tailwind / Shadcn)
-│   ├── lib/                       # Modules utilitaires partagés
-│   │   ├── crypto/                # Fonctions de chiffrement AES-256-GCM
-│   │   ├── tiktok/                # Client SDK officiel TikTok API v2
-│   │   ├── ai/                    # Orchestrateur LLM, Image Gen et TTS
-│   │   ├── ffmpeg/                # Scripts de montage vidéo dynamique
-│   │   └── s3/                    # Client de téléversement vers domaine vérifié
-│   └── workers/                   # Workers BullMQ d'arrière-plan pour la publication
-└── tests/                         # Suites de tests automatisés (Vitest / Playwright)
+│   ├── 09-ROADMAP.md              # Vision stratégique V1 à V2
+│   ├── FEUILLE_DE_ROUTE_DEV_ET_TESTS.md      # Synchronisation complète Sprints / Tests (Unit, E2E, CLI)
+│   └── sprints/                   # Master Prompts d'ingénierie par sprint unitaire (01 à 07)
+├── apps/
+│   ├── api/                       # BACKEND PUR NODE.JS (Fastify / Express + TypeScript)
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   ├── prisma/
+│   │   │   ├── schema.prisma      # Schéma relationnel Prisma
+│   │   │   └── migrations/
+│   │   └── src/
+│   │       ├── server.ts          # Serveur HTTP Node.js (CORS, Cookies, Routes)
+│   │       ├── routes/            # Endpoints REST (/auth, /ai, /posts, /media)
+│   │       ├── services/          # Services métiers (TikTok API, Gemini Omni, Sharp, Crypto)
+│   │       └── workers/           # Workers BullMQ d'arrière-plan & FFmpeg
+│   └── web/                       # FRONTEND PUR REACT (Vite + TypeScript + Tailwind)
+│       ├── package.json
+│       ├── vite.config.ts
+│       ├── tsconfig.json
+│       ├── index.html
+│       └── src/
+│           ├── main.tsx           # Point de montage React
+│           ├── App.tsx            # Routage React Router
+│           ├── components/        # Composants UI (Preview 9:16, Sidebar, Shadcn)
+│           ├── hooks/             # Custom hooks & TanStack Query
+│           └── lib/               # Client API (Axios configuré avec credentials)
+└── packages/
+    └── shared/                    # CONTRATS & SCHÉMAS ZOD PARTAGÉS
+        ├── package.json
+        ├── tsconfig.json
+        └── src/
+            ├── schemas/           # Schémas Zod partagés front/back
+            └── types/             # Types DTOs et enums partagés
 ```
 
 ---

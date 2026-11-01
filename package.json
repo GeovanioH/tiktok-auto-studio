@@ -1,0 +1,26 @@
+{
+  "name": "tiktok-auto-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plateforme SaaS d'automatisation, génération IA multimodale et publication TikTok v2",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @tiktok-studio/* dev",
+    "dev:api": "pnpm --filter @tiktok-studio/api dev",
+    "dev:web": "pnpm --filter @tiktok-studio/web dev",
+    "build": "pnpm --recursive --filter @tiktok-studio/* build",
+    "lint": "pnpm --recursive lint",
+    "typecheck": "pnpm --recursive typecheck",
+    "test": "vitest run C:/Users/ADMIN/Documents/TEST",
+    "test:coverage": "vitest run --coverage",
+    "db:migrate": "pnpm --filter @tiktok-studio/api prisma migrate dev",
+    "db:generate": "pnpm --filter @tiktok-studio/api prisma generate",
+    "db:seed": "pnpm --filter @tiktok-studio/api prisma db seed",
+    "cli": "pnpm --filter @tiktok-studio/api cli"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.3",
+    "zod": "^3.23.8"
+  }
+}
