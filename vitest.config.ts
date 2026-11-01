@@ -13,8 +13,7 @@ export default defineConfig({
     include: [
       "apps/**/*.{test,spec}.{ts,tsx}",
       "packages/**/*.{test,spec}.{ts,tsx}",
-      "tests/**/*.{test,spec}.{ts,tsx}",
-      "C:/Users/ADMIN/Documents/TEST/**/*.{test,spec}.{ts,tsx}"
+      "tests/**/*.{test,spec}.{ts,tsx}"
     ],
     exclude: [
       "**/node_modules/**",

@@ -3,17 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { PromptForm } from "../components/studio/PromptForm";
 import { TikTokPreview } from "../components/studio/TikTokPreview";
 import { ScheduleModal } from "../components/studio/ScheduleModal";
-import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, X, Layers } from "lucide-react";
+import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, X, Layers, ChevronDown, ChevronUp } from "lucide-react";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { ClickSpark } from "../components/ui/ClickSpark";
 import { FlexCarousel } from "../components/ui/FlexCarousel";
 import { api, type PostDto } from "../lib/api";
-
-const defaultCarouselItems = [
-  { src: '/images/one.jpg', alt: 'A chrome sculpture', title: 'Iridescence' },
-  { src: '/images/two.jpg', alt: 'A figure on a white set', title: 'White Room' },
-  { src: '/images/three.jpg', alt: 'A clay bust in profile', title: 'Clay Study', subtitle: 'Studio 04' }
-];
 
 export function StudioPage() {
   const navigate = useNavigate();
@@ -22,6 +16,7 @@ export function StudioPage() {
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false);
+  const [show3dInspector, setShow3dInspector] = useState(false);
   const [notification, setNotification] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   // Éléments du post généré
@@ -29,11 +24,21 @@ export function StudioPage() {
     mediaType: "PHOTO",
     mediaUrls: [
       "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1080&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1080&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1080&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1080&auto=format&fit=crop&q=80",
     ],
     caption: "3 erreurs de productivité qui détruisent votre focus en télétravail. #productivité #focus #dev",
     isAigc: true,
   });
+
+  const carouselItems = (currentPost.mediaUrls && currentPost.mediaUrls.length > 0)
+    ? currentPost.mediaUrls.map((url, idx) => ({
+        src: url,
+        alt: `Slide ${idx + 1}`,
+        title: idx === 0 ? "Slide 1 : Hook" : `Slide ${idx + 1}`,
+        subtitle: idx === 0 ? "Rétention 3 secondes" : "Développement narratif",
+      }))
+    : [];
 
   const handleGenerate = async (
     prompt: string,
@@ -178,9 +183,14 @@ export function StudioPage() {
             spotlightColor="rgba(37, 244, 238, 0.15)"
             className="p-6 space-y-3"
           >
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
-              Paramètres de Légende & Conformité
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+                Paramètres de Légende & Conformité
+              </h3>
+              <span className="text-[11px] font-mono text-zinc-500">
+                {currentPost.caption?.length || 0} / 2 200 car.
+              </span>
+            </div>
             <textarea
               rows={3}
               value={currentPost.caption || ""}
@@ -188,11 +198,11 @@ export function StudioPage() {
               placeholder="Ajuster la légende TikTok..."
               className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-cyan-500"
             />
-            <div className="flex items-center justify-between text-xs text-zinc-400">
-              <span>Transparence IA (ByteDance AIGC)</span>
-              <span className="text-emerald-400 font-bold flex items-center gap-1">
+            <div className="flex items-center justify-between text-xs text-zinc-400 pt-1 border-t border-zinc-800/80">
+              <span className="text-[11px]">Transparence IA (ByteDance AIGC)</span>
+              <span className="text-emerald-400 font-bold flex items-center gap-1 text-[11px]">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                Inclus (Obligatoire)
+                is_aigc: true (Automatique)
               </span>
             </div>
           </SpotlightCard>
@@ -253,73 +263,85 @@ export function StudioPage() {
               <Save className="w-3.5 h-3.5" />
               <span>Enregistrer en Brouillon</span>
             </button>
+
+            {/* Bouton contextuel d'inspection 3D si carrousel de photos généré */}
+            {currentPost.mediaType === "PHOTO" && carouselItems.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setShow3dInspector(!show3dInspector)}
+                className="col-span-2 py-2 px-3 rounded-xl bg-cyan-950/40 border border-cyan-800/80 text-cyan-300 hover:bg-cyan-900/50 text-xs font-semibold flex items-center justify-center gap-2 transition"
+              >
+                <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                <span>{show3dInspector ? "Masquer l'Inspecteur 3D" : `Inspecter les ${carouselItems.length} slides en 3D`}</span>
+                {show3dInspector ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Inspecteur de Séquence Carrousel Photo TikTok 3D Liquid (FlexCarousel React Bits) */}
-      <SpotlightCard
-        spotlightColor="rgba(37, 244, 238, 0.15)"
-        className="p-6 space-y-4 bg-zinc-950 border-cyan-500/30"
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800 pb-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                <Layers className="w-4 h-4" />
-              </span>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <span>Inspecteur Séquentiel 3D Liquid (Carrousels Photos TikTok)</span>
-                <span className="text-[10px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-800 px-2 py-0.5 rounded-full">
-                  Format Photo Multi-Slides v2
+      {/* Inspecteur de Séquence Carrousel Photo TikTok 3D : Uniquement sur demande */}
+      {show3dInspector && currentPost.mediaType === "PHOTO" && carouselItems.length > 0 && (
+        <SpotlightCard
+          spotlightColor="rgba(37, 244, 238, 0.15)"
+          className="p-6 space-y-4 bg-zinc-950 border-cyan-500/30 animate-in fade-in duration-300"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800 pb-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                  <Layers className="w-4 h-4" />
                 </span>
-              </h3>
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                  <span>Inspecteur Séquentiel 3D Liquid — Vraies Slides Générées</span>
+                  <span className="text-[10px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-800 px-2 py-0.5 rounded-full">
+                    {carouselItems.length} Diapositives Actives
+                  </span>
+                </h3>
+              </div>
+              <p className="text-xs text-zinc-400">
+                Survolez et déplacez vos slides générées pour inspecter la dynamique visuelle avant programmation.
+              </p>
             </div>
-            <p className="text-xs text-zinc-400">
-              Survolez et cliquez sur les slides pour inspecter la fluidité narrative, les titres d'accroche et l'étalonnage 9:16 avant programmation.
-            </p>
+
+            <button
+              type="button"
+              onClick={() => setShow3dInspector(false)}
+              className="text-xs text-zinc-400 hover:text-white px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 transition"
+            >
+              Masquer l'inspecteur
+            </button>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-            <span>WebGL Shaders Actifs</span>
+          <div style={{ width: '100%', height: '480px', position: 'relative' }} className="rounded-2xl overflow-hidden bg-black/80 border border-zinc-900 shadow-inner">
+            <FlexCarousel
+              items={carouselItems}
+              preset="liquid"
+              intro="rise"
+              cardHeight={0.5}
+              gap={12}
+              squeeze={0.2}
+              focusOnClick
+              captions
+              fit="natural"
+              radius={0}
+              lensWidth={0.74}
+              lensHeight={1.18}
+              tilt={62}
+              roundness={1}
+              bend={0.34}
+              reach={0.38}
+              curl="twist"
+              dispersion={0.45}
+              liquid={0}
+              followCursor={false}
+              autoplay={false}
+              interval={4}
+              captureWheel
+            />
           </div>
-        </div>
-
-        {/* FlexCarousel React Bits Container (Hauteur 560px avec toutes les props demandées) */}
-        <div style={{ width: '100%', height: '560px', position: 'relative' }} className="rounded-2xl overflow-hidden bg-black/60 border border-zinc-900 shadow-inner">
-          <FlexCarousel
-            items={defaultCarouselItems}
-            preset="liquid"
-            intro="rise"
-            cardHeight={0.5}
-            gap={12}
-            squeeze={0.2}
-            focusOnClick
-            captions
-            fit="natural"
-            radius={0}
-            lensWidth={0.74}
-            lensHeight={1.18}
-            tilt={62}
-            roundness={1}
-            bend={0.34}
-            reach={0.38}
-            curl="twist"
-            dispersion={0.45}
-            liquid={0}
-            followCursor={false}
-            autoplay={false}
-            interval={4}
-            captureWheel
-          />
-        </div>
-
-        <div className="flex items-center justify-between text-xs text-zinc-500 pt-1">
-          <span>💡 Conseil Rétention : Placez le hook le plus percutant sur la première slide pour inciter au swipe vers les slides suivantes.</span>
-          <span className="font-mono text-cyan-400">Molette de souris activée (CaptureWheel)</span>
-        </div>
-      </SpotlightCard>
+        </SpotlightCard>
+      )}
 
       {/* Modale de Programmation (+5 min strict) */}
       <ScheduleModal

@@ -1,17 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Sparkles, Calendar, ListVideo, ShieldCheck, ArrowRight, Zap, CheckCircle2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Sparkles, Calendar, ListVideo, ShieldCheck, ArrowRight, Zap, CheckCircle2, Heart, MessageCircle, Share2, Music } from "lucide-react";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { ShinyText } from "../components/ui/ShinyText";
 import { Squares } from "../components/ui/Squares";
-import FlyingButton from "../components/ui/FlyingButton";
-import { MatrixRain } from "../components/ui/MatrixRain";
 
 export function DashboardPage() {
-  const navigate = useNavigate();
-
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
-      {/* Hero Banner avec Grille Animée Squares & FlyingButton (React Bits) */}
+      {/* Hero Banner avec Grille Animée Squares & Aperçu Studio Réaliste */}
       <div className="relative overflow-hidden rounded-3xl bg-zinc-950 border border-zinc-800 p-8 shadow-2xl">
         <Squares
           speed={0.3}
@@ -57,31 +53,69 @@ export function DashboardPage() {
             </div>
           </div>
 
-          {/* FlyingButton Interactive Launchpad React Bits */}
+          {/* Carte Instantanée TikTok Studio - Aperçu réaliste du dernier post actif */}
           <div className="lg:col-span-5 relative flex items-center justify-center">
-            <div style={{ position: 'relative', height: 440 }} className="w-full">
-              <FlyingButton
-                theme="dark"
-                size="medium"
-                altitude={170}
-                hoverTime={2.4}
-                jets={2}
-                thrusters
-                trigger="hover"
-                carryCursor
-                smoke={1}
-                turbulence={1}
-                wobble={1}
-                ramp={false}
-                thrustColor="#8ec5ff"
-                smokeColor="#eef1f6"
-                onClick={() => {
-                  console.log('Lift off');
-                  navigate('/studio');
-                }}
-              >
-                Take off
-              </FlyingButton>
+            <div className="w-full max-w-sm rounded-2xl bg-zinc-900/90 border border-zinc-800/90 p-5 shadow-2xl backdrop-blur-md space-y-4">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-cyan-400 flex items-center justify-center text-white font-bold text-xs">
+                    TT
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-white flex items-center gap-1">
+                      <span>@studio_createur</span>
+                      <span className="w-3 h-3 rounded-full bg-cyan-400 text-black flex items-center justify-center text-[8px] font-black">✓</span>
+                    </p>
+                    <p className="text-[10px] text-emerald-400 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      <span>TikTok API v2 Validée</span>
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-mono bg-pink-950/80 text-pink-400 border border-pink-800/60 px-2 py-0.5 rounded-full">
+                  Post Actif
+                </span>
+              </div>
+
+              {/* Mockup miniature du post vertical 9:16 */}
+              <div className="relative rounded-xl overflow-hidden bg-black aspect-[16/9] border border-zinc-800 flex items-center justify-center p-4 group">
+                <img
+                  src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80"
+                  alt="Aperçu post"
+                  className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+
+                <div className="relative z-10 w-full space-y-1.5">
+                  <div className="inline-flex items-center gap-1 text-[9px] font-bold bg-pink-500/80 text-white px-2 py-0.5 rounded-md">
+                    <Sparkles className="w-2.5 h-2.5" />
+                    <span>Score Viral 92/100</span>
+                  </div>
+                  <p className="text-xs font-extrabold text-white line-clamp-2 drop-shadow">
+                    "3 erreurs de productivité qui détruisent votre focus en télétravail..."
+                  </p>
+                  <div className="flex items-center gap-3 text-[10px] text-zinc-300 pt-1">
+                    <span className="flex items-center gap-1"><Heart className="w-3 h-3 text-pink-400" /> 12.4k</span>
+                    <span className="flex items-center gap-1"><MessageCircle className="w-3 h-3 text-cyan-400" /> 342</span>
+                    <span className="flex items-center gap-1"><Share2 className="w-3 h-3 text-emerald-400" /> 890</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions rapides contextuelles */}
+              <div className="flex items-center justify-between text-xs pt-1">
+                <span className="text-zinc-400 text-[11px] flex items-center gap-1">
+                  <Music className="w-3 h-3 text-cyan-400" />
+                  <span>Audio Ducking -14dB</span>
+                </span>
+                <Link
+                  to="/studio"
+                  className="font-bold text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition"
+                >
+                  <span>Éditer dans le Studio</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -145,7 +179,7 @@ export function DashboardPage() {
         </SpotlightCard>
       </div>
 
-      {/* Bento Grid Awwwards : Visual Pipeline & Conformité Réseau */}
+      {/* Bento Grid : Visual Pipeline & Conformité Réseau */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Bento Carte 1 (7 cols) : Moniteur du Pipeline Multimodal */}
         <SpotlightCard
@@ -189,17 +223,12 @@ export function DashboardPage() {
           </p>
         </SpotlightCard>
 
-        {/* Bento Carte 2 (5 cols) : Radar de Conformité TikTok v2 avec Flux Chiffré */}
+        {/* Bento Carte 2 (5 cols) : Radar de Conformité TikTok v2 */}
         <SpotlightCard
           spotlightColor="rgba(0, 255, 65, 0.15)"
-          className="lg:col-span-5 p-6 space-y-4 flex flex-col justify-between relative overflow-hidden"
+          className="lg:col-span-5 p-6 space-y-4 flex flex-col justify-between"
         >
-          {/* Visualiseur de Chiffrement Militaire (Matrix Rain) */}
-          <div className="absolute inset-0 z-0 pointer-events-none opacity-10">
-            <MatrixRain opacity={0.25} columnsCount={20} />
-          </div>
-
-          <div className="relative z-10 space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -228,12 +257,12 @@ export function DashboardPage() {
             </div>
           </div>
 
-          <div className="relative z-10 pt-2 text-[10px] text-zinc-500 border-t border-zinc-800/80 flex items-center justify-between">
+          <div className="pt-2 text-[10px] text-zinc-500 border-t border-zinc-800/80 flex items-center justify-between">
             <Link to="/api-keys" className="text-emerald-400 hover:text-emerald-300 font-semibold transition flex items-center gap-1">
-              <span>Tester l'intégrité AES-256</span> $\rightarrow$
+              <span>Tester l'intégrité AES-256</span> →
             </Link>
             <Link to="/accounts" className="text-cyan-400 hover:text-cyan-300 font-semibold transition">
-              Détails OAuth $\rightarrow$
+              Détails OAuth →
             </Link>
           </div>
         </SpotlightCard>

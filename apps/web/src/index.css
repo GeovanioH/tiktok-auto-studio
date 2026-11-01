@@ -296,59 +296,96 @@ body {
   color: #0f172a !important;
 }
 
-[data-theme="light"] .bg-zinc-950,
-.light .bg-zinc-950 {
+[data-theme="light"] .bg-zinc-950:not([data-testid="tiktok-preview"], [data-testid="tiktok-preview"] *),
+.light .bg-zinc-950:not([data-testid="tiktok-preview"], [data-testid="tiktok-preview"] *) {
   background-color: #ffffff !important;
   border-color: #e2e8f0 !important;
 }
 
-[data-theme="light"] .bg-zinc-900,
-.light .bg-zinc-900 {
+[data-theme="light"] .bg-zinc-900:not([data-testid="tiktok-preview"], [data-testid="tiktok-preview"] *),
+.light .bg-zinc-900:not([data-testid="tiktok-preview"], [data-testid="tiktok-preview"] *) {
   background-color: #f1f5f9 !important;
   border-color: #e2e8f0 !important;
 }
 
-[data-theme="light"] .text-white,
-.light .text-white {
+/* En mode clair, adapter la couleur des textes tout en préservant le blanc sur les boutons d'action et badges */
+[data-theme="light"] .text-white:not(
+  [data-testid="tiktok-preview"] *,
+  button,
+  button *,
+  .btn,
+  .btn *,
+  [class*="from-pink"],
+  [class*="from-pink"] *,
+  [class*="from-cyan"],
+  [class*="from-cyan"] *,
+  [class*="bg-pink"],
+  [class*="bg-pink"] *,
+  [class*="bg-cyan"],
+  [class*="bg-cyan"] *,
+  [class*="bg-rose"],
+  [class*="bg-rose"] *,
+  [class*="bg-emerald-600"],
+  [class*="bg-emerald-600"] *
+),
+.light .text-white:not(
+  [data-testid="tiktok-preview"] *,
+  button,
+  button *,
+  .btn,
+  .btn *,
+  [class*="from-pink"],
+  [class*="from-pink"] *,
+  [class*="from-cyan"],
+  [class*="from-cyan"] *,
+  [class*="bg-pink"],
+  [class*="bg-pink"] *,
+  [class*="bg-cyan"],
+  [class*="bg-cyan"] *,
+  [class*="bg-rose"],
+  [class*="bg-rose"] *,
+  [class*="bg-emerald-600"],
+  [class*="bg-emerald-600"] *
+) {
   color: #0f172a !important;
 }
 
-[data-theme="light"] .text-zinc-100,
-.light .text-zinc-100 {
+[data-theme="light"] .text-zinc-100:not([data-testid="tiktok-preview"] *),
+.light .text-zinc-100:not([data-testid="tiktok-preview"] *) {
   color: #1e293b !important;
 }
 
-[data-theme="light"] .text-zinc-200,
-.light .text-zinc-200 {
+[data-theme="light"] .text-zinc-200:not([data-testid="tiktok-preview"] *),
+.light .text-zinc-200:not([data-testid="tiktok-preview"] *) {
   color: #334155 !important;
 }
 
-[data-theme="light"] .text-zinc-300,
-.light .text-zinc-300 {
+[data-theme="light"] .text-zinc-300:not([data-testid="tiktok-preview"] *),
+.light .text-zinc-300:not([data-testid="tiktok-preview"] *) {
   color: #475569 !important;
 }
 
-[data-theme="light"] .text-zinc-400,
-.light .text-zinc-400 {
+[data-theme="light"] .text-zinc-400:not([data-testid="tiktok-preview"] *),
+.light .text-zinc-400:not([data-testid="tiktok-preview"] *) {
   color: #64748b !important;
 }
 
-[data-theme="light"] .text-zinc-500,
-.light .text-zinc-500 {
+[data-theme="light"] .text-zinc-500:not([data-testid="tiktok-preview"] *),
+.light .text-zinc-500:not([data-testid="tiktok-preview"] *) {
   color: #64748b !important;
 }
 
-[data-theme="light"] .border-zinc-800,
-.light .border-zinc-800,
-[data-theme="light"] .border-zinc-700,
-.light .border-zinc-700,
-[data-theme="light"] .border-zinc-900,
-.light .border-zinc-900 {
+[data-theme="light"] .border-zinc-800:not([data-testid="tiktok-preview"] *),
+.light .border-zinc-800:not([data-testid="tiktok-preview"] *),
+[data-theme="light"] .border-zinc-700:not([data-testid="tiktok-preview"] *),
+.light .border-zinc-700:not([data-testid="tiktok-preview"] *),
+[data-theme="light"] .border-zinc-900:not([data-testid="tiktok-preview"] *),
+.light .border-zinc-900:not([data-testid="tiktok-preview"] *) {
   border-color: #e2e8f0 !important;
 }
 
 /* Le mockup TikTok reste toujours en noir réaliste de smartphone */
-[data-testid="tiktok-preview"] {
-  background-color: #000000 !important;
-  border-color: #27272a !important;
+[data-testid="tiktok-preview"],
+[data-testid="tiktok-preview"] * {
+  /* Préserve l'affichage natif sombre du smartphone */
 }

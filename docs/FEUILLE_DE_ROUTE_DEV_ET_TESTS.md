@@ -58,13 +58,13 @@ flowchart LR
 
 | Sprint d'Implémentation | Livrables de Code Principaux | Suite de Test Associée | Type de Test | Critère Bloquant de Validation |
 | :--- | :--- | :--- | :---: | :--- |
-| **Sprint 01 : Socle & Crypto** | `pnpm-workspace.yaml`, `apps/api/src/services/crypto/encryption.ts`, `apps/api/src/config/env.ts` | [`TEST-01-SOCLE-CRYPTO.test.ts`](file:///C:/Users/ADMIN/Documents/TEST/TEST-01-SOCLE-CRYPTO.test.ts) | Unitaire | **TERMINÉ (PASS 40/40)** — Succès 100% chiffrement AES-256-GCM, détection bit-flip, IV 12 octets unique. |
-| **Sprint 02 : BDD & Prisma** | `apps/api/prisma/schema.prisma`, migrations SQL, `apps/api/src/services/db/prisma.ts` | [`TEST-02-BDD-PRISMA.test.ts`](file:///C:/Users/ADMIN/Documents/TEST/TEST-02-BDD-PRISMA.test.ts) | Intégration | **TERMINÉ (PASS 22/22)** — Cascades `onDelete: Cascade` validées, contrainte email/openId unique, blocage quotas. |
-| **Sprint 03 : TikTok API v2** | `apps/api/src/routes/auth/tiktok.ts`, `tokenManager.ts`, `creatorInfo.ts` | [`TEST-03-TIKTOK-API.test.ts`](file:///C:/Users/ADMIN/Documents/TEST/TEST-03-TIKTOK-API.test.ts) | Intégration | **TERMINÉ (PASS 15/15)** — Challenge PKCE SHA-256 valide, rotation proactive des 23h testée sous fausse horloge, 365j expiration. |
-| **Sprint 04 : Gemini Omni** | `gemini.ts` (Omni), `omniVideo.ts`, `converter.ts` (Sharp JPEG 95%), `composer.ts` | [`TEST-04-AI-OMNI-PIPELINE.test.ts`](file:///C:/Users/ADMIN/Documents/TEST/TEST-04-AI-OMNI-PIPELINE.test.ts) | Intégration | **TERMINÉ (PASS 18/18)** — 3 modes omnimodaux validés (`PHOTO_CAROUSEL`, `OMNI_NATIVE_VIDEO`, `COMPOSITE_STUDIO_VIDEO`), conversion Sharp JPEG 95%, domaine vérifié R2. |
-| **Sprint 05 : BullMQ & Résilience** | `publishQueue.ts`, `publishWorker.ts`, `redlock.ts`, `recoveryJob.ts` | [`TEST-05-BULLMQ-SCHEDULER.test.ts`](file:///C:/Users/ADMIN/Documents/TEST/TEST-05-BULLMQ-SCHEDULER.test.ts) | Intégration | Idempotence absolue `jobId`, Redlock actif, **règle des 15 minutes** validée. |
-| **Sprint 06 : Frontend React** | `apps/web/src/pages/` (Studio, Calendar, Posts), `TikTokPreview.tsx` 9:16 | [`TEST-06-UI-STUDIO.test.ts`](file:///C:/Users/ADMIN/Documents/TEST/TEST-06-UI-STUDIO.test.ts) | Unitaire UI | Validation temporelle $\ge +5\text{ min}$, Safe Area TikTok 9:16, bouton Réessayer fonctionnel. |
-| **Sprint 07 : Audit & Outillage** | Mocks MSW v2, dossier audit, `apps/api/src/cli/index.ts` (`studio-cli`) | [`TEST-07-CONFORMITE-AUDIT.test.ts`](file:///C:/Users/ADMIN/Documents/TEST/TEST-07-CONFORMITE-AUDIT.test.ts)<br>[`TEST-E2E-STUDIO-FLOW.spec.ts`](file:///C:/Users/ADMIN/Documents/TEST/TEST-E2E-STUDIO-FLOW.spec.ts)<br>[`TEST-CLI-COMMANDS.test.ts`](file:///C:/Users/ADMIN/Documents/TEST/TEST-CLI-COMMANDS.test.ts) | E2E & CLI | Mode `SELF_ONLY` pré-audit forcé, tag `is_aigc: true`, parcours E2E au vert, CLI code 0. |
+| **Sprint 01 : Socle & Crypto** | `pnpm-workspace.yaml`, `apps/api/src/services/crypto/encryption.ts`, `apps/api/src/config/env.ts` | [`TEST-01-SOCLE-CRYPTO.test.ts`](file:///C:/Users/ADMIN/Documents/tiktok-auto-studio/tests/suites/TEST-01-SOCLE-CRYPTO.test.ts) | Unitaire | **TERMINÉ (PASS 40/40)** — Succès 100% chiffrement AES-256-GCM, détection bit-flip, IV 12 octets unique. |
+| **Sprint 02 : BDD & Prisma** | `apps/api/prisma/schema.prisma`, migrations SQL, `apps/api/src/services/db/prisma.ts` | [`TEST-02-BDD-PRISMA.test.ts`](file:///C:/Users/ADMIN/Documents/tiktok-auto-studio/tests/suites/TEST-02-BDD-PRISMA.test.ts) | Intégration | **TERMINÉ (PASS 22/22)** — Cascades `onDelete: Cascade` validées, contrainte email/openId unique, blocage quotas. |
+| **Sprint 03 : TikTok API v2** | `apps/api/src/routes/auth/tiktok.ts`, `tokenManager.ts`, `creatorInfo.ts` | [`TEST-03-TIKTOK-API.test.ts`](file:///C:/Users/ADMIN/Documents/tiktok-auto-studio/tests/suites/TEST-03-TIKTOK-API.test.ts) | Intégration | **TERMINÉ (PASS 15/15)** — Challenge PKCE SHA-256 valide, rotation proactive des 23h testée sous fausse horloge, 365j expiration. |
+| **Sprint 04 : Gemini Omni** | `gemini.ts` (Omni), `omniVideo.ts`, `converter.ts` (Sharp JPEG 95%), `composer.ts` | [`TEST-04-AI-OMNI-PIPELINE.test.ts`](file:///C:/Users/ADMIN/Documents/tiktok-auto-studio/tests/suites/TEST-04-AI-OMNI-PIPELINE.test.ts) | Intégration | **TERMINÉ (PASS 18/18)** — 3 modes omnimodaux validés (`PHOTO_CAROUSEL`, `OMNI_NATIVE_VIDEO`, `COMPOSITE_STUDIO_VIDEO`), conversion Sharp JPEG 95%, domaine vérifié R2. |
+| **Sprint 05 : BullMQ & Résilience** | `publishQueue.ts`, `publishWorker.ts`, `redlock.ts`, `recoveryJob.ts` | [`TEST-05-BULLMQ-SCHEDULER.test.ts`](file:///C:/Users/ADMIN/Documents/tiktok-auto-studio/tests/suites/TEST-05-BULLMQ-SCHEDULER.test.ts) | Intégration | Idempotence absolue `jobId`, Redlock actif, **règle des 15 minutes** validée. |
+| **Sprint 06 : Frontend React** | `apps/web/src/pages/` (Studio, Calendar, Posts), `TikTokPreview.tsx` 9:16 | [`TEST-06-UI-STUDIO.test.ts`](file:///C:/Users/ADMIN/Documents/tiktok-auto-studio/tests/suites/TEST-06-UI-STUDIO.test.ts) | Unitaire UI | Validation temporelle $\ge +5\text{ min}$, Safe Area TikTok 9:16, bouton Réessayer fonctionnel. |
+| **Sprint 07 : Audit & Outillage** | Mocks MSW v2, dossier audit, `apps/api/src/cli/index.ts` (`studio-cli`) | [`TEST-07-CONFORMITE-AUDIT.test.ts`](file:///C:/Users/ADMIN/Documents/tiktok-auto-studio/tests/suites/TEST-07-CONFORMITE-AUDIT.test.ts)<br>[`TEST-E2E-STUDIO-FLOW.spec.ts`](file:///C:/Users/ADMIN/Documents/tiktok-auto-studio/tests/suites/TEST-E2E-STUDIO-FLOW.spec.ts)<br>[`TEST-CLI-COMMANDS.test.ts`](file:///C:/Users/ADMIN/Documents/tiktok-auto-studio/tests/suites/TEST-CLI-COMMANDS.test.ts) | E2E & CLI | Mode `SELF_ONLY` pré-audit forcé, tag `is_aigc: true`, parcours E2E au vert, CLI code 0. |
 
 ---
 
@@ -83,13 +83,13 @@ flowchart LR
 3. **[DEV]** Implémenter le module de chiffrement AES-256-GCM (`apps/api/src/services/crypto/encryption.ts`).
 4. **[TEST]** Exécuter la suite cryptographique :
    ```bash
-   pnpm vitest run C:\Users\ADMIN\Documents\TEST\TEST-01-SOCLE-CRYPTO.test.ts
+   pnpm vitest run tests/suites/TEST-01-SOCLE-CRYPTO.test.ts
    ```
    *Exigences :* IV 12 octets aléatoire vérifié, détection bit-flipping validée.
 5. **[DEV]** Déclarer le schéma Prisma (`apps/api/prisma/schema.prisma`) et exécuter la migration `pnpm db:migrate`.
 6. **[TEST]** Exécuter les tests d'intégrité relationnelle :
    ```bash
-   pnpm vitest run C:\Users\ADMIN\Documents\TEST\TEST-02-BDD-PRISMA.test.ts
+   pnpm vitest run tests/suites/TEST-02-BDD-PRISMA.test.ts
    ```
    *Exigences :* Cascade de suppression testée, dépassement de quota bloqué par `QUOTA_EXCEEDED`.
 
@@ -106,7 +106,7 @@ flowchart LR
 3. **[DEV]** Implémenter le `tokenManager.ts` (règle des 23 heures).
 4. **[TEST]** Exécuter la suite d'intégration TikTok API :
    ```bash
-   pnpm vitest run C:\Users\ADMIN\Documents\TEST\TEST-03-TIKTOK-API.test.ts
+   pnpm vitest run tests/suites/TEST-03-TIKTOK-API.test.ts
    ```
    *Exigences :* Dérivation `code_challenge` conforme RFC 7636, rotation proactive déclenchée à $T - 1\text{h}$ sous fausse horloge.
 5. **[CLI CHECK]** Vérifier l'état du compte via l'outil CLI :
@@ -128,7 +128,7 @@ flowchart LR
 4. **[DEV]** Brancher le bucket Cloudflare R2 sur le domaine vérifié `https://assets.mondomaine-verifie.com`.
 5. **[TEST]** Exécuter la suite du pipeline omnimodal :
    ```bash
-   pnpm vitest run C:\Users\ADMIN\Documents\TEST\TEST-04-AI-OMNI-PIPELINE.test.ts
+   pnpm vitest run tests/suites/TEST-04-AI-OMNI-PIPELINE.test.ts
    ```
    *Exigences :* Conversion PNG transparente en JPEG 1080x1920 validée, 3 scènes minimum respectées, timestamps `.ass` au format `0:00:04.50`.
 
@@ -145,7 +145,7 @@ flowchart LR
 3. **[DEV]** Implémenter l'algorithme de reprise `recoveryJob.ts` (règle des 15 minutes).
 4. **[TEST]** Exécuter la suite de résilience asynchrone :
    ```bash
-   pnpm vitest run C:\Users\ADMIN\Documents\TEST\TEST-05-BULLMQ-SCHEDULER.test.ts
+   pnpm vitest run tests/suites/TEST-05-BULLMQ-SCHEDULER.test.ts
    ```
    *Exigences :* Rejet strict des doublons de jobs, exécution d'urgence si retard $\le 15$ min, bascule en `MISSED` si $> 15$ min.
 5. **[CLI CHECK]** Tester la réconciliation en ligne de commande :
@@ -166,7 +166,7 @@ flowchart LR
 3. **[DEV]** Coder le calendrier de programmation avec détection automatique du fuseau horaire et conversion UTC.
 4. **[TEST]** Exécuter les tests unitaires UI :
    ```bash
-   pnpm vitest run C:\Users\ADMIN\Documents\TEST\TEST-06-UI-STUDIO.test.ts
+   pnpm vitest run tests/suites/TEST-06-UI-STUDIO.test.ts
    ```
    *Exigences :* Blocage des créneaux planifiés à moins de 5 minutes dans le futur, transition de statut du bouton Réessayer vers `PROCESSING`.
 
@@ -181,17 +181,17 @@ flowchart LR
 1. **[DEV]** Finaliser le binaire d'administration CLI (`apps/api/src/cli/index.ts`).
 2. **[TEST]** Valider toutes les commandes de l'outil CLI :
    ```bash
-   pnpm vitest run C:\Users\ADMIN\Documents\TEST\TEST-CLI-COMMANDS.test.ts
+   pnpm vitest run tests/suites/TEST-CLI-COMMANDS.test.ts
    ```
    *Exigences :* Codes de sortie conformes (0, 1, 2), options `--help`, `auth:status`, `posts:list --json`.
 3. **[TEST]** Valider la conformité réglementaire ByteDance :
    ```bash
-   pnpm vitest run C:\Users\ADMIN\Documents\TEST\TEST-07-CONFORMITE-AUDIT.test.ts
+   pnpm vitest run tests/suites/TEST-07-CONFORMITE-AUDIT.test.ts
    ```
    *Exigences :* Confidentialité `SELF_ONLY` verrouillée en pré-audit, inclusion systématique de `is_aigc: true`.
 4. **[TEST E2E]** Lancer les parcours complets Playwright (React 5173 $\leftrightarrow$ API Node 4000) :
    ```bash
-   pnpm playwright test C:\Users\ADMIN\Documents\TEST\TEST-E2E-STUDIO-FLOW.spec.ts
+   pnpm playwright test tests/suites/TEST-E2E-STUDIO-FLOW.spec.ts
    ```
    *Exigences :* De l'idée au calendrier sans plantage, gestion du quota 403 avec modale.
 5. **[DOCS]** Rédiger le script vidéo du screencast officiel d'audit dans `docs/AUDIT_SCREENCAST_GUIDE.md`.
@@ -250,6 +250,6 @@ Pour exécuter la recette globale de la plateforme en une seule commande :
 
 ```bash
 # Exécution de l'intégralité des 9 suites de tests (Unitaires, Intégration, CLI et E2E)
-pnpm vitest run C:\Users\ADMIN\Documents\TEST
-pnpm playwright test C:\Users\ADMIN\Documents\TEST\TEST-E2E-STUDIO-FLOW.spec.ts
+pnpm vitest run tests/suites
+pnpm playwright test tests/suites/TEST-E2E-STUDIO-FLOW.spec.ts
 ```
