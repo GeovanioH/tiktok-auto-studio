@@ -4,6 +4,8 @@ import { PromptForm } from "../components/studio/PromptForm";
 import { TikTokPreview } from "../components/studio/TikTokPreview";
 import { ScheduleModal } from "../components/studio/ScheduleModal";
 import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, X } from "lucide-react";
+import { SpotlightCard } from "../components/ui/SpotlightCard";
+import { ClickSpark } from "../components/ui/ClickSpark";
 import { api, type PostDto } from "../lib/api";
 
 export function StudioPage() {
@@ -165,7 +167,10 @@ export function StudioPage() {
             currentStep={generationStep}
           />
 
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
+          <SpotlightCard
+            spotlightColor="rgba(37, 244, 238, 0.15)"
+            className="p-6 space-y-3"
+          >
             <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
               Paramètres de Légende & Conformité
             </h3>
@@ -183,7 +188,7 @@ export function StudioPage() {
                 Inclus (Obligatoire)
               </span>
             </div>
-          </div>
+          </SpotlightCard>
         </div>
 
         {/* Colonne Droite : Smartphone 9:16 & Déclenchement (5 colonnes) */}
@@ -205,34 +210,38 @@ export function StudioPage() {
             isAigc={currentPost.isAigc}
           />
 
-          {/* Clic 3 : Boutons d'Action & Déclenchement */}
+          {/* Clic 3 : Boutons d'Action & Déclenchement avec ClickSpark (React Bits) */}
           <div className="w-full max-w-[360px] grid grid-cols-2 gap-2 pt-2">
-            <button
-              type="button"
-              onClick={handleDirectPublish}
-              disabled={isPublishing || isGenerating}
-              className="py-3 px-4 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-pink-500/20 disabled:opacity-50 transition"
-            >
-              <Send className="w-3.5 h-3.5" />
-              <span>Publier (Clic 3)</span>
-            </button>
+            <ClickSpark sparkColor="#fe2c55" sparkCount={10}>
+              <button
+                type="button"
+                onClick={handleDirectPublish}
+                disabled={isPublishing || isGenerating}
+                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-pink-500/20 disabled:opacity-50 transition active:scale-95"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>Publier (Clic 3)</span>
+              </button>
+            </ClickSpark>
 
-            <button
-              type="button"
-              onClick={() => setIsScheduleOpen(true)}
-              disabled={isPublishing || isGenerating}
-              className="py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 transition"
-            >
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Programmer</span>
-            </button>
+            <ClickSpark sparkColor="#25f4ee" sparkCount={10}>
+              <button
+                type="button"
+                onClick={() => setIsScheduleOpen(true)}
+                disabled={isPublishing || isGenerating}
+                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 transition active:scale-95"
+              >
+                <Calendar className="w-3.5 h-3.5" />
+                <span>Programmer</span>
+              </button>
+            </ClickSpark>
 
             <button
               type="button"
               onClick={() =>
                 setNotification({ type: "success", text: "Brouillon sauvegardé dans vos posts !" })
               }
-              className="col-span-2 py-2.5 px-4 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 font-semibold text-xs flex items-center justify-center gap-2 transition"
+              className="col-span-2 py-2.5 px-4 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 font-semibold text-xs flex items-center justify-center gap-2 transition active:scale-95"
             >
               <Save className="w-3.5 h-3.5" />
               <span>Enregistrer en Brouillon</span>

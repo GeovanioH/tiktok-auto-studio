@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Sparkles, Calendar, ListVideo, UserCheck, LayoutDashboard, Zap } from "lucide-react";
+import { ShinyText } from "../ui/ShinyText";
 
 interface SidebarProps {
   quotaUsed?: number;
@@ -34,7 +35,7 @@ export function Sidebar({
           </div>
           <div>
             <h1 className="text-sm font-extrabold text-white tracking-tight flex items-center gap-1.5">
-              <span>Auto-Studio</span>
+              <ShinyText text="Auto-Studio" speed={4} className="font-extrabold" />
               <span className="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-1.5 py-0.2 rounded font-mono">
                 v2
               </span>

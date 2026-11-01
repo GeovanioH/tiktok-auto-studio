@@ -16,6 +16,15 @@ export default {
           cyan: "#25f4ee",
         },
       },
+      keyframes: {
+        shine: {
+          "0%": { backgroundPosition: "100% 0" },
+          "100%": { backgroundPosition: "-100% 0" },
+        },
+      },
+      animation: {
+        shine: "shine 4s linear infinite",
+      },
     },
   },
   plugins: [],
