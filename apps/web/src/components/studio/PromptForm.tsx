@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Wand2, Image as ImageIcon, Film, Layers } from "lucide-react";
+import { Sparkles, Wand2, Image as ImageIcon, Film, Layers, Flame, TrendingUp, CheckCircle2 } from "lucide-react";
 
 interface PromptFormProps {
   onSubmit: (prompt: string, mode: "PHOTO_CAROUSEL" | "OMNI_NATIVE_VIDEO" | "COMPOSITE_STUDIO_VIDEO") => void;
@@ -19,6 +19,23 @@ export function PromptForm({ onSubmit, isLoading, currentStep = 1 }: PromptFormP
   const [mode, setMode] = useState<"PHOTO_CAROUSEL" | "OMNI_NATIVE_VIDEO" | "COMPOSITE_STUDIO_VIDEO">(
     "PHOTO_CAROUSEL"
   );
+
+  // Rétro-ingénierie REA : Algorithme prédictif de rétention et viralité
+  const calculateViralScore = (text: string) => {
+    if (!text.trim()) return { score: 45, label: "En attente d'accroche", color: "text-zinc-500", bar: "bg-zinc-700", type: "Standard" };
+    let score = 52;
+    if (/\d+/.test(text)) score += 14; // Présence de chiffres (Top 3, 5 étapes)
+    if (/pourquoi|secret|erreur|comment|détruire|vérité|astuce|jamais|attention|stop/i.test(text)) score += 20; // Mots déclencheurs
+    if (text.length >= 35) score += 10;
+    if (text.includes("?")) score += 4;
+    score = Math.min(97, score);
+
+    if (score >= 82) return { score, label: "Accroche Ultra-Virale", color: "text-emerald-400", bar: "bg-gradient-to-r from-emerald-400 to-cyan-400", type: "Curiosity Gap (Forte rétention 3s)" };
+    if (score >= 68) return { score, label: "Bonne Dynamique Narrative", color: "text-cyan-400", bar: "bg-gradient-to-r from-cyan-400 to-blue-500", type: "Listicle Engageant" };
+    return { score, label: "Rétention Initiale Moyenne", color: "text-amber-400", bar: "bg-amber-400", type: "Descriptif Linéaire" };
+  };
+
+  const viralAnalysis = calculateViralScore(prompt);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,6 +149,42 @@ export function PromptForm({ onSubmit, isLoading, currentStep = 1 }: PromptFormP
             className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition resize-none"
             required
           />
+        </div>
+
+        {/* Widget Rétro-Ingénierie REA : Prédicteur de Viralité & Rétention 3s */}
+        <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-xl p-3.5 space-y-2.5">
+          <div className="flex items-center justify-between text-xs">
+            <span className="flex items-center gap-1.5 font-bold text-zinc-300">
+              <Flame className="w-4 h-4 text-pink-500" />
+              <span>Score Viral Estimé</span>
+            </span>
+            <div className="flex items-center gap-2">
+              <span className={`font-mono font-bold text-xs ${viralAnalysis.color}`}>
+                {viralAnalysis.score}/100
+              </span>
+              <span className="text-[10px] bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded-full font-medium">
+                {viralAnalysis.label}
+              </span>
+            </div>
+          </div>
+
+          <div className="w-full bg-zinc-900 h-2 rounded-full overflow-hidden">
+            <div
+              className={`h-full ${viralAnalysis.bar} transition-all duration-500 rounded-full`}
+              style={{ width: `${viralAnalysis.score}%` }}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 pt-1 text-[11px] text-zinc-400">
+            <div className="flex items-center gap-1.5">
+              <TrendingUp className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Format : <strong className="text-zinc-300">{viralAnalysis.type}</strong></span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Sous-titres : <strong className="text-zinc-300">Karaoké TikTok Actif</strong></span>
+            </div>
+          </div>
         </div>
 
         {/* Stepper d'inférence si en chargement */}

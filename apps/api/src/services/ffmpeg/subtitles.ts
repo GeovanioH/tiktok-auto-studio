@@ -4,6 +4,12 @@ export interface SubtitleCue {
   text: string;
 }
 
+export interface WordTiming {
+  word: string;
+  startSec: number;
+  endSec: number;
+}
+
 /**
  * Formate les secondes au format standard ASS (h:mm:ss.cs).
  */
@@ -32,6 +38,7 @@ ScaledBorderAndShadow: yes
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: TikTokStyle,Montserrat,68,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,6,3,2,60,60,420,1
+Style: TikTokKaraoke,Montserrat,74,&H0000FFFF,&H000000FF,&H00000000,&H90000000,-1,0,0,0,105,105,0,0,1,8,4,2,60,60,420,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -46,4 +53,50 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     .join("\n");
 
   return header + events;
+}
+
+/**
+ * Génère un script de sous-titres .ass avec surbrillance Karaoké TikTok mot-à-mot.
+ * Rétro-ingénierie REA inspirée des leaders Submagic & Opus Clip.
+ */
+export function generateKaraokeAssSubtitles(
+  segments: Array<{ text: string; words: WordTiming[] }>
+): string {
+  const header = `[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: TikTokKaraoke,Montserrat,72,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,7,3,2,60,60,420,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+`;
+
+  const events: string[] = [];
+
+  for (const seg of segments) {
+    for (let i = 0; i < seg.words.length; i++) {
+      const activeWord = seg.words[i];
+      const start = formatAssTime(activeWord.startSec);
+      const end = formatAssTime(activeWord.endSec);
+
+      // Met en surbrillance jaune fluo (&H0000FFFF&) le mot actuellement prononcé
+      const formattedLine = seg.words
+        .map((w, idx) => {
+          if (idx === i) {
+            return `{\\c&H0000FFFF&\\fscx110\\fscy110}${w.word.toUpperCase()}{\\r}`;
+          }
+          return `{\\c&H00FFFFFF&}${w.word.toUpperCase()}`;
+        })
+        .join(" ");
+
+      events.push(`Dialogue: 0,${start},${end},TikTokKaraoke,,0,0,0,,${formattedLine}`);
+    }
+  }
+
+  return header + events.join("\n");
 }

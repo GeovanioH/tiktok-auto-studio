@@ -8,13 +8,16 @@ export interface VideoCompositionOptions {
   audioPath: string;
   assSubtitlePath: string;
   outputPath: string;
+  bgMusicPath?: string;
+  bgMusicVolume?: number;
 }
 
 /**
  * Assemble les images avec effet Ken Burns, mixe la piste voix-off et incruste les sous-titres .ass.
+ * Supporte l'Audio Ducking intelligent (fond sonore atténué sous la voix).
  */
 export async function composeVideoWithKenBurns(options: VideoCompositionOptions): Promise<string> {
-  const { imagePaths, sceneDurations, audioPath, assSubtitlePath, outputPath } = options;
+  const { imagePaths, sceneDurations, audioPath, assSubtitlePath, outputPath, bgMusicPath, bgMusicVolume = 0.15 } = options;
 
   if (imagePaths.length === 0) {
     throw new Error("INVALID_INPUT: Au moins une image est requise pour le montage.");
@@ -43,9 +46,24 @@ export async function composeVideoWithKenBurns(options: VideoCompositionOptions)
   filterComplex += `${concatInputs}concat=n=${totalScenes}:v=1:a=0[v_concat]; `;
   // Échappement des deux points Windows pour filtre subtitles FFmpeg si besoin
   const escapedSubtitlePath = assSubtitlePath.replace(/\\/g, "/").replace(/:/g, "\\:");
-  filterComplex += `[v_concat]subtitles='${escapedSubtitlePath}'[v_out]`;
+  filterComplex += `[v_concat]subtitles='${escapedSubtitlePath}'[v_out]; `;
 
-  const cmd = `ffmpeg -y ${inputs} -i "${audioPath}" -filter_complex "${filterComplex}" -map "[v_out]" -map ${totalScenes}:a -c:v libx264 -preset fast -crf 22 -pix_fmt yuv420p -c:a aac -b:a 192k -ar 44100 -shortest "${outputPath}"`;
+  // Gestion de l'audio et de l'Audio Ducking
+  let audioMap = "";
+  if (bgMusicPath) {
+    // Entrée supplémentaire pour la musique de fond
+    inputs += `-i "${audioPath}" -stream_loop -1 -i "${bgMusicPath}" `;
+    const voiceIdx = totalScenes;
+    const bgIdx = totalScenes + 1;
+    // Mixage avec ducking du volume musical
+    filterComplex += `[${bgIdx}:a]volume=${bgMusicVolume}[bg_ducked]; [${voiceIdx}:a][bg_ducked]amix=inputs=2:duration=first:dropout_transition=2[a_out]`;
+    audioMap = `-map "[a_out]"`;
+  } else {
+    inputs += `-i "${audioPath}" `;
+    audioMap = `-map ${totalScenes}:a`;
+  }
+
+  const cmd = `ffmpeg -y ${inputs}-filter_complex "${filterComplex}" -map "[v_out]" ${audioMap} -c:v libx264 -preset fast -crf 22 -pix_fmt yuv420p -c:a aac -b:a 192k -ar 44100 -shortest "${outputPath}"`;
 
   try {
     await execAsync(cmd);

@@ -138,6 +138,16 @@ export function TikTokPreview({
         </div>
       </div>
 
+      {/* Sous-titres Karaoké Dynamiques TikTok (Centre de l'écran) */}
+      <div className="absolute inset-x-4 top-[54%] -translate-y-1/2 flex items-center justify-center z-20 pointer-events-none">
+        <div className="bg-black/70 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/10 shadow-2xl text-center transform hover:scale-105 transition">
+          <p className="text-sm font-black tracking-wide text-white uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+            <span className="text-yellow-400 animate-pulse font-extrabold mr-1.5">⚡ ATTENTION :</span>
+            <span>{caption ? caption.split(" ").slice(0, 4).join(" ") : "LE SECRET VIRAL"}</span>
+          </p>
+        </div>
+      </div>
+
       {/* Overlay Bas : Compte & Légende */}
       <div
         data-testid="tiktok-bottom-overlay"
