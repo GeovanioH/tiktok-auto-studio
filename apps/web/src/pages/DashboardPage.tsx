@@ -1,13 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Sparkles, Calendar, ListVideo, ShieldCheck, ArrowRight, Zap, CheckCircle2 } from "lucide-react";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { ShinyText } from "../components/ui/ShinyText";
 import { Squares } from "../components/ui/Squares";
+import FlyingButton from "../components/ui/FlyingButton";
 
 export function DashboardPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
-      {/* Hero Banner avec Grille Animée Squares (React Bits) */}
+      {/* Hero Banner avec Grille Animée Squares & FlyingButton (React Bits) */}
       <div className="relative overflow-hidden rounded-3xl bg-zinc-950 border border-zinc-800 p-8 shadow-2xl">
         <Squares
           speed={0.3}
@@ -18,37 +21,67 @@ export function DashboardPage() {
           className="opacity-35"
         />
 
-        <div className="relative z-10 max-w-2xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-400 text-xs font-semibold backdrop-blur-sm">
-            <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-            <span>Studio Multimodal Autonome v2.0</span>
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="lg:col-span-7 space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-400 text-xs font-semibold backdrop-blur-sm">
+              <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+              <span>Studio Multimodal Autonome v2.0</span>
+            </div>
+
+            <h1 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">
+              Pilotez votre présence TikTok{" "}
+              <ShinyText text="sans jamais ouvrir l'application." speed={3.5} className="font-black" />
+            </h1>
+
+            <p className="text-sm text-zinc-400 leading-relaxed">
+              Génération par IA (Gemini Pro & Imagen 3), montage vertical 9:16 avec sous-titres karaoké animés et diffusion programmée sur l'API officielle TikTok Direct Publishing v2.
+            </p>
+
+            <div className="pt-2 flex flex-wrap gap-3">
+              <Link
+                to="/studio"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-gradient-to-r from-pink-500 via-rose-500 to-cyan-500 hover:opacity-90 transition shadow-lg shadow-pink-500/20 active:scale-95"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Créer en 3 Clics</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                to="/calendar"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs text-zinc-300 bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700/80 transition active:scale-95"
+              >
+                <Calendar className="w-4 h-4 text-cyan-400" />
+                <span>Voir le Calendrier</span>
+              </Link>
+            </div>
           </div>
 
-          <h1 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">
-            Pilotez votre présence TikTok{" "}
-            <ShinyText text="sans jamais ouvrir l'application." speed={3.5} className="font-black" />
-          </h1>
-
-          <p className="text-sm text-zinc-400 leading-relaxed">
-            Génération par IA (Gemini Pro & Imagen 3), montage vertical 9:16 avec sous-titres karaoké animés et diffusion programmée sur l'API officielle TikTok Direct Publishing v2.
-          </p>
-
-          <div className="pt-2 flex flex-wrap gap-3">
-            <Link
-              to="/studio"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-gradient-to-r from-pink-500 via-rose-500 to-cyan-500 hover:opacity-90 transition shadow-lg shadow-pink-500/20 active:scale-95"
-            >
-              <Sparkles className="w-4 h-4" />
-              <span>Créer en 3 Clics</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-            <Link
-              to="/calendar"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs text-zinc-300 bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700/80 transition active:scale-95"
-            >
-              <Calendar className="w-4 h-4 text-cyan-400" />
-              <span>Voir le Calendrier</span>
-            </Link>
+          {/* FlyingButton Interactive Launchpad React Bits */}
+          <div className="lg:col-span-5 relative flex items-center justify-center">
+            <div style={{ position: 'relative', height: 440 }} className="w-full">
+              <FlyingButton
+                theme="dark"
+                size="medium"
+                altitude={170}
+                hoverTime={2.4}
+                jets={2}
+                thrusters
+                trigger="hover"
+                carryCursor
+                smoke={1}
+                turbulence={1}
+                wobble={1}
+                ramp={false}
+                thrustColor="#8ec5ff"
+                smokeColor="#eef1f6"
+                onClick={() => {
+                  console.log('Lift off');
+                  navigate('/studio');
+                }}
+              >
+                Take off
+              </FlyingButton>
+            </div>
           </div>
         </div>
 
