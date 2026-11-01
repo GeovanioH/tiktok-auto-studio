@@ -29,8 +29,15 @@ export function TikTokPreview({
   return (
     <div
       data-testid="tiktok-preview"
-      className="relative mx-auto w-[320px] h-[568px] sm:w-[360px] sm:h-[640px] bg-black rounded-[40px] border-[8px] border-zinc-800 shadow-2xl overflow-hidden select-none"
+      className="relative mx-auto w-[320px] h-[568px] sm:w-[360px] sm:h-[640px] bg-black rounded-[44px] border-[8px] border-zinc-800 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] overflow-hidden select-none transition-all duration-300 hover:border-zinc-700"
     >
+      {/* Dynamic Island / Capteur Caméra */}
+      <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-4 bg-zinc-950 rounded-full z-30 border border-zinc-800/60 pointer-events-none flex items-center justify-end pr-2.5">
+        <span className="w-2 h-2 rounded-full bg-zinc-900 border border-zinc-700/80"></span>
+      </div>
+
+      {/* Reflet de Verre Diagonal (Glass Glare Awwwards) */}
+      <div className="pointer-events-none absolute inset-0 z-20 glass-glare opacity-80" />
       {/* Contenu Média Principal */}
       <div className="absolute inset-0 w-full h-full">
         {mediaType === "VIDEO" ? (
