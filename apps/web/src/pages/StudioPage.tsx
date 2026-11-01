@@ -3,10 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { PromptForm } from "../components/studio/PromptForm";
 import { TikTokPreview } from "../components/studio/TikTokPreview";
 import { ScheduleModal } from "../components/studio/ScheduleModal";
-import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, X } from "lucide-react";
+import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, X, Layers } from "lucide-react";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { ClickSpark } from "../components/ui/ClickSpark";
+import { FlexCarousel } from "../components/ui/FlexCarousel";
 import { api, type PostDto } from "../lib/api";
+
+const defaultCarouselItems = [
+  { src: '/images/one.jpg', alt: 'A chrome sculpture', title: 'Iridescence' },
+  { src: '/images/two.jpg', alt: 'A figure on a white set', title: 'White Room' },
+  { src: '/images/three.jpg', alt: 'A clay bust in profile', title: 'Clay Study', subtitle: 'Studio 04' }
+];
 
 export function StudioPage() {
   const navigate = useNavigate();
@@ -249,6 +256,70 @@ export function StudioPage() {
           </div>
         </div>
       </div>
+
+      {/* Inspecteur de Séquence Carrousel Photo TikTok 3D Liquid (FlexCarousel React Bits) */}
+      <SpotlightCard
+        spotlightColor="rgba(37, 244, 238, 0.15)"
+        className="p-6 space-y-4 bg-zinc-950 border-cyan-500/30"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800 pb-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                <Layers className="w-4 h-4" />
+              </span>
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <span>Inspecteur Séquentiel 3D Liquid (Carrousels Photos TikTok)</span>
+                <span className="text-[10px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-800 px-2 py-0.5 rounded-full">
+                  Format Photo Multi-Slides v2
+                </span>
+              </h3>
+            </div>
+            <p className="text-xs text-zinc-400">
+              Survolez et cliquez sur les slides pour inspecter la fluidité narrative, les titres d'accroche et l'étalonnage 9:16 avant programmation.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span>WebGL Shaders Actifs</span>
+          </div>
+        </div>
+
+        {/* FlexCarousel React Bits Container (Hauteur 560px avec toutes les props demandées) */}
+        <div style={{ width: '100%', height: '560px', position: 'relative' }} className="rounded-2xl overflow-hidden bg-black/60 border border-zinc-900 shadow-inner">
+          <FlexCarousel
+            items={defaultCarouselItems}
+            preset="liquid"
+            intro="rise"
+            cardHeight={0.5}
+            gap={12}
+            squeeze={0.2}
+            focusOnClick
+            captions
+            fit="natural"
+            radius={0}
+            lensWidth={0.74}
+            lensHeight={1.18}
+            tilt={62}
+            roundness={1}
+            bend={0.34}
+            reach={0.38}
+            curl="twist"
+            dispersion={0.45}
+            liquid={0}
+            followCursor={false}
+            autoplay={false}
+            interval={4}
+            captureWheel
+          />
+        </div>
+
+        <div className="flex items-center justify-between text-xs text-zinc-500 pt-1">
+          <span>💡 Conseil Rétention : Placez le hook le plus percutant sur la première slide pour inciter au swipe vers les slides suivantes.</span>
+          <span className="font-mono text-cyan-400">Molette de souris activée (CaptureWheel)</span>
+        </div>
+      </SpotlightCard>
 
       {/* Modale de Programmation (+5 min strict) */}
       <ScheduleModal
