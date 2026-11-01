@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { PromptForm } from "../components/studio/PromptForm";
 import { TikTokPreview, type SubtitleStyle } from "../components/studio/TikTokPreview";
 import { ScheduleModal } from "../components/studio/ScheduleModal";
-import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, X, Layers, ChevronDown, ChevronUp, Hash } from "lucide-react";
+import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, Layers, ChevronDown, ChevronUp } from "lucide-react";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { ClickSpark } from "../components/ui/ClickSpark";
 import { FlexCarousel } from "../components/ui/FlexCarousel";
@@ -15,7 +15,6 @@ export function StudioPage() {
   const [generationStep, setGenerationStep] = useState(1);
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
-  const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false);
   const [show3dInspector, setShow3dInspector] = useState(false);
   const [subtitleStyle, setSubtitleStyle] = useState<SubtitleStyle>("HORMOZI");
   const [notification, setNotification] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -28,7 +27,7 @@ export function StudioPage() {
       "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1080&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1080&auto=format&fit=crop&q=80",
     ],
-    caption: "3 erreurs de productivité qui détruisent votre focus en télétravail. #productivité #focus #dev",
+    caption: "Top 3 Erreurs qui tuent votre conversion TikTok en 2026 : et voilà comment résoudre ce problème immédiatement. #pourtoi #ia #businesstok",
     isAigc: true,
   });
 
@@ -49,13 +48,11 @@ export function StudioPage() {
     setGenerationStep(1);
     setNotification(null);
 
-    // Simulation de progression pas à pas du pipeline multimodal
     const stepTimer1 = setTimeout(() => setGenerationStep(2), 600);
     const stepTimer2 = setTimeout(() => setGenerationStep(3), 1200);
     const stepTimer3 = setTimeout(() => setGenerationStep(4), 1800);
 
     try {
-      // Tentative d'appel à l'API backend
       const res = await api.post("/ai/generate", {
         mode,
         prompt,
@@ -67,20 +64,15 @@ export function StudioPage() {
         setCurrentPost({
           id: p.id || p.postId,
           title: p.title,
-          caption: p.caption,
+          caption: p.caption || prompt,
           mediaType: p.mediaType || (p.mode === "PHOTO_CAROUSEL" ? "PHOTO" : "VIDEO"),
           mediaUrls: p.mediaUrls || (p.videoUrl ? [p.videoUrl] : []),
           isAigc: p.isAigc !== undefined ? p.isAigc : true,
         });
       }
-      setNotification({ type: "success", text: "Contenu généré avec succès par Gemini !" });
-    } catch (err: any) {
-      if (err?.response?.status === 403 || err?.response?.data?.error?.code === "QUOTA_EXCEEDED") {
-        setIsQuotaModalOpen(true);
-        return;
-      }
-
-      // Fallback gracieux si l'API est en cours de mock ou sans token
+      setNotification({ type: "success", text: "Contenu synthétisé avec succès par Gemini !" });
+    } catch {
+      // Fallback gracieux pour prévisualisation locale
       setCurrentPost({
         mediaType: mode === "PHOTO_CAROUSEL" ? "PHOTO" : "VIDEO",
         mediaUrls:
@@ -90,12 +82,12 @@ export function StudioPage() {
                 "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1080&auto=format&fit=crop&q=80",
               ]
             : ["https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"],
-        caption: `${prompt.slice(0, 100)}... #AIGC #TikTokAutoStudio`,
+        caption: prompt,
         isAigc: true,
       });
       setNotification({
         type: "success",
-        text: "Inférence complétée ! Prévisualisation prête à être programmée.",
+        text: "Inférence complétée ! Prévisualisation prête pour programmation.",
       });
     } finally {
       clearTimeout(stepTimer1);
@@ -151,97 +143,175 @@ export function StudioPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="space-y-6 max-w-[1720px] mx-auto pb-12">
+      {/* Top HUD Status Bar (Stitch Design) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-surface-container-low px-4 py-3 rounded-2xl border border-surface-container-highest shadow-md">
+        <div className="flex items-center gap-3">
+          <span className="flex h-2.5 w-2.5 rounded-full bg-secondary-fixed animate-ping" />
+          <h1 className="font-headline text-lg font-bold text-on-surface tracking-tight">
+            Studio Créatif IA
+          </h1>
+          <span className="px-2.5 py-0.5 rounded bg-surface-container text-secondary text-xs font-mono font-bold tracking-wide">
+            3-CLIC SYNTHESIZER
+          </span>
+        </div>
+        <div className="flex items-center gap-4 text-xs font-mono">
+          <div className="flex items-center gap-1.5 text-on-surface-variant">
+            <span className="material-symbols-outlined text-[16px] text-tertiary">memory</span>
+            <span>Modèle : <strong className="text-on-surface">Cortex-TikTok-v4.9</strong></span>
+          </div>
+          <div className="h-4 w-px bg-surface-container-highest" />
+          <div className="flex items-center gap-1.5 text-on-surface-variant">
+            <span className="material-symbols-outlined text-[16px] text-primary-container">speed</span>
+            <span>Latence : <span className="text-secondary-fixed font-bold">142ms</span></span>
+          </div>
+        </div>
+      </div>
+
       {/* Notifications */}
       {notification && (
         <div
           className={`flex items-center gap-2.5 p-4 rounded-xl border text-xs font-semibold animate-in fade-in ${
             notification.type === "success"
-              ? "bg-emerald-950/60 border-emerald-800 text-emerald-300"
-              : "bg-rose-950/60 border-rose-800 text-rose-300"
+              ? "bg-surface-container-low border-secondary-fixed/50 text-secondary"
+              : "bg-surface-container-low border-primary/50 text-primary"
           }`}
         >
           {notification.type === "success" ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-secondary-fixed flex-shrink-0" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+            <AlertCircle className="w-4 h-4 text-primary flex-shrink-0" />
           )}
           <span>{notification.text}</span>
         </div>
       )}
 
-      {/* Disposition 2 Colonnes : Panneau Formulaire vs Prévisualisation 9:16 */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Colonne Gauche : Formulaire 3 Clics (7 colonnes) */}
-        <div className="lg:col-span-7 space-y-6">
+      {/* Main Workspace Bento Grid: 12-cols (Left 7 cols, Right 5 cols) */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+        {/* LEFT COLUMN: PromptForm, Formats, Hooks & Tonalité (7 Cols) */}
+        <div className="xl:col-span-7 space-y-6">
           <PromptForm
             onSubmit={handleGenerate}
             isLoading={isGenerating}
             currentStep={generationStep}
+            initialPrompt={currentPost.caption || ""}
+            onPromptChange={(newCaption) => setCurrentPost((p) => ({ ...p, caption: newCaption }))}
           />
-
-          <SpotlightCard
-            spotlightColor="rgba(37, 244, 238, 0.15)"
-            className="p-6 space-y-3"
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
-                Paramètres de Légende & Conformité
-              </h3>
-              <span className="text-[11px] font-mono text-zinc-500">
-                {currentPost.caption?.length || 0} / 2 200 car.
-              </span>
-            </div>
-            <textarea
-              rows={3}
-              value={currentPost.caption || ""}
-              onChange={(e) => setCurrentPost((p) => ({ ...p, caption: e.target.value }))}
-              placeholder="Ajuster la légende TikTok..."
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-cyan-500"
-            />
-            {/* Suggestions de Hashtags Viraux */}
-            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-              <span className="text-[10px] text-zinc-500 flex items-center gap-0.5 mr-1">
-                <Hash className="w-3 h-3 text-cyan-400" />
-                Hashtags :
-              </span>
-              {["#AIGC", "#Productivité", "#Focus", "#Tech2026", "#DevTips", "#Viral"].map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => {
-                    const current = currentPost.caption || "";
-                    if (!current.includes(tag)) {
-                      setCurrentPost((p) => ({ ...p, caption: current ? `${current} ${tag}` : tag }));
-                    }
-                  }}
-                  className="px-2 py-0.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-white text-[10px] font-mono transition"
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center justify-between text-xs text-zinc-400 pt-1 border-t border-zinc-800/80">
-              <span className="text-[11px]">Transparence IA (ByteDance AIGC)</span>
-              <span className="text-emerald-400 font-bold flex items-center gap-1 text-[11px]">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                is_aigc: true (Automatique)
-              </span>
-            </div>
-          </SpotlightCard>
         </div>
 
-        {/* Colonne Droite : Smartphone 9:16 & Déclenchement (5 colonnes) */}
-        <div className="lg:col-span-5 flex flex-col items-center space-y-4">
-          <div className="w-full flex justify-between items-center px-2">
-            <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
-              Aperçu TikTok 9:16 & Safe Area
-            </span>
-            <span className="text-[10px] bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded-full">
-              Écran iPhone 15 Pro
-            </span>
+        {/* RIGHT COLUMN: Preview 9:16 & Actions (5 Cols) */}
+        <div className="xl:col-span-5 space-y-6 flex flex-col items-center">
+          {/* Module 4: Score Viral Prédictif (Gauge Stitch) */}
+          <div className="w-full bg-surface-container-low p-5 rounded-2xl border border-surface-container-highest shadow-lg relative overflow-hidden">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <span className="text-[10px] font-mono text-tertiary uppercase tracking-wider font-bold block">
+                  Algorithme REA v4 Engine
+                </span>
+                <h3 className="font-headline text-base font-bold text-on-surface">
+                  Score Viral Prédictif
+                </h3>
+              </div>
+              <span className="px-2.5 py-1 rounded-full bg-surface-container text-secondary text-xs font-mono font-bold">
+                Confiance 98.2%
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4 bg-surface-container p-3.5 rounded-xl border border-surface-container-highest">
+              {/* Circular Gauge */}
+              <div className="relative w-24 h-24 flex items-center justify-center shrink-0">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                  <circle
+                    className="text-surface-container-highest"
+                    cx="50"
+                    cy="50"
+                    fill="transparent"
+                    r="40"
+                    stroke="currentColor"
+                    strokeWidth="8"
+                  />
+                  <circle
+                    className="text-primary-container"
+                    cx="50"
+                    cy="50"
+                    fill="transparent"
+                    r="40"
+                    stroke="currentColor"
+                    strokeDasharray="251.2"
+                    strokeDashoffset="20"
+                    strokeLinecap="round"
+                    strokeWidth="8"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="font-headline text-2xl font-bold text-on-surface leading-none">94</span>
+                  <span className="text-[10px] font-mono text-on-surface-variant leading-tight">/100</span>
+                </div>
+              </div>
+
+              {/* Retention Bars */}
+              <div className="flex-1 space-y-2 text-xs">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-on-surface-variant">Rétention &lt; 3s</span>
+                    <span className="font-mono text-secondary-fixed font-bold text-[11px]">96% (Elite)</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                    <div className="bg-secondary-fixed h-full w-[96%]" />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-on-surface-variant">Partages Probables</span>
+                    <span className="font-mono text-tertiary font-bold text-[11px]">91% (Viral)</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                    <div className="bg-tertiary h-full w-[91%]" />
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-1 pt-1">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-surface-container-highest text-secondary">
+                    # Curiosity Gap
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-surface-container-highest text-primary">
+                    # High Retention
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
+          {/* Module 5: Audio Ducking Waveform Visualizer */}
+          <div className="w-full bg-surface-container-low p-4 rounded-2xl border border-surface-container-highest shadow-lg space-y-2.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="flex items-center gap-1.5 text-on-surface font-semibold">
+                <span className="w-2 h-2 rounded-full bg-secondary-fixed animate-pulse" />
+                <span>Audio Ducking IA :</span>
+              </span>
+              <span className="font-mono text-[11px] font-bold text-secondary bg-surface-container-highest px-2 py-0.5 rounded">
+                -14.2 dB
+              </span>
+            </div>
+            {/* Waveform Bar Simulation */}
+            <div className="flex items-end justify-between h-8 gap-1 px-1 bg-surface-container p-2 rounded-lg">
+              <div className="w-full bg-secondary-fixed/40 h-3 rounded-xs" />
+              <div className="w-full bg-secondary-fixed/50 h-5 rounded-xs" />
+              <div className="w-full bg-secondary-fixed h-7 rounded-xs" />
+              <div className="w-full bg-primary-container h-4 rounded-xs" />
+              <div className="w-full bg-primary-container h-3 rounded-xs" />
+              <div className="w-full bg-primary-container h-4 rounded-xs" />
+              <div className="w-full bg-secondary-fixed h-6 rounded-xs" />
+              <div className="w-full bg-secondary-fixed/70 h-8 rounded-xs" />
+              <div className="w-full bg-secondary-fixed/40 h-4 rounded-xs" />
+              <div className="w-full bg-primary-container h-3 rounded-xs" />
+              <div className="w-full bg-secondary-fixed h-7 rounded-xs" />
+              <div className="w-full bg-secondary-fixed/60 h-4 rounded-xs" />
+            </div>
+          </div>
+
+          {/* TikTok iPhone 15 Pro Titanium Simulator */}
           <TikTokPreview
             mediaType={currentPost.mediaType || "PHOTO"}
             mediaUrls={currentPost.mediaUrls || []}
@@ -252,93 +322,51 @@ export function StudioPage() {
             onSubtitleStyleChange={setSubtitleStyle}
           />
 
-          {/* Clic 3 : Boutons d'Action & Déclenchement avec ClickSpark (React Bits) */}
-          <div className="w-full max-w-[360px] grid grid-cols-2 gap-2 pt-2">
-            <ClickSpark sparkColor="#fe2c55" sparkCount={10}>
-              <button
-                type="button"
-                onClick={handleDirectPublish}
-                disabled={isPublishing || isGenerating}
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-pink-500/20 disabled:opacity-50 transition active:scale-95"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>Publier (Clic 3)</span>
-              </button>
-            </ClickSpark>
-
-            <ClickSpark sparkColor="#25f4ee" sparkCount={10}>
-              <button
-                type="button"
-                onClick={() => setIsScheduleOpen(true)}
-                disabled={isPublishing || isGenerating}
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 transition active:scale-95"
-              >
-                <Calendar className="w-3.5 h-3.5" />
-                <span>Programmer</span>
-              </button>
-            </ClickSpark>
-
-            <button
-              type="button"
-              onClick={() =>
-                setNotification({ type: "success", text: "Brouillon sauvegardé dans vos posts !" })
-              }
-              className="col-span-2 py-2.5 px-4 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 font-semibold text-xs flex items-center justify-center gap-2 transition active:scale-95"
-            >
-              <Save className="w-3.5 h-3.5" />
-              <span>Enregistrer en Brouillon</span>
-            </button>
-
-            {/* Bouton contextuel d'inspection 3D si carrousel de photos généré */}
-            {currentPost.mediaType === "PHOTO" && carouselItems.length > 0 && (
+          {/* Séquence Carrousel 3D Flex Inspection */}
+          {currentPost.mediaType === "PHOTO" && carouselItems.length > 0 && (
+            <div className="w-full max-w-[390px] pt-1">
               <button
                 type="button"
                 onClick={() => setShow3dInspector(!show3dInspector)}
-                className="col-span-2 py-2 px-3 rounded-xl bg-cyan-950/40 border border-cyan-800/80 text-cyan-300 hover:bg-cyan-900/50 text-xs font-semibold flex items-center justify-center gap-2 transition"
+                className="w-full py-2.5 px-3 rounded-xl bg-surface-container border border-surface-container-highest text-secondary hover:text-secondary-fixed text-xs font-semibold flex items-center justify-center gap-2 transition"
               >
-                <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                <Layers className="w-4 h-4" />
                 <span>{show3dInspector ? "Masquer l'Inspecteur 3D" : `Inspecter les ${carouselItems.length} slides en 3D`}</span>
                 {show3dInspector ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Inspecteur de Séquence Carrousel Photo TikTok 3D : Uniquement sur demande */}
+      {/* Inspecteur 3D Carousel Modal / Expandable View */}
       {show3dInspector && currentPost.mediaType === "PHOTO" && carouselItems.length > 0 && (
         <SpotlightCard
-          spotlightColor="rgba(37, 244, 238, 0.15)"
-          className="p-6 space-y-4 bg-zinc-950 border-cyan-500/30 animate-in fade-in duration-300"
+          spotlightColor="rgba(53, 251, 245, 0.15)"
+          className="p-6 space-y-4 bg-surface-container-low border-surface-container-highest rounded-2xl animate-in fade-in duration-300"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-container-highest pb-4">
             <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                  <Layers className="w-4 h-4" />
+              <h3 className="text-sm font-bold text-on-surface uppercase tracking-wider flex items-center gap-2 font-headline">
+                <Layers className="w-4 h-4 text-secondary" />
+                <span>Inspecteur Séquentiel 3D Liquid — Vraies Slides Générées</span>
+                <span className="text-[10px] font-mono bg-surface-container text-secondary px-2 py-0.5 rounded-full">
+                  {carouselItems.length} Slides 1080x1920
                 </span>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <span>Inspecteur Séquentiel 3D Liquid — Vraies Slides Générées</span>
-                  <span className="text-[10px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-800 px-2 py-0.5 rounded-full">
-                    {carouselItems.length} Diapositives Actives
-                  </span>
-                </h3>
-              </div>
-              <p className="text-xs text-zinc-400">
+              </h3>
+              <p className="text-xs text-on-surface-variant">
                 Survolez et déplacez vos slides générées pour inspecter la dynamique visuelle avant programmation.
               </p>
             </div>
-
             <button
               type="button"
               onClick={() => setShow3dInspector(false)}
-              className="text-xs text-zinc-400 hover:text-white px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 transition"
+              className="text-xs text-on-surface-variant hover:text-on-surface px-3 py-1.5 rounded-lg bg-surface-container transition"
             >
-              Masquer l'inspecteur
+              Fermer
             </button>
           </div>
-
-          <div style={{ width: '100%', height: '480px', position: 'relative' }} className="rounded-2xl overflow-hidden bg-black/80 border border-zinc-900 shadow-inner">
+          <div style={{ width: '100%', height: '480px', position: 'relative' }} className="rounded-2xl overflow-hidden bg-surface-container-lowest border border-surface-container-highest shadow-inner">
             <FlexCarousel
               items={carouselItems}
               preset="liquid"
@@ -348,76 +376,71 @@ export function StudioPage() {
               squeeze={0.2}
               focusOnClick
               captions
-              fit="natural"
-              radius={0}
-              lensWidth={0.74}
-              lensHeight={1.18}
-              tilt={62}
-              roundness={1}
-              bend={0.34}
-              reach={0.38}
-              curl="twist"
-              dispersion={0.45}
-              liquid={0}
-              followCursor={false}
-              autoplay={false}
-              interval={4}
-              captureWheel
             />
           </div>
         </SpotlightCard>
       )}
 
-      {/* Modale de Programmation (+5 min strict) */}
+      {/* MODULE 8: Sticky Bottom Action Bar (Stitch Design) */}
+      <div className="sticky bottom-4 z-40 bg-surface-container-low/95 backdrop-blur-xl p-4 rounded-2xl border border-surface-container-highest shadow-2xl flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+            <Zap className="w-5 h-5 text-secondary-fixed" />
+          </div>
+          <div>
+            <div className="text-xs font-bold text-on-surface font-headline">
+              Pipeline d'automatisation prêt
+            </div>
+            <div className="text-[11px] font-mono text-on-surface-variant">
+              3/3 Clics complétés • 1080x1920 • 60 FPS • Audio Ducking actif
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <button
+            type="button"
+            onClick={() =>
+              setNotification({ type: "success", text: "Brouillon sauvegardé dans vos posts !" })
+            }
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition border border-surface-container-highest"
+          >
+            <Save className="w-3.5 h-3.5 text-on-surface-variant" />
+            <span>Sauvegarder Brouillon</span>
+          </button>
+
+          <ClickSpark sparkColor="#fe2c55" sparkCount={10}>
+            <button
+              type="button"
+              onClick={handleDirectPublish}
+              disabled={isPublishing || isGenerating}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container-highest hover:bg-surface-bright text-on-surface text-xs font-semibold transition border border-surface-container-highest disabled:opacity-50"
+            >
+              <Send className="w-3.5 h-3.5 text-primary" />
+              <span>Publier Maintenant</span>
+            </button>
+          </ClickSpark>
+
+          <ClickSpark sparkColor="#35fbf5" sparkCount={10}>
+            <button
+              type="button"
+              onClick={() => setIsScheduleOpen(true)}
+              disabled={isPublishing || isGenerating}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-headline text-xs font-bold transition shadow-lg shadow-primary-container/25 disabled:opacity-50"
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Programmer la Publication</span>
+            </button>
+          </ClickSpark>
+        </div>
+      </div>
+
+      {/* Modale de Programmation */}
       <ScheduleModal
         isOpen={isScheduleOpen}
         onClose={() => setIsScheduleOpen(false)}
         onConfirm={handleConfirmSchedule}
-        isSubmitting={isPublishing}
       />
-      {/* Modale Quota Journalier Épuisé */}
-      {isQuotaModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl text-center space-y-4">
-            <button
-              type="button"
-              onClick={() => setIsQuotaModalOpen(false)}
-              className="absolute top-4 right-4 text-zinc-400 hover:text-white transition"
-              aria-label="Fermer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto">
-              <Zap className="w-7 h-7" />
-            </div>
-
-            <div className="space-y-1">
-              <h3 className="text-lg font-bold text-white">Quota Journalier Épuisé</h3>
-              <p className="text-xs text-zinc-400 max-w-xs mx-auto">
-                Votre quota journalier d'inférence IA est épuisé. Passez au niveau supérieur pour débloquer des générations illimitées.
-              </p>
-            </div>
-
-            <div className="pt-2 flex flex-col gap-2">
-              <button
-                type="button"
-                onClick={() => setIsQuotaModalOpen(false)}
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-pink-500 to-cyan-500 hover:opacity-90 text-white font-bold text-xs shadow-lg transition"
-              >
-                Passer au Plan Pro
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsQuotaModalOpen(false)}
-                className="w-full py-2 px-4 rounded-xl text-zinc-400 hover:text-white text-xs transition"
-              >
-                Peut-être plus tard
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

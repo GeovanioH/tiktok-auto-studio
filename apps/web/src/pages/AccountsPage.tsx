@@ -39,7 +39,7 @@ export function AccountsPage() {
           createdAt: new Date().toISOString(),
         });
       });
-  }, []);
+  }, [searchParams]);
 
   const handleProactiveRotate = async () => {
     setIsRotating(true);
@@ -74,10 +74,10 @@ export function AccountsPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-[1720px] mx-auto space-y-6 pb-12">
       <div>
-        <h1 className="text-xl font-bold text-white tracking-tight">Comptes TikTok & Sécurité OAuth2</h1>
-        <p className="text-xs text-zinc-400 mt-1">
+        <h1 className="text-xl font-bold text-on-surface tracking-tight font-headline">Comptes TikTok & Sécurité OAuth2</h1>
+        <p className="text-xs text-on-surface-variant mt-1">
           Gestion des autorisations officielles ByteDance, rotation proactive des jetons et conformité sandbox.
         </p>
       </div>
@@ -86,8 +86,8 @@ export function AccountsPage() {
         <div
           className={`p-4 rounded-xl border text-xs font-semibold ${
             notification.type === "success"
-              ? "bg-emerald-950/60 border-emerald-800 text-emerald-300"
-              : "bg-rose-950/60 border-rose-800 text-rose-300"
+              ? "bg-surface-container-low border-secondary-fixed/50 text-secondary"
+              : "bg-surface-container-low border-primary/50 text-primary"
           }`}
         >
           {notification.text}
@@ -95,34 +95,34 @@ export function AccountsPage() {
       )}
 
       {/* Alerte Mode Sandbox Pré-Audit TikTok */}
-      <div className="bg-amber-950/30 border border-amber-800/80 rounded-2xl p-5 flex items-start gap-3">
-        <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+      <div className="bg-surface-container-low border border-tertiary/40 rounded-2xl p-5 flex items-start gap-3 shadow-md">
+        <AlertTriangle className="w-5 h-5 text-tertiary flex-shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <h3 className="text-xs font-bold text-amber-300 uppercase tracking-wider">
+          <h3 className="text-xs font-bold text-tertiary uppercase tracking-wider font-mono">
             Mode Sandbox Développeur Actif (Audit ByteDance en cours)
           </h3>
-          <p className="text-xs text-amber-200/80 leading-relaxed">
-            Conformément aux exigences de sécurité TikTok v2, toutes les publications créées via l'application sont restreintes en mode <span className="font-mono font-bold bg-amber-900/60 px-1 py-0.5 rounded">SELF_ONLY</span> (visibles uniquement par le créateur connecté) jusqu'à la validation définitive du dossier d'audit commercial.
+          <p className="text-xs text-on-surface-variant leading-relaxed">
+            Conformément aux exigences de sécurité TikTok v2, toutes les publications créées via l'application sont restreintes en mode <span className="font-mono font-bold bg-surface-container px-1 py-0.5 rounded text-tertiary">SELF_ONLY</span> (visibles uniquement par le créateur connecté) jusqu'à la validation définitive du dossier d'audit commercial.
           </p>
         </div>
       </div>
 
       {/* Carte du Compte Actif ou Connexion */}
       {account ? (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-zinc-800 pb-6">
+        <div className="bg-surface-container-low border border-surface-container-highest rounded-2xl p-6 shadow-xl space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-surface-container-highest pb-6">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-cyan-400/60">
+              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-secondary-fixed">
                 <img src={account.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-base font-bold text-white">{account.displayName}</h3>
-                  <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full font-semibold">
-                    Connecté
+                  <h3 className="text-base font-bold text-on-surface font-headline">{account.displayName}</h3>
+                  <span className="text-[10px] bg-surface-container text-secondary-fixed border border-secondary/30 px-2 py-0.5 rounded-full font-semibold font-mono">
+                    Connecté v2
                   </span>
                 </div>
-                <p className="text-xs text-zinc-400 font-mono mt-0.5">ID: {account.openId}</p>
+                <p className="text-xs text-on-surface-variant font-mono mt-0.5">ID: {account.openId}</p>
               </div>
             </div>
 
@@ -131,16 +131,16 @@ export function AccountsPage() {
                 type="button"
                 onClick={handleProactiveRotate}
                 disabled={isRotating}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs font-semibold transition"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition border border-surface-container-highest"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${isRotating ? "animate-spin" : ""}`} />
+                <RefreshCw className={`w-3.5 h-3.5 ${isRotating ? "animate-spin text-secondary" : ""}`} />
                 <span>Rotation Proactive (23h)</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleDisconnect}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-rose-950/60 hover:bg-rose-900/80 border border-rose-800/80 text-rose-300 text-xs font-semibold transition"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-error-container/20 hover:bg-error-container/40 border border-error/40 text-primary text-xs font-semibold transition"
               >
                 <Unlink className="w-3.5 h-3.5" />
                 <span>Déconnecter</span>
@@ -150,40 +150,40 @@ export function AccountsPage() {
 
           {/* Détails Sécurité & Scopes */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 space-y-2">
-              <span className="text-zinc-400 font-semibold flex items-center gap-1.5">
-                <Key className="w-4 h-4 text-cyan-400" />
+            <div className="bg-surface-container border border-surface-container-highest rounded-xl p-4 space-y-2">
+              <span className="text-on-surface font-semibold flex items-center gap-1.5">
+                <Key className="w-4 h-4 text-secondary" />
                 Scopes Accordés par ByteDance :
               </span>
-              <ul className="space-y-1 text-zinc-300 font-mono text-[11px]">
+              <ul className="space-y-1 text-on-surface-variant font-mono text-[11px]">
                 {account.scopes.map((s) => (
                   <li key={s} className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>
                     <span>{s}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 space-y-2">
-              <span className="text-zinc-400 font-semibold flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <div className="bg-surface-container border border-surface-container-highest rounded-xl p-4 space-y-2">
+              <span className="text-on-surface font-semibold flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-secondary-fixed" />
                 État du Chiffrement AES-256-GCM :
               </span>
-              <p className="text-zinc-300 text-[11px] leading-relaxed">
+              <p className="text-on-surface-variant text-[11px] leading-relaxed">
                 Tokens chiffrés en base de données avec vecteur d'initialisation unique (IV 12 octets) et tag d'authentification 16 octets. Aucun token exposé côté client.
               </p>
             </div>
           </div>
         </div>
       ) : (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-10 text-center space-y-5 shadow-xl">
-          <div className="w-14 h-14 rounded-2xl bg-black border border-zinc-700 flex items-center justify-center mx-auto text-white">
-            <Key className="w-7 h-7 text-cyan-400" />
+        <div className="bg-surface-container-low border border-surface-container-highest rounded-2xl p-10 text-center space-y-5 shadow-xl">
+          <div className="w-14 h-14 rounded-2xl bg-surface-container border border-surface-container-highest flex items-center justify-center mx-auto text-on-surface">
+            <Key className="w-7 h-7 text-secondary" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Connectez votre compte TikTok v2</h3>
-            <p className="text-xs text-zinc-400 max-w-sm mx-auto mt-1">
+            <h3 className="text-lg font-bold text-on-surface font-headline">Connectez votre compte TikTok v2</h3>
+            <p className="text-xs text-on-surface-variant max-w-sm mx-auto mt-1">
               Autorisez TikTok Auto-Studio à publier automatiquement vos vidéos et carrousels via l'API officielle sécurisée par PKCE RFC 7636.
             </p>
           </div>
@@ -192,16 +192,16 @@ export function AccountsPage() {
       )}
 
       {/* Guide Conformité ByteDance */}
-      <div className="bg-zinc-900/50 border border-zinc-800/80 rounded-2xl p-5 flex items-center justify-between text-xs text-zinc-400">
+      <div className="bg-surface-container-low border border-surface-container-highest rounded-2xl p-5 flex items-center justify-between text-xs text-on-surface-variant">
         <div>
-          <p className="font-semibold text-zinc-300">TikTok Developer Terms & Conditions</p>
+          <p className="font-semibold text-on-surface">TikTok Developer Terms & Conditions</p>
           <p className="text-[11px]">Plateforme conforme aux règles d'automatisation et de transparence AIGC ByteDance 2026.</p>
         </div>
         <a
           href="https://developers.tiktok.com/doc/overview"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1"
+          className="text-secondary hover:text-secondary-fixed font-semibold flex items-center gap-1"
         >
           <span>Consulter les règles</span>
           <ExternalLink className="w-3.5 h-3.5" />

@@ -115,11 +115,11 @@ export function PostsPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-[1720px] mx-auto space-y-6 pb-12">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">Historique des Publications</h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <h1 className="text-xl font-bold text-on-surface tracking-tight font-headline">Historique des Publications</h1>
+          <p className="text-xs text-on-surface-variant mt-1">
             Gérez vos contenus, suivez le statut de publication et relancez les échecs en 1 clic.
           </p>
         </div>
@@ -129,14 +129,14 @@ export function PostsPage() {
         <div
           className={`flex items-center gap-2.5 p-4 rounded-xl border text-xs font-semibold animate-in fade-in ${
             notification.type === "success"
-              ? "bg-emerald-950/60 border-emerald-800 text-emerald-300"
-              : "bg-rose-950/60 border-rose-800 text-rose-300"
+              ? "bg-surface-container-low border-secondary-fixed/50 text-secondary"
+              : "bg-surface-container-low border-primary/50 text-primary"
           }`}
         >
           {notification.type === "success" ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-secondary-fixed flex-shrink-0" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+            <AlertCircle className="w-4 h-4 text-primary flex-shrink-0" />
           )}
           <span>{notification.text}</span>
         </div>

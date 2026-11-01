@@ -7,8 +7,8 @@
 }
 
 body {
-  background-color: #09090b;
-  color: #f4f4f5;
+  background-color: #111318;
+  color: #e2e2e9;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden;
 }
@@ -28,13 +28,13 @@ body {
   );
 }
 
-/* Lueur Ambiante Diffuse (Ambient Backglow) */
+/* Lueur Ambiante Diffuse */
 .ambient-glow-pink {
-  filter: drop-shadow(0 0 35px rgba(254, 44, 85, 0.25));
+  filter: drop-shadow(0 0 35px rgba(255, 81, 104, 0.3));
 }
 
 .ambient-glow-cyan {
-  filter: drop-shadow(0 0 35px rgba(37, 244, 238, 0.25));
+  filter: drop-shadow(0 0 35px rgba(53, 251, 245, 0.3));
 }
 
 /* Scrollbar Design Moderne */
@@ -46,160 +46,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: #282a2f;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
-}
-
-/* ==============================================================================
- * EFFET MATRIX RAIN (Uiverse.io by whoisyourdeadie)
- * Utilisé pour le Moniteur de Chiffrement Militaire AES-256-GCM & Coffre de Sécurité
- * ============================================================================== */
-.matrix-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  display: flex;
-}
-
-.matrix-pattern {
-  position: relative;
-  width: 1000px;
-  height: 100%;
-  flex-shrink: 0;
-}
-
-.matrix-column {
-  position: absolute;
-  top: -100%;
-  width: 20px;
-  height: 100%;
-  font-size: 16px;
-  line-height: 18px;
-  font-weight: bold;
-  animation: fall linear infinite;
-  white-space: nowrap;
-}
-
-.matrix-column::before {
-  content: "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: linear-gradient(
-    to bottom,
-    #ffffff 0%,
-    #ffffff 5%,
-    #00ff41 10%,
-    #00ff41 20%,
-    #00dd33 30%,
-    #00bb22 40%,
-    #009911 50%,
-    #007700 60%,
-    #005500 70%,
-    #003300 80%,
-    rgba(0, 255, 65, 0.5) 90%,
-    transparent 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  writing-mode: vertical-lr;
-  letter-spacing: 1px;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.matrix-column:nth-child(1) { left: 0px; animation-delay: -2.5s; animation-duration: 3s; }
-.matrix-column:nth-child(2) { left: 25px; animation-delay: -3.2s; animation-duration: 4s; }
-.matrix-column:nth-child(3) { left: 50px; animation-delay: -1.8s; animation-duration: 2.5s; }
-.matrix-column:nth-child(4) { left: 75px; animation-delay: -2.9s; animation-duration: 3.5s; }
-.matrix-column:nth-child(5) { left: 100px; animation-delay: -1.5s; animation-duration: 3s; }
-.matrix-column:nth-child(6) { left: 125px; animation-delay: -3.8s; animation-duration: 4.5s; }
-.matrix-column:nth-child(7) { left: 150px; animation-delay: -2.1s; animation-duration: 2.8s; }
-.matrix-column:nth-child(8) { left: 175px; animation-delay: -2.7s; animation-duration: 3.2s; }
-.matrix-column:nth-child(9) { left: 200px; animation-delay: -3.4s; animation-duration: 3.8s; }
-.matrix-column:nth-child(10) { left: 225px; animation-delay: -1.9s; animation-duration: 2.7s; }
-.matrix-column:nth-child(11) { left: 250px; animation-delay: -3.6s; animation-duration: 4.2s; }
-.matrix-column:nth-child(12) { left: 275px; animation-delay: -2.3s; animation-duration: 3.1s; }
-.matrix-column:nth-child(13) { left: 300px; animation-delay: -3.1s; animation-duration: 3.6s; }
-.matrix-column:nth-child(14) { left: 325px; animation-delay: -2.6s; animation-duration: 2.9s; }
-.matrix-column:nth-child(15) { left: 350px; animation-delay: -3.7s; animation-duration: 4.1s; }
-.matrix-column:nth-child(16) { left: 375px; animation-delay: -2.8s; animation-duration: 3.3s; }
-.matrix-column:nth-child(17) { left: 400px; animation-delay: -3.3s; animation-duration: 3.7s; }
-.matrix-column:nth-child(18) { left: 425px; animation-delay: -2.2s; animation-duration: 2.6s; }
-.matrix-column:nth-child(19) { left: 450px; animation-delay: -3.9s; animation-duration: 4.3s; }
-.matrix-column:nth-child(20) { left: 475px; animation-delay: -2.4s; animation-duration: 3.4s; }
-.matrix-column:nth-child(21) { left: 500px; animation-delay: -1.7s; animation-duration: 2.4s; }
-.matrix-column:nth-child(22) { left: 525px; animation-delay: -3.5s; animation-duration: 3.9s; }
-.matrix-column:nth-child(23) { left: 550px; animation-delay: -2s; animation-duration: 3s; }
-.matrix-column:nth-child(24) { left: 575px; animation-delay: -4s; animation-duration: 4.4s; }
-.matrix-column:nth-child(25) { left: 600px; animation-delay: -1.6s; animation-duration: 2.3s; }
-.matrix-column:nth-child(26) { left: 625px; animation-delay: -3s; animation-duration: 3.5s; }
-.matrix-column:nth-child(27) { left: 650px; animation-delay: -3.8s; animation-duration: 4s; }
-.matrix-column:nth-child(28) { left: 675px; animation-delay: -2.5s; animation-duration: 2.8s; }
-.matrix-column:nth-child(29) { left: 700px; animation-delay: -3.2s; animation-duration: 3.6s; }
-.matrix-column:nth-child(30) { left: 725px; animation-delay: -2.7s; animation-duration: 3.2s; }
-.matrix-column:nth-child(31) { left: 750px; animation-delay: -1.8s; animation-duration: 2.7s; }
-.matrix-column:nth-child(32) { left: 775px; animation-delay: -3.6s; animation-duration: 4.1s; }
-.matrix-column:nth-child(33) { left: 800px; animation-delay: -2.1s; animation-duration: 3.1s; }
-.matrix-column:nth-child(34) { left: 825px; animation-delay: -3.4s; animation-duration: 3.7s; }
-.matrix-column:nth-child(35) { left: 850px; animation-delay: -2.8s; animation-duration: 2.9s; }
-.matrix-column:nth-child(36) { left: 875px; animation-delay: -3.7s; animation-duration: 4.2s; }
-.matrix-column:nth-child(37) { left: 900px; animation-delay: -2.3s; animation-duration: 3.3s; }
-.matrix-column:nth-child(38) { left: 925px; animation-delay: -1.9s; animation-duration: 2.5s; }
-.matrix-column:nth-child(39) { left: 950px; animation-delay: -3.5s; animation-duration: 3.8s; }
-.matrix-column:nth-child(40) { left: 975px; animation-delay: -2.6s; animation-duration: 3.4s; }
-
-.matrix-column:nth-child(odd)::before {
-  content: "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン123456789";
-}
-
-.matrix-column:nth-child(even)::before {
-  content: "ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴァィゥェォャュョッABCDEFGHIJKLMNOPQRSTUVWXYZ";
-}
-
-.matrix-column:nth-child(3n)::before {
-  content: "アカサタナハマヤラワイキシチニヒミリウクスツヌフムユルエケセテネヘメレオコソトノホモヨロヲン0987654321";
-}
-
-.matrix-column:nth-child(4n)::before {
-  content: "ンヲロヨモホノトソコオレメヘネテセケエルユムフヌツスクウリミヒニチシキイワラヤマハナタサカア";
-}
-
-.matrix-column:nth-child(5n)::before {
-  content: "ガザダバパギジヂビピグズヅブプゲゼデベペゴゾドボポヴァィゥェォャュョッ!@#$%^&*()_+-=[]{}|;:,.<>?";
-}
-
-@keyframes fall {
-  0% {
-    transform: translateY(-10%);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(200%);
-    opacity: 0;
-  }
-}
-
-@media (max-width: 768px) {
-  .matrix-column {
-    font-size: 14px;
-    line-height: 16px;
-    width: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .matrix-column {
-    font-size: 12px;
-    line-height: 14px;
-    width: 15px;
-  }
+  background: #33353a;
 }
 
 /* ==============================================================================
@@ -264,31 +115,30 @@ body {
 }
 
 /* ==============================================================================
- * THÈME FOND BLANC / STUDIO CLAIR (Light Mode System)
+ * THÈME OBSIDIAN LIGHT CREATOR STUDIO (Design Tokens Stitch)
  * ============================================================================== */
-[data-theme="light"], .light {
+html:not(.dark),
+[data-theme="light"],
+.light {
   color-scheme: light;
 }
 
+html:not(.dark) body,
 [data-theme="light"] body,
 .light body {
-  background-color: #f8fafc;
-  color: #0f172a;
-}
-
-[data-theme="light"] .theme-layout,
-.light .theme-layout {
   background-color: #f8fafc !important;
   color: #0f172a !important;
 }
 
+html:not(.dark) aside,
 [data-theme="light"] aside,
 .light aside {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: #ffffff !important;
   border-color: #e2e8f0 !important;
   color: #0f172a !important;
 }
 
+html:not(.dark) header,
 [data-theme="light"] header,
 .light header {
   background-color: rgba(255, 255, 255, 0.92) !important;
@@ -296,96 +146,55 @@ body {
   color: #0f172a !important;
 }
 
-[data-theme="light"] .bg-zinc-950:not([data-testid="tiktok-preview"], [data-testid="tiktok-preview"] *),
-.light .bg-zinc-950:not([data-testid="tiktok-preview"], [data-testid="tiktok-preview"] *) {
+html:not(.dark) .bg-surface,
+[data-theme="light"] .bg-surface,
+.light .bg-surface {
+  background-color: #f8fafc !important;
+}
+
+html:not(.dark) .bg-surface-container,
+[data-theme="light"] .bg-surface-container,
+.light .bg-surface-container {
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  border-color: #e2e8f0 !important;
+}
+
+html:not(.dark) .bg-surface-container-low,
+[data-theme="light"] .bg-surface-container-low,
+.light .bg-surface-container-low {
   background-color: #ffffff !important;
   border-color: #e2e8f0 !important;
 }
 
-[data-theme="light"] .bg-zinc-900:not([data-testid="tiktok-preview"], [data-testid="tiktok-preview"] *),
-.light .bg-zinc-900:not([data-testid="tiktok-preview"], [data-testid="tiktok-preview"] *) {
+html:not(.dark) .bg-surface-container-high,
+[data-theme="light"] .bg-surface-container-high,
+.light .bg-surface-container-high {
   background-color: #f1f5f9 !important;
   border-color: #e2e8f0 !important;
 }
 
-/* En mode clair, adapter la couleur des textes tout en préservant le blanc sur les boutons d'action et badges */
-[data-theme="light"] .text-white:not(
-  [data-testid="tiktok-preview"] *,
-  button,
-  button *,
-  .btn,
-  .btn *,
-  [class*="from-pink"],
-  [class*="from-pink"] *,
-  [class*="from-cyan"],
-  [class*="from-cyan"] *,
-  [class*="bg-pink"],
-  [class*="bg-pink"] *,
-  [class*="bg-cyan"],
-  [class*="bg-cyan"] *,
-  [class*="bg-rose"],
-  [class*="bg-rose"] *,
-  [class*="bg-emerald-600"],
-  [class*="bg-emerald-600"] *
-),
-.light .text-white:not(
-  [data-testid="tiktok-preview"] *,
-  button,
-  button *,
-  .btn,
-  .btn *,
-  [class*="from-pink"],
-  [class*="from-pink"] *,
-  [class*="from-cyan"],
-  [class*="from-cyan"] *,
-  [class*="bg-pink"],
-  [class*="bg-pink"] *,
-  [class*="bg-cyan"],
-  [class*="bg-cyan"] *,
-  [class*="bg-rose"],
-  [class*="bg-rose"] *,
-  [class*="bg-emerald-600"],
-  [class*="bg-emerald-600"] *
-) {
+html:not(.dark) .bg-surface-container-highest,
+[data-theme="light"] .bg-surface-container-highest,
+.light .bg-surface-container-highest {
+  background-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+}
+
+html:not(.dark) .text-on-surface,
+[data-theme="light"] .text-on-surface,
+.light .text-on-surface {
   color: #0f172a !important;
 }
 
-[data-theme="light"] .text-zinc-100:not([data-testid="tiktok-preview"] *),
-.light .text-zinc-100:not([data-testid="tiktok-preview"] *) {
-  color: #1e293b !important;
-}
-
-[data-theme="light"] .text-zinc-200:not([data-testid="tiktok-preview"] *),
-.light .text-zinc-200:not([data-testid="tiktok-preview"] *) {
-  color: #334155 !important;
-}
-
-[data-theme="light"] .text-zinc-300:not([data-testid="tiktok-preview"] *),
-.light .text-zinc-300:not([data-testid="tiktok-preview"] *) {
-  color: #475569 !important;
-}
-
-[data-theme="light"] .text-zinc-400:not([data-testid="tiktok-preview"] *),
-.light .text-zinc-400:not([data-testid="tiktok-preview"] *) {
+html:not(.dark) .text-on-surface-variant,
+[data-theme="light"] .text-on-surface-variant,
+.light .text-on-surface-variant {
   color: #64748b !important;
-}
-
-[data-theme="light"] .text-zinc-500:not([data-testid="tiktok-preview"] *),
-.light .text-zinc-500:not([data-testid="tiktok-preview"] *) {
-  color: #64748b !important;
-}
-
-[data-theme="light"] .border-zinc-800:not([data-testid="tiktok-preview"] *),
-.light .border-zinc-800:not([data-testid="tiktok-preview"] *),
-[data-theme="light"] .border-zinc-700:not([data-testid="tiktok-preview"] *),
-.light .border-zinc-700:not([data-testid="tiktok-preview"] *),
-[data-theme="light"] .border-zinc-900:not([data-testid="tiktok-preview"] *),
-.light .border-zinc-900:not([data-testid="tiktok-preview"] *) {
-  border-color: #e2e8f0 !important;
 }
 
 /* Le mockup TikTok reste toujours en noir réaliste de smartphone */
-[data-testid="tiktok-preview"],
-[data-testid="tiktok-preview"] * {
-  /* Préserve l'affichage natif sombre du smartphone */
+[data-testid="tiktok-preview"] {
+  background-color: #000000 !important;
+  border-color: #27272a !important;
 }
