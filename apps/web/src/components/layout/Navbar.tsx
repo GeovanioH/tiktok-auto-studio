@@ -1,4 +1,4 @@
-import { ShieldCheck, Bell, ExternalLink } from "lucide-react";
+import { ShieldCheck, Bell, ExternalLink, Activity } from "lucide-react";
 import { ThemeToggle } from "../ui/ThemeToggle";
 
 interface NavbarProps {
@@ -13,6 +13,10 @@ export function Navbar({ title = "TikTok Auto-Studio" }: NavbarProps) {
         <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full flex items-center gap-1">
           <ShieldCheck className="w-3 h-3" />
           <span>API v2 Validée</span>
+        </span>
+        <span className="hidden md:flex items-center gap-1.5 text-[10px] font-mono text-zinc-400 bg-zinc-900 border border-zinc-800 px-2.5 py-0.5 rounded-full">
+          <Activity className="w-3 h-3 text-cyan-400 animate-pulse" />
+          <span>Fastify :4000 • Redis BullMQ • Gemini Omni</span>
         </span>
       </div>
 

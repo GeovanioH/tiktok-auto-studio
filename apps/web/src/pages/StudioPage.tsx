@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PromptForm } from "../components/studio/PromptForm";
-import { TikTokPreview } from "../components/studio/TikTokPreview";
+import { TikTokPreview, type SubtitleStyle } from "../components/studio/TikTokPreview";
 import { ScheduleModal } from "../components/studio/ScheduleModal";
-import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, X, Layers, ChevronDown, ChevronUp } from "lucide-react";
+import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, X, Layers, ChevronDown, ChevronUp, Hash } from "lucide-react";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { ClickSpark } from "../components/ui/ClickSpark";
 import { FlexCarousel } from "../components/ui/FlexCarousel";
@@ -17,6 +17,7 @@ export function StudioPage() {
   const [isPublishing, setIsPublishing] = useState(false);
   const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false);
   const [show3dInspector, setShow3dInspector] = useState(false);
+  const [subtitleStyle, setSubtitleStyle] = useState<SubtitleStyle>("HORMOZI");
   const [notification, setNotification] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   // Éléments du post généré
@@ -198,6 +199,28 @@ export function StudioPage() {
               placeholder="Ajuster la légende TikTok..."
               className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-cyan-500"
             />
+            {/* Suggestions de Hashtags Viraux */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+              <span className="text-[10px] text-zinc-500 flex items-center gap-0.5 mr-1">
+                <Hash className="w-3 h-3 text-cyan-400" />
+                Hashtags :
+              </span>
+              {["#AIGC", "#Productivité", "#Focus", "#Tech2026", "#DevTips", "#Viral"].map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => {
+                    const current = currentPost.caption || "";
+                    if (!current.includes(tag)) {
+                      setCurrentPost((p) => ({ ...p, caption: current ? `${current} ${tag}` : tag }));
+                    }
+                  }}
+                  className="px-2 py-0.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-white text-[10px] font-mono transition"
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
             <div className="flex items-center justify-between text-xs text-zinc-400 pt-1 border-t border-zinc-800/80">
               <span className="text-[11px]">Transparence IA (ByteDance AIGC)</span>
               <span className="text-emerald-400 font-bold flex items-center gap-1 text-[11px]">
@@ -225,6 +248,8 @@ export function StudioPage() {
             caption={currentPost.caption || ""}
             accountHandle="@studio_createur"
             isAigc={currentPost.isAigc}
+            subtitleStyle={subtitleStyle}
+            onSubtitleStyleChange={setSubtitleStyle}
           />
 
           {/* Clic 3 : Boutons d'Action & Déclenchement avec ClickSpark (React Bits) */}
