@@ -507,6 +507,9 @@ erDiagram
 
 ## 9. Variables d'Environnement & Configuration
 
+> 📘 **Guide pas à pas pour obtenir toutes les clés d'API :**
+> Consultez notre guide complet et illustré : [`docs/GUIDE_RECUPERATION_CLES_API.md`](docs/GUIDE_RECUPERATION_CLES_API.md) pour créer et configurer gratuitement vos comptes Google AI Studio, ElevenLabs, TikTok Developer Portal et Cloudflare R2.
+
 Créez un fichier `.env.local` (développement) et configurez votre gestionnaire de secrets (production) avec les variables suivantes :
 
 ```bash
