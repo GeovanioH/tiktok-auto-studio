@@ -1,4 +1,5 @@
 import { ShieldCheck, Bell, ExternalLink } from "lucide-react";
+import { ThemeToggle } from "../ui/ThemeToggle";
 
 interface NavbarProps {
   title?: string;
@@ -6,7 +7,7 @@ interface NavbarProps {
 
 export function Navbar({ title = "TikTok Auto-Studio" }: NavbarProps) {
   return (
-    <header className="h-16 border-b border-zinc-800 bg-zinc-950/70 backdrop-blur px-6 flex items-center justify-between flex-shrink-0">
+    <header className="h-16 border-b border-zinc-800 bg-zinc-950/70 backdrop-blur px-6 flex items-center justify-between flex-shrink-0 transition-colors duration-300">
       <div className="flex items-center gap-3">
         <h2 className="text-sm font-bold text-white tracking-tight">{title}</h2>
         <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full flex items-center gap-1">
@@ -16,11 +17,14 @@ export function Navbar({ title = "TikTok Auto-Studio" }: NavbarProps) {
       </div>
 
       <div className="flex items-center gap-4">
+        {/* Toggle Mode Fond Blanc / Sombre (Uiverse.io) */}
+        <ThemeToggle showLabels />
+
         <a
           href="https://developers.tiktok.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-zinc-400 hover:text-zinc-200 flex items-center gap-1 transition"
+          className="text-xs text-zinc-400 hover:text-zinc-200 flex items-center gap-1 transition hidden sm:flex"
         >
           <span>Doc TikTok v2</span>
           <ExternalLink className="w-3 h-3" />
