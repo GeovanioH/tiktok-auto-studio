@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Sparkles, Calendar, ListVideo, UserCheck, LayoutDashboard, Zap } from "lucide-react";
+import { Sparkles, Calendar, ListVideo, UserCheck, LayoutDashboard, Zap, KeyRound } from "lucide-react";
 import { ShinyText } from "../ui/ShinyText";
 
 interface SidebarProps {
@@ -21,6 +21,7 @@ export function Sidebar({
     { to: "/calendar", label: "Calendrier & Horaires", icon: Calendar },
     { to: "/posts", label: "Historique & Relances", icon: ListVideo },
     { to: "/accounts", label: "Comptes TikTok v2", icon: UserCheck },
+    { to: "/api-keys", label: "Clés API & Setup", icon: KeyRound },
   ];
 
   const quotaPercent = Math.min(100, Math.round((quotaUsed / quotaMax) * 100));

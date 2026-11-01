@@ -6,6 +6,7 @@ import { StudioPage } from "./pages/StudioPage";
 import { CalendarPage } from "./pages/CalendarPage";
 import { PostsPage } from "./pages/PostsPage";
 import { AccountsPage } from "./pages/AccountsPage";
+import { ApiKeysPage } from "./pages/ApiKeysPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,6 +28,7 @@ export default function App() {
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/posts" element={<PostsPage />} />
             <Route path="/accounts" element={<AccountsPage />} />
+            <Route path="/api-keys" element={<ApiKeysPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -15,6 +15,8 @@ export function DashboardLayout() {
         return "Historique des Publications & Relance";
       case "/accounts":
         return "Comptes TikTok & Conformité ByteDance";
+      case "/api-keys":
+        return "Clés API & Configuration Système";
       default:
         return "Vue d'ensemble du Studio";
     }

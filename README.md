@@ -505,64 +505,187 @@ erDiagram
 
 ---
 
-## 9. Variables d'Environnement & Configuration
+## 9. Variables d'Environnement & Guide Complet de Récupération des Clés API
 
-> 📘 **Guide pas à pas pour obtenir toutes les clés d'API :**
-> Consultez notre guide complet et illustré : [`docs/GUIDE_RECUPERATION_CLES_API.md`](docs/GUIDE_RECUPERATION_CLES_API.md) pour créer et configurer gratuitement vos comptes Google AI Studio, ElevenLabs, TikTok Developer Portal et Cloudflare R2.
+Ce guide exhaustif détaille l'obtention, la configuration et la sécurisation de l'ensemble des clés d'API et variables d'environnement requises par **TikTok Auto-Studio**.
 
-Créez un fichier `.env.local` (développement) et configurez votre gestionnaire de secrets (production) avec les variables suivantes :
+### 9.1 Tableau Récapitulatif des Services & Clés
+
+| Variable `.env` | Service Fournisseur | Rôle dans l'application | Coût / Tier Gratuit | Lien direct du portail |
+| :--- | :--- | :--- | :--- | :--- |
+| `GEMINI_API_KEY` | **Google AI Studio** | Scripts IA, score viral, métadonnées & visuels | **Gratuit** (Free tier 15 RPM) | [aistudio.google.com](https://aistudio.google.com/app/apikey) |
+| `ELEVENLABS_API_KEY` | **ElevenLabs Voice AI** | Génération de la voix-off ultra-réaliste | **Gratuit** (10 000 car./mois) | [elevenlabs.io](https://elevenlabs.io/) |
+| `TIKTOK_CLIENT_KEY` | **TikTok for Developers** | Identifiant de votre application TikTok | **Gratuit** | [developers.tiktok.com](https://developers.tiktok.com/) |
+| `TIKTOK_CLIENT_SECRET`| **TikTok for Developers** | Secret OAuth2 pour l'échange de jetons | **Gratuit** | [developers.tiktok.com](https://developers.tiktok.com/) |
+| `S3_ACCESS_KEY_ID` | **Cloudflare R2** (ou AWS) | Authentification stockage média S3 | **Gratuit** (10 Go/mois, 0\$ egress) | [dash.cloudflare.com](https://dash.cloudflare.com/) |
+| `S3_SECRET_ACCESS_KEY`| **Cloudflare R2** (ou AWS) | Secret API du stockage S3 | **Gratuit** | [dash.cloudflare.com](https://dash.cloudflare.com/) |
+| `ENCRYPTION_MASTER_KEY`| **Génération Locale** | Chiffrement AES-256-GCM des tokens | **Gratuit** (Généré en Node.js) | Local |
+| `JWT_SECRET` | **Génération Locale** | Signature des sessions web HttpOnly | **Gratuit** (Généré en Node.js) | Local |
+| `DATABASE_URL` | **Neon / Supabase / Local** | Stockage PostgreSQL des posts et comptes | **Gratuit** (Tier cloud ou Docker) | [neon.tech](https://neon.tech/) |
+| `REDIS_URL` | **Upstash / Local** | File d'attente BullMQ & planification | **Gratuit** (Tier cloud ou Docker) | [upstash.com](https://upstash.com/) |
+
+---
+
+### 9.2 Google AI Studio (Gemini 1.5 & Imagen 3)
+
+Google AI Studio permet d'utiliser **Gemini 1.5 Pro**, **Gemini 1.5 Flash** et **Imagen 3** pour la rédaction des hooks, des scripts vidéo, l'analyse de viralité et la génération des visuels 9:16.
+
+1. Rendez-vous sur le portail [Google AI Studio](https://aistudio.google.com/).
+2. Connectez-vous avec votre compte Google.
+3. Cliquez sur le bouton bleu **« Get API key »** (dans la barre latérale gauche).
+4. Cliquez sur **« Create API key »** $\rightarrow$ Sélectionnez un projet existant ou **« Create API key in new project »**.
+5. Copiez la clé générée (commençant par `AIzaSy...`).
+6. Ajoutez-la dans votre `.env` :
+   ```env
+   GEMINI_API_KEY="AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+   ```
+
+*Remarque : Le quota gratuit fournit 15 requêtes par minute (RPM) et 1 million de tokens de contexte, amplement suffisant pour des dizaines de publications journalières.*
+
+---
+
+### 9.3 ElevenLabs (Synthèse Vocale TTS)
+
+ElevenLabs fournit les voix de synthèse haute fidélité pour le doublage audio des vidéos.
+
+1. Créez un compte ou connectez-vous sur [ElevenLabs.io](https://elevenlabs.io/).
+2. Cliquez sur votre **Avatar** en bas à gauche $\rightarrow$ **« Profile + API key »** (ou allez sur [elevenlabs.io/app/settings/api-keys](https://elevenlabs.io/app/settings/api-keys)).
+3. Cliquez sur **« Create API Key »**, nommez-la `TikTok Studio` et copiez le token.
+4. Ajoutez-le dans votre `.env` :
+   ```env
+   ELEVENLABS_API_KEY="sk_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+   ```
+
+*Remarque : 10 000 caractères gratuits par mois sont offerts. En cas d'absence de clé ou d'épuisement du quota, le studio bascule automatiquement sur un moteur TTS local.*
+
+---
+
+### 9.4 TikTok Developer Portal (Login Kit & Content Posting)
+
+1. **Création du compte :** Rendez-vous sur [TikTok for Developers](https://developers.tiktok.com/) et connectez-vous avec votre compte TikTok.
+2. **Création de l'application :** Cliquez sur **« Manage Apps »** $\rightarrow$ **« Create an App »** (Nom : `TikTok Auto Studio`, Catégorie : `Productivity / Content Creation Tool`).
+3. **Activation des Produits :**
+   - **Login Kit :** Scopes `user.info.basic`, `user.info.profile`. Redirect URI : `http://localhost:4000/api/auth/tiktok/callback` (dev) ou votre URL de production.
+   - **Content Posting API :** Scopes `video.publish`, `video.upload`.
+4. **Récupération des Identifiants :** Dans **« App Credentials »**, copiez la **Client Key** et le **Client Secret**.
+5. Ajoutez-les dans votre `.env` :
+   ```env
+   TIKTOK_CLIENT_KEY="awXXXXXXXXXXXXXXXX"
+   TIKTOK_CLIENT_SECRET="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+   TIKTOK_REDIRECT_URI="http://localhost:4000/api/auth/tiktok/callback"
+   TIKTOK_AUDIT_APPROVED="false"
+   ```
+
+*Important : Laissez `TIKTOK_AUDIT_APPROVED="false"` tant que l'audit commercial n'est pas validé. Le studio forcera automatiquement la visibilité `SELF_ONLY` en mode Sandbox pour éviter tout blocage 403.*
+
+---
+
+### 9.5 Stockage Médias S3 / Cloudflare R2 (Domaine Vérifié)
+
+TikTok exige que les fichiers médias soient accessibles via une **URL HTTPS publique hébergée sur un domaine vérifié**. Cloudflare R2 est recommandé (zéro frais de bande passante sortante et 10 Go gratuits).
+
+1. Sur [Cloudflare Dashboard](https://dash.cloudflare.com/), allez dans **« R2 Object Storage »** $\rightarrow$ **« Create bucket »** nommé `tiktok-studio-media`.
+2. Cliquez sur **« Manage R2 API Tokens »** $\rightarrow$ **« Create API Token »** (Permissions : *Object Read & Write*).
+3. Notez l'**Access Key ID**, la **Secret Access Key** et l'**Endpoint S3**.
+4. Dans l'onglet **« Settings »** de votre bucket, activez l'accès public via **« Connect Domain »** (ex: `assets.mondomaine.com`).
+5. Déclarez ce même domaine dans la console développeur TikTok (rubrique *Verified Domains*).
+6. Ajoutez dans votre `.env` :
+   ```env
+   S3_ENDPOINT="https://<ACCOUNT_ID>.r2.cloudflarestorage.com"
+   S3_ACCESS_KEY_ID="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+   S3_SECRET_ACCESS_KEY="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+   S3_BUCKET_NAME="tiktok-studio-media"
+   S3_PUBLIC_VERIFIED_DOMAIN="https://assets.mondomaine.com"
+   ```
+
+---
+
+### 9.6 Clés Cryptographiques Locales (AES-256-GCM & JWT)
+
+Les jetons TikTok sont chiffrés au repos en base de données selon la norme militaire **AES-256-GCM** (exigence d'audit ByteDance). Vous générez ces clés vous-même sur votre poste :
 
 ```bash
+node -e "console.log('ENCRYPTION_MASTER_KEY=' + require('crypto').randomBytes(32).toString('hex')); console.log('JWT_SECRET=' + require('crypto').randomBytes(32).toString('hex'))"
+```
+
+Reportez les deux chaînes hexadécimales de 64 caractères dans votre `.env` :
+```env
+ENCRYPTION_MASTER_KEY="a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90"
+JWT_SECRET="e9f8d7c6b5a43210e9f8d7c6b5a43210e9f8d7c6b5a43210e9f8d7c6b5a43210"
+```
+
+---
+
+### 9.7 Base de Données PostgreSQL & Cache Redis
+
+- **En local avec Docker (recommandé pour démarrer) :**
+  ```bash
+  docker compose up -d
+  ```
+  ```env
+  DATABASE_URL="postgresql://postgres:postgres_password@localhost:5432/tiktok_studio?schema=public"
+  REDIS_URL="redis://localhost:6379"
+  ```
+- **En Cloud Gratuit :** PostgreSQL serverless sur [Neon.tech](https://neon.tech/) et Redis managé sur [Upstash.com](https://upstash.com/).
+
+---
+
+### 9.8 Template `.env` Complet & Commande de Vérification
+
+Copiez `.env.example` vers `.env` :
+
+```bash
+cp .env.example .env
+```
+
+```env
 # ==============================================================================
-# CONFIGURATION SERVEURS & URLS (MONOREPO NODE.JS + REACT)
+# 1. SERVEURS & PORTS
 # ==============================================================================
-NODE_ENV="development" # ou "production"
-PORT=4000 # Port du serveur API Node.js (Fastify / Express)
+NODE_ENV="development"
+PORT=4000
 API_URL="http://localhost:4000"
-FRONTEND_URL="http://localhost:5173" # Port du client React (Vite SPA)
+FRONTEND_URL="http://localhost:5173"
 
 # ==============================================================================
-# BASE DE DONNÉES & CACHE DISTRIBUÉ
+# 2. PERSISTANCE & CACHE
 # ==============================================================================
 DATABASE_URL="postgresql://postgres:postgres_password@localhost:5432/tiktok_studio?schema=public"
 REDIS_URL="redis://localhost:6379"
 
 # ==============================================================================
-# SÉCURITÉ & CHIFFREMENT (Générer une clé de 64 caractères hexadécimaux)
-# Commande Linux/Mac : openssl rand -hex 32
+# 3. SÉCURITÉ MILITAIRE (AES-256-GCM & JWT)
 # ==============================================================================
 ENCRYPTION_MASTER_KEY="a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90"
-JWT_SECRET="remplacer_par_un_secret_jwt_aleatoire_de_minimum_32_caracteres"
+JWT_SECRET="super_secret_jwt_key_pour_sessions_http_only_32_caracteres"
 
 # ==============================================================================
-# TIKTOK DEVELOPER PORTAL (Console https://developers.tiktok.com/)
+# 4. TIKTOK DEVELOPER PORTAL
 # ==============================================================================
-TIKTOK_CLIENT_KEY="votre_tiktok_client_key"
-TIKTOK_CLIENT_SECRET="votre_tiktok_client_secret"
+TIKTOK_CLIENT_KEY="dev_tiktok_client_key"
+TIKTOK_CLIENT_SECRET="dev_tiktok_client_secret"
 TIKTOK_REDIRECT_URI="http://localhost:4000/api/auth/tiktok/callback"
+TIKTOK_AUDIT_APPROVED="false"
 
 # ==============================================================================
-# HÉBERGEMENT MÉDIAS S3 / CLOUDFLARE R2 (Domaine vérifié TikTok obligatoire)
+# 5. STOCKAGE MÉDIAS S3 / CLOUDFLARE R2
 # ==============================================================================
-S3_ENDPOINT="https://<account_id>.r2.cloudflarestorage.com"
-S3_ACCESS_KEY_ID="votre_access_key_r2"
-S3_SECRET_ACCESS_KEY="votre_secret_key_r2"
+S3_ENDPOINT="https://example.r2.cloudflarestorage.com"
+S3_ACCESS_KEY_ID="dev_r2_access_key"
+S3_SECRET_ACCESS_KEY="dev_r2_secret_key"
 S3_BUCKET_NAME="tiktok-studio-media"
-S3_REGION="auto"
-# ATTENTION : Ce domaine public DOIT être déclaré et validé dans la console TikTok
 S3_PUBLIC_VERIFIED_DOMAIN="https://assets.mondomaine-verifie.com"
 
 # ==============================================================================
-# FOURNISSEURS D'INTELLIGENCE ARTIFICIELLE
+# 6. IA GÉNÉRATIVE & VOIX-OFF
 # ==============================================================================
-GEMINI_API_KEY="AIzaSy..." # Google Gemini API (Scripts, Multimodal & Imagen 3)
-ELEVENLABS_API_KEY="votre_cle_elevenlabs"
+GEMINI_API_KEY="AIzaSy_dev_key"
+ELEVENLABS_API_KEY="dev_elevenlabs_key"
+```
 
-# ==============================================================================
-# QUOTAS & LIMITES SYSTÈME
-# ==============================================================================
-DEFAULT_USER_DAILY_AI_QUOTA=20
-MAX_VIDEO_UPLOAD_SIZE_MB=500
+Validez votre configuration en lançant les tests unitaires d'environnement :
+```bash
+pnpm --filter @tiktok-studio/api test:unit tests/unit/env.test.ts
 ```
 
 ---
