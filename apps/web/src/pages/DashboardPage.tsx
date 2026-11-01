@@ -4,6 +4,7 @@ import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { ShinyText } from "../components/ui/ShinyText";
 import { Squares } from "../components/ui/Squares";
 import FlyingButton from "../components/ui/FlyingButton";
+import { MatrixRain } from "../components/ui/MatrixRain";
 
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -188,12 +189,17 @@ export function DashboardPage() {
           </p>
         </SpotlightCard>
 
-        {/* Bento Carte 2 (5 cols) : Radar de Conformité TikTok v2 */}
+        {/* Bento Carte 2 (5 cols) : Radar de Conformité TikTok v2 avec Flux Chiffré */}
         <SpotlightCard
-          spotlightColor="rgba(254, 44, 85, 0.15)"
-          className="lg:col-span-5 p-6 space-y-4 flex flex-col justify-between"
+          spotlightColor="rgba(0, 255, 65, 0.15)"
+          className="lg:col-span-5 p-6 space-y-4 flex flex-col justify-between relative overflow-hidden"
         >
-          <div>
+          {/* Visualiseur de Chiffrement Militaire (Matrix Rain) */}
+          <div className="absolute inset-0 z-0 pointer-events-none opacity-10">
+            <MatrixRain opacity={0.25} columnsCount={20} />
+          </div>
+
+          <div className="relative z-10 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -202,7 +208,7 @@ export function DashboardPage() {
               <span className="text-[10px] font-mono text-zinc-400">Sandbox v2</span>
             </div>
 
-            <div className="mt-4 space-y-2.5">
+            <div className="space-y-2.5">
               <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-zinc-950/80 border border-zinc-800">
                 <span className="text-zinc-400">Visibilité Pré-Audit :</span>
                 <span className="text-amber-400 font-bold font-mono">SELF_ONLY Forcé</span>
@@ -212,14 +218,20 @@ export function DashboardPage() {
                 <span className="text-emerald-400 font-bold font-mono">is_aigc: true</span>
               </div>
               <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-zinc-950/80 border border-zinc-800">
+                <span className="text-zinc-400">Chiffrement AES-256 :</span>
+                <span className="text-emerald-400 font-bold font-mono">Galois/Counter Mode</span>
+              </div>
+              <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-zinc-950/80 border border-zinc-800">
                 <span className="text-zinc-400">Rotation des Jetons :</span>
                 <span className="text-cyan-400 font-bold font-mono">Règle des 23h Active</span>
               </div>
             </div>
           </div>
 
-          <div className="pt-2 text-[10px] text-zinc-500 border-t border-zinc-800/80 flex items-center justify-between">
-            <span>Dossier d'audit : Prêt pour soumission</span>
+          <div className="relative z-10 pt-2 text-[10px] text-zinc-500 border-t border-zinc-800/80 flex items-center justify-between">
+            <Link to="/api-keys" className="text-emerald-400 hover:text-emerald-300 font-semibold transition flex items-center gap-1">
+              <span>Tester l'intégrité AES-256</span> $\rightarrow$
+            </Link>
             <Link to="/accounts" className="text-cyan-400 hover:text-cyan-300 font-semibold transition">
               Détails OAuth $\rightarrow$
             </Link>

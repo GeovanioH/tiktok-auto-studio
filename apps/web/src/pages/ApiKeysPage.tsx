@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { ShinyText } from "../components/ui/ShinyText";
+import { CryptoVaultMonitor } from "../components/security/CryptoVaultMonitor";
 
 interface ApiProvider {
   id: string;
@@ -230,6 +231,9 @@ export function ApiKeysPage() {
           {cryptoCommand}
         </div>
       </SpotlightCard>
+
+      {/* Moniteur de Chiffrement Militaire AES-256-GCM avec Pluie Matrix Utile */}
+      <CryptoVaultMonitor />
 
       {/* Grille des Fournisseurs d'API */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
