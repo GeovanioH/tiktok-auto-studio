@@ -115,7 +115,7 @@ body {
 }
 
 /* ==============================================================================
- * THÈME OBSIDIAN LIGHT CREATOR STUDIO (Design Tokens Stitch)
+ * THÈME STUDIO CLAIR PLATINE MINÉRAL (Sans blanc pur — Non-White Light Palette)
  * ============================================================================== */
 html:not(.dark),
 [data-theme="light"],
@@ -126,71 +126,89 @@ html:not(.dark),
 html:not(.dark) body,
 [data-theme="light"] body,
 .light body {
-  background-color: #f8fafc !important;
-  color: #0f172a !important;
+  background-color: #E2E8F0 !important; /* Platine Ardoisé (Slate 200 - Aucun blanc pur) */
+  color: #0F172A !important;
 }
 
 html:not(.dark) aside,
 [data-theme="light"] aside,
 .light aside {
-  background-color: #ffffff !important;
-  border-color: #e2e8f0 !important;
-  color: #0f172a !important;
+  background-color: #D9E2EC !important; /* Panneau Minéral Teinté */
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
 }
 
 html:not(.dark) header,
 [data-theme="light"] header,
 .light header {
-  background-color: rgba(255, 255, 255, 0.92) !important;
-  border-color: #e2e8f0 !important;
-  color: #0f172a !important;
+  background-color: rgba(217, 226, 236, 0.95) !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
 }
 
 html:not(.dark) .bg-surface,
 [data-theme="light"] .bg-surface,
 .light .bg-surface {
-  background-color: #f8fafc !important;
+  background-color: #E2E8F0 !important;
 }
 
 html:not(.dark) .bg-surface-container,
 [data-theme="light"] .bg-surface-container,
 .light .bg-surface-container {
-  background-color: #ffffff !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-  border-color: #e2e8f0 !important;
+  background-color: #EDF2F7 !important; /* Brume d'Argent Douce (Slate 100) */
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.08);
+  border-color: #CBD5E1 !important;
 }
 
 html:not(.dark) .bg-surface-container-low,
 [data-theme="light"] .bg-surface-container-low,
 .light .bg-surface-container-low {
-  background-color: #ffffff !important;
-  border-color: #e2e8f0 !important;
+  background-color: #D9E2EC !important;
+  border-color: #CBD5E1 !important;
 }
 
 html:not(.dark) .bg-surface-container-high,
 [data-theme="light"] .bg-surface-container-high,
 .light .bg-surface-container-high {
-  background-color: #f1f5f9 !important;
-  border-color: #e2e8f0 !important;
+  background-color: #D0DBE5 !important;
+  border-color: #CBD5E1 !important;
 }
 
 html:not(.dark) .bg-surface-container-highest,
 [data-theme="light"] .bg-surface-container-highest,
 .light .bg-surface-container-highest {
-  background-color: #e2e8f0 !important;
-  border-color: #cbd5e1 !important;
+  background-color: #CBD5E1 !important;
+  border-color: #94A3B8 !important;
+}
+
+html:not(.dark) .border-surface-container-highest,
+[data-theme="light"] .border-surface-container-highest,
+.light .border-surface-container-highest {
+  border-color: #CBD5E1 !important;
+}
+
+html:not(.dark) .border-surface-container-high,
+[data-theme="light"] .border-surface-container-high,
+.light .border-surface-container-high {
+  border-color: #CBD5E1 !important;
 }
 
 html:not(.dark) .text-on-surface,
 [data-theme="light"] .text-on-surface,
 .light .text-on-surface {
-  color: #0f172a !important;
+  color: #0F172A !important;
 }
 
 html:not(.dark) .text-on-surface-variant,
 [data-theme="light"] .text-on-surface-variant,
 .light .text-on-surface-variant {
-  color: #64748b !important;
+  color: #475569 !important;
+}
+
+html:not(.dark) input,
+html:not(.dark) select,
+html:not(.dark) textarea {
+  color: #0F172A !important;
 }
 
 /* Le mockup TikTok reste toujours en noir réaliste de smartphone */

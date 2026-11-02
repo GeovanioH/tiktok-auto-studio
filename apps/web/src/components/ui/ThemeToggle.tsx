@@ -40,13 +40,13 @@ export function ThemeToggle({ className = "", showLabels = false }: ThemeToggleP
         <span className="text-[11px] font-medium text-zinc-400 flex items-center gap-1">
           {isDark ? (
             <>
-              <Moon className="w-3 h-3 text-cyan-400" />
+              <Moon className="w-3 h-3 text-secondary-fixed" />
               <span>Nuit</span>
             </>
           ) : (
             <>
               <Sun className="w-3 h-3 text-amber-500" />
-              <span>Blanc</span>
+              <span>Clair</span>
             </>
           )}
         </span>
@@ -54,13 +54,13 @@ export function ThemeToggle({ className = "", showLabels = false }: ThemeToggleP
 
       <label
         className="theme-switch"
-        title={isDark ? "Basculer en Mode Fond Blanc (Studio Clair)" : "Basculer en Mode Sombre (Studio Nuit)"}
+        title={isDark ? "Basculer en Mode Studio Clair (Platine)" : "Basculer en Mode Studio Nuit (Ardoise)"}
       >
         <input
           type="checkbox"
           checked={isDark}
           onChange={handleToggle}
-          aria-label="Basculer le thème fond blanc / sombre"
+          aria-label="Basculer le thème clair / nuit"
         />
         <span className="slider" />
       </label>

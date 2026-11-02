@@ -71,7 +71,7 @@ export function Navbar({ title = "TikTok Studio IA Pro" }: NavbarProps) {
           </span>
         </Link>
 
-        {/* Toggle Mode Fond Blanc / Sombre */}
+        {/* Toggle Mode Clair (Platine) / Nuit (Ardoise) */}
         <ThemeToggle showLabels={false} />
 
         {/* Centre de Notifications Fonctionnel */}
