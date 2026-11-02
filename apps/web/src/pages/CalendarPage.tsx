@@ -268,7 +268,7 @@ export function CalendarPage() {
 
       {/* Modale Batch Studio 7 Jours (Optionnelle si ouvert via navbar) */}
       {isBatchOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
           <div className="relative w-full max-w-xl bg-surface-container-low border border-surface-container-highest rounded-3xl p-6 shadow-2xl space-y-5">
             <button
               type="button"

@@ -42,31 +42,31 @@ export function ScheduleModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in">
-      <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
+      <div className="relative w-full max-w-md bg-surface-container border border-surface-container-highest rounded-2xl p-6 shadow-2xl">
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 text-zinc-400 hover:text-white transition"
+          className="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface transition"
           aria-label="Fermer"
         >
           <X className="w-5 h-5" />
         </button>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-secondary-fixed/10 border border-secondary-fixed/20 text-secondary-fixed flex items-center justify-center">
             <Calendar className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">Programmer la publication</h3>
-            <p className="text-xs text-zinc-400">Diffusion automatisée sur l'API officielle TikTok v2</p>
+            <h3 className="text-base font-bold text-on-surface">Programmer la publication</h3>
+            <p className="text-xs text-on-surface-variant">Diffusion automatisée sur l'API officielle TikTok v2</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-zinc-300 mb-1.5 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-zinc-400" />
+            <label className="block text-xs font-semibold text-on-surface mb-1.5 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-on-surface-variant" />
               <span>Date et heure locale (minimum +5 min)</span>
             </label>
             <input
@@ -76,14 +76,14 @@ export function ScheduleModal({
                 setDateTimeValue(e.target.value);
                 setErrorMessage(null);
               }}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition"
+              className="w-full bg-surface-container-low border border-surface-container-highest rounded-lg px-3.5 py-2.5 text-sm text-on-surface focus:outline-none focus:border-secondary-fixed focus:ring-1 focus:ring-secondary-fixed transition"
               required
             />
           </div>
 
-          <div className="bg-zinc-950/60 border border-zinc-800/80 rounded-lg p-3 text-xs text-zinc-400 space-y-1">
+          <div className="bg-surface-container-low/70 border border-surface-container-highest rounded-lg p-3 text-xs text-on-surface-variant space-y-1">
             <p>
-              • <strong className="text-zinc-300">Règle de sécurité TikTok :</strong> La date doit être supérieure d'au moins 5 minutes à l'instant présent.
+              • <strong className="text-on-surface">Règle de sécurité TikTok :</strong> La date doit être supérieure d'au moins 5 minutes à l'instant présent.
             </p>
             <p>• Conversion automatique en UTC par le serveur.</p>
           </div>
@@ -100,14 +100,14 @@ export function ScheduleModal({
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 rounded-lg text-sm text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+              className="px-4 py-2 rounded-lg text-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 transition shadow-lg shadow-cyan-500/20"
+              className="px-4 py-2 rounded-lg text-sm font-semibold text-slate-900 bg-gradient-to-r from-secondary-fixed to-cyan-400 hover:brightness-110 disabled:opacity-50 transition shadow-lg shadow-secondary-fixed/20"
             >
               {isSubmitting ? "Enregistrement..." : "Confirmer la programmation"}
             </button>

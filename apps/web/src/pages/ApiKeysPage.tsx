@@ -227,7 +227,7 @@ export function ApiKeysPage() {
           </button>
         </div>
 
-        <div className="mt-4 p-3 rounded-lg bg-black/60 border border-zinc-800 font-mono text-xs text-cyan-300 break-all select-all">
+        <div className="mt-4 p-3 rounded-lg bg-surface-container-lowest border border-surface-container-highest font-mono text-xs text-secondary-fixed break-all select-all">
           {cryptoCommand}
         </div>
       </SpotlightCard>
@@ -254,42 +254,42 @@ export function ApiKeysPage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    {provider.category === "ai" && <Cpu className="w-4 h-4 text-cyan-400" />}
+                    {provider.category === "ai" && <Cpu className="w-4 h-4 text-secondary-fixed" />}
                     {provider.category === "tiktok" && <Volume2 className="w-4 h-4 text-pink-400" />}
                     {provider.category === "storage" && <Cloud className="w-4 h-4 text-purple-400" />}
                     {provider.category === "crypto" && <Lock className="w-4 h-4 text-emerald-400" />}
                     {provider.category === "db" && <Database className="w-4 h-4 text-amber-400" />}
-                    <h3 className="text-base font-bold text-white">{provider.name}</h3>
+                    <h3 className="text-base font-bold text-on-surface">{provider.name}</h3>
                   </div>
-                  <p className="text-xs text-zinc-400">{provider.role}</p>
+                  <p className="text-xs text-on-surface-variant">{provider.role}</p>
                 </div>
 
-                <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 whitespace-nowrap">
+                <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-surface-container border border-surface-container-highest text-on-surface whitespace-nowrap">
                   {provider.statusLabel}
                 </span>
               </div>
 
               {/* Badges Info */}
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[10px] font-mono bg-zinc-900 text-emerald-400 px-2 py-0.5 rounded border border-emerald-950">
+                <span className="text-[10px] font-mono bg-surface-container text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30">
                   {provider.tier}
                 </span>
-                <span className="text-[10px] font-mono bg-zinc-900 text-zinc-400 px-2 py-0.5 rounded border border-zinc-800">
+                <span className="text-[10px] font-mono bg-surface-container text-on-surface-variant px-2 py-0.5 rounded border border-surface-container-highest">
                   {provider.envVar}
                 </span>
               </div>
 
-              <p className="text-xs text-zinc-300 leading-relaxed">
+              <p className="text-xs text-on-surface-variant leading-relaxed">
                 {provider.description}
               </p>
 
               {/* Étapes pas à pas */}
-              <div className="p-3.5 rounded-xl bg-zinc-950/80 border border-zinc-900 space-y-2">
-                <p className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
+              <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-highest space-y-2">
+                <p className="text-[11px] font-bold text-on-surface uppercase tracking-wider flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-secondary-fixed" />
                   Étapes de configuration :
                 </p>
-                <ol className="text-xs text-zinc-400 space-y-1.5 list-decimal list-inside pl-1">
+                <ol className="text-xs text-on-surface-variant space-y-1.5 list-decimal list-inside pl-1">
                   {provider.steps.map((step, idx) => (
                     <li key={idx} className="leading-relaxed">
                       {step}
@@ -300,24 +300,24 @@ export function ApiKeysPage() {
             </div>
 
             {/* Actions & Bouton Portail */}
-            <div className="pt-3 border-t border-zinc-900 flex items-center justify-between gap-3">
+            <div className="pt-3 border-t border-surface-container-highest flex items-center justify-between gap-3">
               {provider.portalUrl ? (
                 <a
                   href={provider.portalUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 font-semibold transition group"
+                  className="flex items-center gap-1.5 text-xs text-secondary-fixed hover:underline font-semibold transition group"
                 >
                   <span>Ouvrir {provider.portalName}</span>
                   <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition" />
                 </a>
               ) : (
-                <span className="text-xs text-zinc-500 font-mono">Génération interne</span>
+                <span className="text-xs text-on-surface-variant font-mono">Génération interne</span>
               )}
 
               <button
                 onClick={() => handleCopy(provider.exampleValue, provider.id)}
-                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition"
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface border border-surface-container-highest transition"
                 title="Copier le format .env"
               >
                 {copiedKey === provider.id ? (

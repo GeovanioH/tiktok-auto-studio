@@ -8,18 +8,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Obsidian Cyber Studio Tokens (Optimized Deep Midnight Cyber palette)
-        surface: "#0B0D13",
-        "surface-dim": "#0B0D13",
-        "surface-bright": "#1A2030",
-        "surface-container-lowest": "#06070B",
-        "surface-container-low": "#0F121C",
-        "surface-container": "#141724",
-        "surface-container-high": "#1A2032",
-        "surface-container-highest": "#222A40",
-        "on-surface": "#F1F5F9",
+        // Midnight Slate Cyber Studio Tokens (Deep Slate Blue, non-black dark mode)
+        surface: "#0F172A",
+        "surface-dim": "#0F172A",
+        "surface-bright": "#243248",
+        "surface-container-lowest": "#0A0F1D",
+        "surface-container-low": "#141F35",
+        "surface-container": "#1E293B",
+        "surface-container-high": "#28364F",
+        "surface-container-highest": "#334155",
+        "on-surface": "#F8FAFC",
         "on-surface-variant": "#94A3B8",
-        outline: "#222A40",
+        outline: "#334155",
         primary: "#ffb3b6",
         "primary-container": "#FE2C55",
         "on-primary-container": "#5b0015",
@@ -34,9 +34,9 @@ export default {
 
         // Studio Legacy aliases
         studio: {
-          bg: "#0B0D13",
-          card: "#141724",
-          border: "#222A40",
+          bg: "#0F172A",
+          card: "#1E293B",
+          border: "#334155",
           accent: "#FE2C55",
           cyan: "#00F5D4",
         },

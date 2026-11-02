@@ -87,7 +87,7 @@ export function DashboardPage() {
           speed={0.25}
           squareSize={48}
           direction="diagonal"
-          borderColor="#222A40"
+          borderColor="#334155"
           hoverFillColor="rgba(53, 251, 245, 0.12)"
           className="opacity-30"
         />
@@ -151,7 +151,7 @@ export function DashboardPage() {
 
               {/* Aperçu : Post Réel ou État Vierge Réel */}
               {activePost ? (
-                <div className="relative rounded-xl overflow-hidden bg-black aspect-[16/9] border border-surface-container-highest flex items-center justify-center p-4">
+                <div className="relative rounded-xl overflow-hidden bg-surface-container-lowest aspect-[16/9] border border-surface-container-highest flex items-center justify-center p-4">
                   {activePost.mediaUrls[0] && (
                     <img
                       src={activePost.mediaUrls[0]}

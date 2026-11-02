@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none">
   <defs>
     <linearGradient id="fav-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10131E" />
-      <stop offset="100%" stop-color="#07090E" />
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0F172A" />
     </linearGradient>
     <linearGradient id="fav-rim" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#00F5D4" stop-opacity="0.8" />
@@ -38,7 +38,7 @@
   </defs>
 
   <!-- Chassis Plate -->
-  <rect x="4" y="4" width="92" height="92" rx="24" fill="url(#fav-bg)" stroke="#161B29" stroke-width="1.5" />
+  <rect x="4" y="4" width="92" height="92" rx="24" fill="url(#fav-bg)" stroke="#334155" stroke-width="1.5" />
   <rect x="4" y="4" width="92" height="92" rx="24" fill="none" stroke="url(#fav-rim)" stroke-width="1.2" />
 
   <g filter="url(#fav-glow)">

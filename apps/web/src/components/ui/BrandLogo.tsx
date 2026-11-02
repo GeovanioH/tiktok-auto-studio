@@ -28,8 +28,8 @@ export function BrandLogo({ className = "w-9 h-9", size = 36, withGlow = true }:
       >
         <defs>
           <linearGradient id="comp-brand-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#10131E" />
-            <stop offset="100%" stopColor="#07090E" />
+            <stop offset="0%" stopColor="#1E293B" />
+            <stop offset="100%" stopColor="#0F172A" />
           </linearGradient>
 
           <linearGradient id="comp-brand-rim" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -71,7 +71,7 @@ export function BrandLogo({ className = "w-9 h-9", size = 36, withGlow = true }:
         </defs>
 
         {/* Chassis Plate */}
-        <rect x="4" y="4" width="92" height="92" rx="24" fill="url(#comp-brand-bg)" stroke="#161B29" strokeWidth="1.5" />
+        <rect x="4" y="4" width="92" height="92" rx="24" fill="url(#comp-brand-bg)" stroke="#334155" strokeWidth="1.5" />
         <rect x="4" y="4" width="92" height="92" rx="24" fill="none" stroke="url(#comp-brand-rim)" strokeWidth="1.2" />
 
         <g filter="url(#comp-glow)">
