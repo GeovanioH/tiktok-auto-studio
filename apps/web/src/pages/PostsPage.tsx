@@ -26,51 +26,7 @@ export function PostsPage() {
         setPosts([]);
       }
     } catch {
-      // Mock data canonique pour la démonstration des 4 états
-      setPosts([
-        {
-          id: "post_pub_1",
-          accountId: "acc_1",
-          postType: "DIRECT_POST",
-          mediaType: "PHOTO",
-          caption: "3 étapes pour automatiser son workflow d'ingénierie logicielle",
-          mediaUrls: ["https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1080"],
-          status: "PUBLISHED",
-          publishedAt: new Date(Date.now() - 3600 * 1000).toISOString(),
-          isAigc: true,
-          privacyLevel: "SELF_ONLY",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-        {
-          id: "post_sch_2",
-          accountId: "acc_1",
-          postType: "DIRECT_POST",
-          mediaType: "VIDEO",
-          caption: "Pourquoi TypeScript strict mode évite 80% des bugs de production",
-          mediaUrls: ["https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"],
-          status: "SCHEDULED",
-          scheduledFor: new Date(Date.now() + 4 * 3600 * 1000).toISOString(),
-          isAigc: true,
-          privacyLevel: "SELF_ONLY",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-        {
-          id: "post_err_3",
-          accountId: "acc_1",
-          postType: "DIRECT_POST",
-          mediaType: "VIDEO",
-          caption: "Les dangers des microservices mal dimensionnés en startup",
-          mediaUrls: ["https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"],
-          status: "FAILED",
-          failureReason: "Erreur réseau TikTok 503 : rate limit temporaire",
-          isAigc: true,
-          privacyLevel: "SELF_ONLY",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-      ]);
+      setPosts([]);
     } finally {
       setIsLoading(false);
     }

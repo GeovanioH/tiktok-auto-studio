@@ -19,39 +19,7 @@ export function CalendarPage() {
         setPosts(res.data.posts);
       }
     } catch {
-      // Mock data par défaut pour prévisualiser le calendrier
-      const mockNow = new Date();
-      setPosts([
-        {
-          id: "post_cal_1",
-          accountId: "acc_1",
-          postType: "DIRECT_POST",
-          mediaType: "PHOTO",
-          caption: "Les 3 leviers secrets de la viralité TikTok en 2026 #pourtoi #ia",
-          mediaUrls: ["https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1080"],
-          status: "SCHEDULED",
-          scheduledFor: new Date(mockNow.getTime() + 2 * 3600 * 1000).toISOString(),
-          isAigc: true,
-          privacyLevel: "SELF_ONLY",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-        {
-          id: "post_cal_2",
-          accountId: "acc_1",
-          postType: "DIRECT_POST",
-          mediaType: "VIDEO",
-          caption: "Routine matinale d'un solopreneur tech à succès",
-          mediaUrls: ["https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"],
-          status: "PUBLISHED",
-          scheduledFor: new Date(mockNow.getTime() - 24 * 3600 * 1000).toISOString(),
-          publishedAt: new Date(mockNow.getTime() - 24 * 3600 * 1000).toISOString(),
-          isAigc: true,
-          privacyLevel: "SELF_ONLY",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-      ]);
+      setPosts([]);
     }
   };
 
@@ -122,37 +90,37 @@ export function CalendarPage() {
     }, 900);
   };
 
+  const scheduledCount = posts.filter((p) => p.status === "SCHEDULED").length;
+
   return (
     <div className="max-w-[1720px] mx-auto space-y-6 pb-12">
-      {/* 1. TOP TELEMETRY STRIP & CONTEXT HUD (Stitch Design) */}
+      {/* 1. TOP TELEMETRY STRIP & CONTEXT HUD (Sans simulation fictive) */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-surface-container-low px-4 py-3 rounded-2xl border border-surface-container-highest shadow-sm">
         <div className="flex items-center gap-4 flex-wrap text-xs font-mono">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-secondary-fixed animate-ping" />
-            <span className="text-secondary-fixed uppercase tracking-wider font-semibold">Queue Daemon Sync: Active</span>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-secondary-fixed" />
+            <span className="text-on-surface font-semibold">Ordonnanceur TikTok Studio</span>
           </div>
           <div className="h-4 w-px bg-surface-container-highest" />
-          <div className="flex items-center gap-1.5 text-on-surface-variant font-label">
-            <span className="material-symbols-outlined text-[16px] text-secondary">public</span>
+          <div className="flex items-center gap-1.5 text-on-surface-variant">
             <span>Fuseau :</span>
             <span className="text-on-surface font-semibold bg-surface-container px-2 py-0.5 rounded">
               Europe/Paris (GMT+2)
             </span>
           </div>
           <div className="h-4 w-px bg-surface-container-highest" />
-          <div className="flex items-center gap-1.5 text-on-surface-variant font-label">
-            <span className="material-symbols-outlined text-[16px] text-tertiary">bolt</span>
-            <span>Buffer Queue :</span>
-            <span className="text-tertiary font-semibold font-mono">
-              7 créneaux calculés / 99.8% viral potential
+          <div className="flex items-center gap-1.5 text-on-surface-variant">
+            <span>File d'attente :</span>
+            <span className="text-secondary font-semibold font-mono">
+              {scheduledCount > 0 ? `${scheduledCount} créneau(x) programmé(s)` : "0 créneau programmé"}
             </span>
           </div>
         </div>
 
-        {/* Auto-Healing & Safety Pill */}
-        <div className="flex items-center gap-2 bg-surface-container px-3 py-1 rounded-full border border-surface-container-highest text-xs font-mono">
+        {/* Safety Lock Info */}
+        <div className="flex items-center gap-2 bg-surface-container px-3 py-1 rounded-full border border-surface-container-highest text-xs font-mono text-on-surface">
           <ShieldCheck className="w-3.5 h-3.5 text-secondary-fixed" />
-          <span className="text-on-surface">Auto-guérison BullMQ : <span className="text-secondary-fixed">15 min active</span></span>
+          <span>Règle TikTok API : <span className="text-secondary-fixed">T+5 min minimum</span></span>
         </div>
       </div>
 

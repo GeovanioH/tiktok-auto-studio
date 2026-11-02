@@ -147,23 +147,21 @@ export function StudioPage() {
       {/* Top HUD Status Bar (Stitch Design) */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-surface-container-low px-4 py-3 rounded-2xl border border-surface-container-highest shadow-md">
         <div className="flex items-center gap-3">
-          <span className="flex h-2.5 w-2.5 rounded-full bg-secondary-fixed animate-ping" />
+          <span className="w-2 h-2 rounded-full bg-secondary-fixed" />
           <h1 className="font-headline text-lg font-bold text-on-surface tracking-tight">
             Studio Créatif IA
           </h1>
           <span className="px-2.5 py-0.5 rounded bg-surface-container text-secondary text-xs font-mono font-bold tracking-wide">
-            3-CLIC SYNTHESIZER
+            SYNTHÉTISEUR 9:16
           </span>
         </div>
         <div className="flex items-center gap-4 text-xs font-mono">
           <div className="flex items-center gap-1.5 text-on-surface-variant">
-            <span className="material-symbols-outlined text-[16px] text-tertiary">memory</span>
-            <span>Modèle : <strong className="text-on-surface">Cortex-TikTok-v4.9</strong></span>
+            <span>Moteur : <strong className="text-on-surface">Gemini + Sharp</strong></span>
           </div>
           <div className="h-4 w-px bg-surface-container-highest" />
           <div className="flex items-center gap-1.5 text-on-surface-variant">
-            <span className="material-symbols-outlined text-[16px] text-primary-container">speed</span>
-            <span>Latence : <span className="text-secondary-fixed font-bold">142ms</span></span>
+            <span>Résolution : <span className="text-secondary-fixed font-bold">1080x1920 (9:16)</span></span>
           </div>
         </div>
       </div>
@@ -316,7 +314,7 @@ export function StudioPage() {
             mediaType={currentPost.mediaType || "PHOTO"}
             mediaUrls={currentPost.mediaUrls || []}
             caption={currentPost.caption || ""}
-            accountHandle="@studio_createur"
+            accountHandle="@createur"
             isAigc={currentPost.isAigc}
             subtitleStyle={subtitleStyle}
             onSubtitleStyleChange={setSubtitleStyle}

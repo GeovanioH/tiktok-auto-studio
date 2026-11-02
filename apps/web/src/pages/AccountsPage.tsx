@@ -27,17 +27,7 @@ export function AccountsPage() {
         }
       })
       .catch(() => {
-        // Mock compte actif pour l'aperçu du Dashboard
-        setAccount({
-          id: "acc_demo_1",
-          openId: "open_id_tiktok_verified",
-          displayName: "Studio Créateur Officiel",
-          avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
-          tokenExpiresAt: new Date(Date.now() + 23 * 3600 * 1000).toISOString(),
-          refreshTokenExpiresAt: new Date(Date.now() + 360 * 24 * 3600 * 1000).toISOString(),
-          scopes: ["user.info.basic", "video.publish", "video.upload"],
-          createdAt: new Date().toISOString(),
-        });
+        setAccount(null);
       });
   }, [searchParams]);
 
@@ -52,8 +42,8 @@ export function AccountsPage() {
       });
     } catch {
       setNotification({
-        type: "success",
-        text: "Simulation : Token TikTok rafraîchi avec succès (+24h de validité).",
+        type: "error",
+        text: "Impossible de rafraîchir le jeton (aucun compte actif ou serveur indisponible).",
       });
     } finally {
       setIsRotating(false);
