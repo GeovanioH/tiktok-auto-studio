@@ -5,12 +5,16 @@ export interface TikTokLoginButtonProps {
 }
 
 export function TikTokLoginButton({
-  redirectUrl = "http://localhost:4000/api/auth/tiktok/login",
+  redirectUrl,
   className = "",
   label = "Continuer avec TikTok",
 }: TikTokLoginButtonProps) {
+  const defaultUrl = import.meta.env.VITE_API_URL
+    ? `${import.meta.env.VITE_API_URL}/auth/tiktok/login`
+    : "/api/auth/tiktok/login";
+
   const handleLogin = () => {
-    window.location.href = redirectUrl;
+    window.location.href = redirectUrl || defaultUrl;
   };
 
   return (

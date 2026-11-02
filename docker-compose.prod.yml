@@ -1,0 +1,94 @@
+version: "3.8"
+
+# ==============================================================================
+# TIKTOK AUTO STUDIO — DOCKER COMPOSE PRODUCTION (AUTO SSL CADDY + POSTGRES + REDIS)
+# Déploiement autonome sur n'importe quel VPS (Hetzner, OVH, DigitalOcean, AWS)
+# ==============================================================================
+
+services:
+  # 1. Reverse Proxy HTTPS Automatique (Certificats Let's Encrypt gérés à 100%)
+  caddy:
+    image: caddy:2-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAIN=${DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    networks:
+      - tiktok-net
+
+  # 2. Application Full-Stack Unifiée (Fastify API + React Vite SPA)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-postgres_password}@postgres:5432/tiktok_studio?schema=public
+      - REDIS_URL=redis://redis:6379
+      - ENCRYPTION_MASTER_KEY=${ENCRYPTION_MASTER_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - TIKTOK_CLIENT_KEY=${TIKTOK_CLIENT_KEY}
+      - TIKTOK_CLIENT_SECRET=${TIKTOK_CLIENT_SECRET}
+      - TIKTOK_REDIRECT_URI=https://${DOMAIN:-localhost}/api/auth/tiktok/callback
+      - FRONTEND_URL=https://${DOMAIN:-localhost}
+      - API_URL=https://${DOMAIN:-localhost}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - tiktok-net
+
+  # 3. Base de Données PostgreSQL 16
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_password}
+      POSTGRES_DB: tiktok_studio
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tiktok-net
+
+  # 4. Cache Redis 7 (BullMQ)
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data_prod:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tiktok-net
+
+volumes:
+  postgres_data_prod:
+  redis_data_prod:
+  caddy_data:
+  caddy_config:
+
+networks:
+  tiktok-net:
+    driver: bridge

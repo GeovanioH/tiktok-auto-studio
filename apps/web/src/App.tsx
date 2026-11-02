@@ -10,6 +10,8 @@ import { CalendarPage } from "./pages/CalendarPage";
 import { PostsPage } from "./pages/PostsPage";
 import { AccountsPage } from "./pages/AccountsPage";
 import { ApiKeysPage } from "./pages/ApiKeysPage";
+import { PrivacyPage } from "./pages/PrivacyPage";
+import { TermsPage } from "./pages/TermsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,6 +45,11 @@ export default function App() {
       <NotificationProvider>
         <BrowserRouter>
           <Routes>
+            {/* Pages légales accessibles publiquement hors dashboard */}
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+
+            {/* Dashboard principal */}
             <Route element={<DashboardLayout />}>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/studio" element={<StudioPage />} />
@@ -52,6 +59,7 @@ export default function App() {
               <Route path="/accounts" element={<AccountsPage />} />
               <Route path="/api-keys" element={<ApiKeysPage />} />
             </Route>
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>

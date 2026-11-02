@@ -1,0 +1,54 @@
+# ==============================================================================
+# TIKTOK AUTO STUDIO — RENDER BLUEPRINT (INFRASTRUCTURE AS CODE)
+# Déploiement en 1 clic : Web Service + Base PostgreSQL + Cache Redis
+# ==============================================================================
+
+services:
+  # Service Web Principal (Fastify API + React SPA unifiés)
+  - type: web
+    name: tiktok-auto-studio
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    region: frankfurt # ou oregon
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tiktok-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromRedis:
+          name: tiktok-redis
+          property: connectionString
+      - key: ENCRYPTION_MASTER_KEY
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TIKTOK_CLIENT_KEY
+        sync: false # À renseigner dans la console Render
+      - key: TIKTOK_CLIENT_SECRET
+        sync: false # À renseigner dans la console Render
+      - key: TIKTOK_REDIRECT_URI
+        sync: false # Ex: https://tiktok-auto-studio.onrender.com/api/auth/tiktok/callback
+      - key: TIKTOK_AUDIT_APPROVED
+        value: "false"
+
+# Base de Données Relationnelle Managée
+databases:
+  - name: tiktok-postgres
+    plan: free # ou starter
+    region: frankfurt
+    databaseName: tiktok_studio
+    user: postgres
+
+# Cache Redis & File de Tâches BullMQ Managé
+redis:
+  - name: tiktok-redis
+    plan: free # ou starter
+    region: frankfurt
+    maxmemoryPolicy: noeviction
