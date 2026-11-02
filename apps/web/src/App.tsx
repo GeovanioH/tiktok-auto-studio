@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
@@ -19,6 +20,23 @@ const queryClient = new QueryClient({
 });
 
 export default function App() {
+  // Global ReactBits Spotlight tracking for any .spotlight-card
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      const card = target?.closest<HTMLElement>(".spotlight-card");
+      if (card) {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty("--mouse-x", `${x}px`);
+        card.style.setProperty("--mouse-y", `${y}px`);
+      }
+    };
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
