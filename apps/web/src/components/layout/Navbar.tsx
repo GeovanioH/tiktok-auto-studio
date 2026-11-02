@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Bell, Zap } from "lucide-react";
 import { ThemeToggle } from "../ui/ThemeToggle";
+import { BrandLogo } from "../ui/BrandLogo";
 
 interface NavbarProps {
   title?: string;
@@ -11,9 +12,12 @@ export function Navbar({ title = "TikTok Studio IA Pro" }: NavbarProps) {
     <header className="h-16 border-b border-surface-container-highest bg-surface/85 backdrop-blur-xl px-4 sm:px-6 flex items-center justify-between flex-shrink-0 transition-colors duration-300 z-40 sticky top-0">
       {/* Titre & Télémétrie HUD de gauche */}
       <div className="flex items-center gap-3 overflow-hidden">
-        <h2 className="text-sm font-headline font-bold text-on-surface tracking-tight truncate hidden lg:block">
-          {title}
-        </h2>
+        <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
+          <BrandLogo size={28} className="w-7 h-7 group-hover:scale-105 transition-transform" />
+          <h2 className="text-sm font-headline font-bold text-on-surface tracking-tight truncate hidden lg:block">
+            {title}
+          </h2>
+        </Link>
 
         {/* Status Chips HUD (Stitch Design) */}
         <div className="flex items-center gap-2 overflow-x-auto py-1">

@@ -13,6 +13,7 @@ import {
   Grid3X3,
   Sparkles
 } from "lucide-react";
+import { BrandLogo } from "../ui/BrandLogo";
 
 export type SubtitleStyle = "HORMOZI" | "SUBMAGIC" | "CYBER" | "MINIMAL";
 
@@ -349,8 +350,8 @@ export function TikTokPreview({
               className="absolute right-2.5 bottom-16 flex flex-col items-center gap-3 text-white z-25 pointer-events-none"
             >
               <div className="relative mb-1">
-                <div className="w-10 h-10 rounded-full border-2 border-white bg-primary-container flex items-center justify-center text-on-primary-container font-mono text-xs font-bold shadow-md">
-                  TT
+                <div className="w-10 h-10 rounded-full border-2 border-white bg-surface-container-highest flex items-center justify-center shadow-md overflow-hidden">
+                  <BrandLogo size={36} className="w-full h-full" withGlow={false} />
                 </div>
                 <span className="w-4 h-4 rounded-full bg-primary-container text-white flex items-center justify-center text-[10px] -mt-2 font-bold shadow">
                   +

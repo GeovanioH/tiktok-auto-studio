@@ -12,6 +12,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { ShinyText } from "../ui/ShinyText";
+import { BrandLogo } from "../ui/BrandLogo";
 
 interface SidebarProps {
   quotaUsed?: number;
@@ -61,10 +62,8 @@ export function Sidebar({
       <div className="flex flex-col gap-4 px-3">
         {/* Brand Header */}
         <div className="flex items-center justify-between px-1">
-          <Link to="/" className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary-container to-secondary-fixed flex items-center justify-center font-black text-black text-sm shadow-md flex-shrink-0">
-              TT
-            </div>
+          <Link to="/" className="flex items-center gap-2.5 overflow-hidden group">
+            <BrandLogo className="w-9 h-9 group-hover:scale-105 transition-transform" />
             {!isCollapsed && (
               <div className="flex flex-col overflow-hidden">
                 <h1 className="text-sm font-extrabold text-on-surface tracking-tight flex items-center gap-1 leading-tight">
