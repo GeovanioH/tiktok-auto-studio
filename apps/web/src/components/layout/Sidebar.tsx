@@ -63,31 +63,46 @@ export function Sidebar({
     >
       <div className="flex flex-col gap-4 px-3">
         {/* Brand Header */}
-        <div className="flex items-center justify-between px-1">
-          <Link to="/" className="flex items-center gap-2.5 overflow-hidden group">
-            <BrandLogo className="w-9 h-9 group-hover:scale-105 transition-transform" />
-            {!isCollapsed && (
-              <div className="flex flex-col overflow-hidden">
-                <h1 className="text-sm font-extrabold text-on-surface tracking-tight flex items-center gap-1 leading-tight">
+        {isCollapsed ? (
+          <div className="flex flex-col items-center gap-2">
+            <Link to="/" className="flex items-center justify-center p-1 group" title="TikTok Studio IA">
+              <BrandLogo size={34} className="w-8.5 h-8.5 group-hover:scale-105 transition-transform" withGlow={false} />
+            </Link>
+            <button
+              type="button"
+              onClick={handleToggle}
+              className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition flex items-center justify-center"
+              aria-label="Déplier la barre latérale"
+              title="Déplier la barre latérale"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between px-1">
+            <Link to="/" className="flex items-center gap-2.5 overflow-hidden group flex-1 min-w-0">
+              <BrandLogo size={36} className="w-9 h-9 group-hover:scale-105 transition-transform flex-shrink-0" withGlow={false} />
+              <div className="flex flex-col overflow-hidden min-w-0">
+                <h1 className="text-sm font-extrabold text-on-surface tracking-tight flex items-center gap-1 leading-tight truncate">
                   <ShinyText text="TikTok Studio" speed={3.5} className="font-extrabold" />
                 </h1>
-                <span className="text-[10px] text-secondary font-mono tracking-wider uppercase">
+                <span className="text-[10px] text-secondary font-mono tracking-wider uppercase truncate">
                   IA Pro Suite v2
                 </span>
               </div>
-            )}
-          </Link>
+            </Link>
 
-          {/* Bouton de repliement */}
-          <button
-            type="button"
-            onClick={handleToggle}
-            className="p-1 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition"
-            aria-label={isCollapsed ? "Déplier la barre latérale" : "Replier la barre latérale"}
-          >
-            {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={handleToggle}
+              className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition flex-shrink-0 ml-1"
+              aria-label="Replier la barre latérale"
+              title="Replier la barre latérale"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+          </div>
+        )}
 
         <div className="h-px w-full bg-surface-container-highest opacity-60" />
 
