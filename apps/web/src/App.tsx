@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { NotificationProvider } from "./context/NotificationContext";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import { DashboardPage } from "./pages/DashboardPage";
 import { StudioPage } from "./pages/StudioPage";
@@ -39,20 +40,22 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<DashboardLayout />}>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/studio" element={<StudioPage />} />
-            <Route path="/simulator" element={<SimulatorPage />} />
-            <Route path="/calendar" element={<CalendarPage />} />
-            <Route path="/posts" element={<PostsPage />} />
-            <Route path="/accounts" element={<AccountsPage />} />
-            <Route path="/api-keys" element={<ApiKeysPage />} />
-          </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
+      <NotificationProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<DashboardLayout />}>
+              <Route path="/" element={<DashboardPage />} />
+              <Route path="/studio" element={<StudioPage />} />
+              <Route path="/simulator" element={<SimulatorPage />} />
+              <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/posts" element={<PostsPage />} />
+              <Route path="/accounts" element={<AccountsPage />} />
+              <Route path="/api-keys" element={<ApiKeysPage />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </NotificationProvider>
     </QueryClientProvider>
   );
 }

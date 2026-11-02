@@ -3,9 +3,11 @@ import { useSearchParams } from "react-router-dom";
 import { TikTokLoginButton } from "../components/auth/TikTokLoginButton";
 import { ShieldCheck, AlertTriangle, Key, ExternalLink, Unlink, RefreshCw } from "lucide-react";
 import { api, type TikTokAccountDto } from "../lib/api";
+import { useNotifications } from "../context/NotificationContext";
 
 export function AccountsPage() {
   const [searchParams] = useSearchParams();
+  const { addNotification } = useNotifications();
   const [account, setAccount] = useState<TikTokAccountDto | null>(null);
   const [isRotating, setIsRotating] = useState(false);
   const [notification, setNotification] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -15,6 +17,12 @@ export function AccountsPage() {
       setNotification({
         type: "success",
         text: "Compte connecté avec succès à l'API officielle TikTok v2 !",
+      });
+      addNotification({
+        title: "Compte Connecté",
+        message: "Votre compte TikTok officiel est maintenant synchronisé avec le Studio.",
+        type: "success",
+        link: "/accounts",
       });
     }
 
@@ -40,6 +48,12 @@ export function AccountsPage() {
         type: "success",
         text: "Rotation proactive du Token effectuée avec succès (Règle des 23h validée) !",
       });
+      addNotification({
+        title: "Token Proactif Renouvelé",
+        message: "Vos accès TikTok ont été prolongés de 24h sans interruption.",
+        type: "success",
+        link: "/accounts",
+      });
     } catch {
       setNotification({
         type: "error",
@@ -60,6 +74,12 @@ export function AccountsPage() {
     setNotification({
       type: "success",
       text: "Compte TikTok déconnecté et tokens chiffrés révoqués de la base de données.",
+    });
+    addNotification({
+      title: "Compte Déconnecté",
+      message: "Votre compte TikTok a été dissocié et les tokens révoqués de la base locale.",
+      type: "info",
+      link: "/accounts",
     });
   };
 

@@ -8,9 +8,11 @@ import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { ClickSpark } from "../components/ui/ClickSpark";
 import { FlexCarousel } from "../components/ui/FlexCarousel";
 import { api, type PostDto } from "../lib/api";
+import { useNotifications } from "../context/NotificationContext";
 
 export function StudioPage() {
   const navigate = useNavigate();
+  const { addNotification } = useNotifications();
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationStep, setGenerationStep] = useState(1);
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
@@ -71,6 +73,12 @@ export function StudioPage() {
         });
       }
       setNotification({ type: "success", text: "Contenu synthétisé avec succès par Gemini !" });
+      addNotification({
+        title: "Synthèse IA Complétée",
+        message: "Votre post 9:16 a été généré avec succès dans le Studio.",
+        type: "success",
+        link: "/studio",
+      });
     } catch {
       // Fallback gracieux pour prévisualisation locale
       setCurrentPost({
@@ -107,6 +115,12 @@ export function StudioPage() {
         status: "PROCESSING",
       });
       setNotification({ type: "success", text: "Publication initiée sur TikTok v2 ! Statut : En cours" });
+      addNotification({
+        title: "Publication Lancée",
+        message: "Envoi immédiat en cours de traitement sur TikTok Direct Publishing v2.",
+        type: "info",
+        link: "/posts",
+      });
     } catch (err: any) {
       setNotification({
         type: "error",
@@ -130,6 +144,12 @@ export function StudioPage() {
       setNotification({
         type: "success",
         text: `Post planifié avec succès pour le ${new Date(isoDate).toLocaleString("fr-FR")} !`,
+      });
+      addNotification({
+        title: "Publication Programmée",
+        message: `Votre vidéo a été ajoutée au planning pour le ${new Date(isoDate).toLocaleString("fr-FR")}.`,
+        type: "success",
+        link: "/calendar",
       });
       navigate("/calendar");
     } catch (err: any) {

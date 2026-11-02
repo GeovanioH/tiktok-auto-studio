@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { CalendarGrid } from "../components/calendar/CalendarGrid";
 import { ScheduleModal } from "../components/studio/ScheduleModal";
 import { api, type PostDto } from "../lib/api";
+import { useNotifications } from "../context/NotificationContext";
 import { Sparkles, CheckCircle2, AlertCircle, Calendar, X, Clock, Lock, ShieldCheck, Zap } from "lucide-react";
 
 export function CalendarPage() {
+  const { addNotification } = useNotifications();
   const [posts, setPosts] = useState<PostDto[]>([]);
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
@@ -28,9 +30,16 @@ export function CalendarPage() {
   }, []);
 
   const handleConfirmSchedule = (isoDate: string) => {
+    const formatted = new Date(isoDate).toLocaleString("fr-FR");
     setNotification({
       type: "success",
-      text: `Créneau réservé pour le ${new Date(isoDate).toLocaleString("fr-FR")}. Rendez-vous dans le Studio pour finaliser !`,
+      text: `Créneau réservé pour le ${formatted}. Rendez-vous dans le Studio pour finaliser !`,
+    });
+    addNotification({
+      title: "Créneau Réservé",
+      message: `Publication programmée pour le ${formatted}.`,
+      type: "success",
+      link: "/calendar",
     });
     setIsScheduleOpen(false);
   };
@@ -86,6 +95,12 @@ export function CalendarPage() {
       setNotification({
         type: "success",
         text: "✨ 7 publications hebdomadaires générées et programmées avec succès sur les heures de pointe TikTok !",
+      });
+      addNotification({
+        title: "Batch 7 Jours Planifié",
+        message: "7 publications optimisées ont été ajoutées à votre calendrier de diffusion.",
+        type: "success",
+        link: "/calendar",
       });
     }, 900);
   };

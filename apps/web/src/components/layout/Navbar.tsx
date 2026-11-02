@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Bell, Zap, User } from "lucide-react";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import { BrandLogo } from "../ui/BrandLogo";
+import { NotificationPopover } from "./NotificationPopover";
+import { useNotifications } from "../../context/NotificationContext";
 import { api } from "../../lib/api";
 
 interface NavbarProps {
@@ -11,6 +13,8 @@ interface NavbarProps {
 
 export function Navbar({ title = "TikTok Studio IA Pro" }: NavbarProps) {
   const [isConnected, setIsConnected] = useState(false);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const { unreadCount } = useNotifications();
 
   useEffect(() => {
     // Vérification réelle du statut TikTok sans simulation
@@ -66,14 +70,30 @@ export function Navbar({ title = "TikTok Studio IA Pro" }: NavbarProps) {
         {/* Toggle Mode Fond Blanc / Sombre */}
         <ThemeToggle showLabels={false} />
 
-        {/* Notifications */}
-        <button
-          type="button"
-          className="relative p-2 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition"
-          aria-label="Notifications"
-        >
-          <Bell className="w-4 h-4" />
-        </button>
+        {/* Centre de Notifications Fonctionnel */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setIsNotifOpen((prev) => !prev)}
+            className={`relative p-2 rounded-xl transition ${
+              isNotifOpen
+                ? "bg-surface-container-high text-secondary-fixed shadow-sm"
+                : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
+            }`}
+            aria-label="Notifications"
+            aria-expanded={isNotifOpen}
+          >
+            <Bell className="w-4 h-4" />
+            {unreadCount > 0 && (
+              <span className="absolute top-1 right-1 flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-container opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary-container border-2 border-surface"></span>
+              </span>
+            )}
+          </button>
+
+          <NotificationPopover isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)} />
+        </div>
 
         {/* User avatar réel */}
         <Link
