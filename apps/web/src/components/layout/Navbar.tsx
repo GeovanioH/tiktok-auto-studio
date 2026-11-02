@@ -35,18 +35,29 @@ export function Navbar({ title = "TikTok Studio IA Pro" }: NavbarProps) {
             <span className="w-2 h-2 rounded-full bg-secondary-fixed animate-pulse"></span>
             <span className="text-[11px] font-mono text-on-surface font-medium">Gemini Omni v4.2</span>
           </div>
+
+          {/* AIGC Stream Audio Spectrum Bars (Stitch Spec) */}
+          <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 bg-surface-container rounded-full border border-surface-container-high group flex-shrink-0" title="Flux Audio/Vidéo TikTok IA Synth Active">
+            <span className="text-[10px] font-mono text-on-surface-variant group-hover:text-secondary-fixed transition-colors">AIGC Stream</span>
+            <div className="flex items-end gap-0.5 h-4 px-1">
+              <div className="spectrum-bar" />
+              <div className="spectrum-bar" />
+              <div className="spectrum-bar" />
+              <div className="spectrum-bar" />
+              <div className="spectrum-bar" />
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Raccourcis et Actions rapides de droite */}
       <div className="flex items-center gap-3 flex-shrink-0">
-        {/* Raccourci Batch 7 Jours (Bouton Shimmer Stitch) */}
-        <Link
-          to="/calendar"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-container text-on-primary-container hover:bg-primary font-bold text-xs shadow-md shadow-primary-container/20 transition-all active:scale-95"
-        >
-          <Zap className="w-3.5 h-3.5 fill-current" />
-          <span className="hidden sm:inline">Batch 7 Jours</span>
+        {/* Raccourci Batch 7 Jours (Border Beam Uiverse / ReactBits) */}
+        <Link to="/calendar" className="border-beam-btn shadow-md shadow-primary-container/20 hover:scale-105 transition-all">
+          <div className="border-beam-inner text-white font-bold text-xs">
+            <Zap className="w-3.5 h-3.5 fill-current" />
+            <span className="hidden sm:inline">Batch 7 Jours</span>
+          </div>
         </Link>
 
         {/* TikTok v2 OAuth status pill */}

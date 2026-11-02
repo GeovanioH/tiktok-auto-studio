@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { ShinyText } from "../components/ui/ShinyText";
 import { Squares } from "../components/ui/Squares";
+import { BrandLogo } from "../components/ui/BrandLogo";
 
 export function DashboardPage() {
   return (
@@ -96,8 +97,8 @@ export function DashboardPage() {
             <div className="w-full max-w-sm rounded-2xl bg-surface-container border border-surface-container-high p-5 shadow-2xl backdrop-blur-md space-y-4">
               <div className="flex items-center justify-between border-b border-surface-container-highest pb-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary-container to-secondary-fixed flex items-center justify-center text-black font-black text-xs">
-                    TT
+                  <div className="w-8 h-8 rounded-full overflow-hidden border border-surface-container-highest shadow-sm flex items-center justify-center flex-shrink-0">
+                    <BrandLogo size={32} className="w-full h-full" withGlow={false} />
                   </div>
                   <div>
                     <p className="text-xs font-bold text-on-surface flex items-center gap-1">
@@ -163,9 +164,9 @@ export function DashboardPage() {
         <div className="absolute right-40 bottom-0 -mb-10 w-80 h-80 bg-primary-container/10 rounded-full blur-3xl pointer-events-none" />
       </div>
 
-      {/* Cartes KPI (Stitch Bento Metric Cards) */}
+      {/* Cartes KPI (Stitch Bento Metric Cards & Spotlight) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-2 shadow-sm hover:border-secondary/40 transition">
+        <div className="spotlight-card p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-2 shadow-sm hover:border-secondary/40 transition">
           <div className="flex items-center justify-between text-on-surface-variant text-xs">
             <span className="font-semibold uppercase tracking-wider text-[11px]">Posts Programmés</span>
             <Calendar className="w-4 h-4 text-secondary-fixed" />
@@ -177,7 +178,7 @@ export function DashboardPage() {
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-2 shadow-sm hover:border-primary-container/40 transition">
+        <div className="spotlight-card p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-2 shadow-sm hover:border-primary-container/40 transition">
           <div className="flex items-center justify-between text-on-surface-variant text-xs">
             <span className="font-semibold uppercase tracking-wider text-[11px]">Vidéos Publiées</span>
             <ListVideo className="w-4 h-4 text-primary" />
@@ -189,7 +190,7 @@ export function DashboardPage() {
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-2 shadow-sm hover:border-tertiary/40 transition">
+        <div className="spotlight-card p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-2 shadow-sm hover:border-tertiary/40 transition">
           <div className="flex items-center justify-between text-on-surface-variant text-xs">
             <span className="font-semibold uppercase tracking-wider text-[11px]">Quota IA Quotidien</span>
             <Zap className="w-4 h-4 text-tertiary" />
@@ -198,7 +199,7 @@ export function DashboardPage() {
           <p className="text-[11px] text-on-surface-variant">Inférences Gemini 1.5 disponibles</p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-2 shadow-sm hover:border-secondary/40 transition">
+        <div className="spotlight-card p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-2 shadow-sm hover:border-secondary/40 transition">
           <div className="flex items-center justify-between text-on-surface-variant text-xs">
             <span className="font-semibold uppercase tracking-wider text-[11px]">Sécurité & Chiffrement</span>
             <ShieldCheck className="w-4 h-4 text-secondary-fixed" />

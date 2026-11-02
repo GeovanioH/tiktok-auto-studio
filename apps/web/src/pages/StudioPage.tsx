@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { PromptForm } from "../components/studio/PromptForm";
 import { TikTokPreview, type SubtitleStyle } from "../components/studio/TikTokPreview";
 import { ScheduleModal } from "../components/studio/ScheduleModal";
-import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, Layers, ChevronDown, ChevronUp } from "lucide-react";
+import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, Layers, ChevronDown, ChevronUp, Smartphone } from "lucide-react";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { ClickSpark } from "../components/ui/ClickSpark";
 import { FlexCarousel } from "../components/ui/FlexCarousel";
@@ -398,6 +398,14 @@ export function StudioPage() {
         </div>
 
         <div className="flex items-center gap-2.5 flex-wrap">
+          <Link
+            to="/simulator"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition border border-surface-container-highest"
+          >
+            <Smartphone className="w-3.5 h-3.5 text-secondary" />
+            <span>Tester dans le Simulateur 9:16</span>
+          </Link>
+
           <button
             type="button"
             onClick={() =>

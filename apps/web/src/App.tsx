@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import { DashboardPage } from "./pages/DashboardPage";
 import { StudioPage } from "./pages/StudioPage";
+import { SimulatorPage } from "./pages/SimulatorPage";
 import { CalendarPage } from "./pages/CalendarPage";
 import { PostsPage } from "./pages/PostsPage";
 import { AccountsPage } from "./pages/AccountsPage";
@@ -25,6 +26,7 @@ export default function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/studio" element={<StudioPage />} />
+            <Route path="/simulator" element={<SimulatorPage />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/posts" element={<PostsPage />} />
             <Route path="/accounts" element={<AccountsPage />} />
