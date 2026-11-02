@@ -4,16 +4,18 @@ import { Bell, Zap, User } from "lucide-react";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import { BrandLogo } from "../ui/BrandLogo";
 import { NotificationPopover } from "./NotificationPopover";
+import { UserMenuPopover } from "./UserMenuPopover";
 import { useNotifications } from "../../context/NotificationContext";
-import { api } from "../../lib/api";
+import { api, type TikTokAccountDto } from "../../lib/api";
 
 interface NavbarProps {
   title?: string;
 }
 
 export function Navbar({ title = "TikTok Studio IA Pro" }: NavbarProps) {
-  const [isConnected, setIsConnected] = useState(false);
+  const [account, setAccount] = useState<TikTokAccountDto | null>(null);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { unreadCount } = useNotifications();
 
   useEffect(() => {
@@ -22,16 +24,18 @@ export function Navbar({ title = "TikTok Studio IA Pro" }: NavbarProps) {
       .get("/auth/tiktok/status")
       .then((res) => {
         if (res.data && res.data.account) {
-          setIsConnected(true);
+          setAccount(res.data.account);
         } else {
-          setIsConnected(false);
+          setAccount(null);
         }
       })
       .catch(() => {
         // En cas d'erreur ou d'absence de backend : 0 compte connecté par défaut
-        setIsConnected(false);
+        setAccount(null);
       });
   }, []);
+
+  const isConnected = !!account;
 
   return (
     <header className="h-16 border-b border-surface-container-highest bg-surface/85 backdrop-blur-xl px-4 sm:px-6 flex items-center justify-between flex-shrink-0 transition-colors duration-300 z-40 sticky top-0">
@@ -74,7 +78,10 @@ export function Navbar({ title = "TikTok Studio IA Pro" }: NavbarProps) {
         <div className="relative">
           <button
             type="button"
-            onClick={() => setIsNotifOpen((prev) => !prev)}
+            onClick={() => {
+              setIsNotifOpen((prev) => !prev);
+              setIsUserMenuOpen(false);
+            }}
             className={`relative p-2 rounded-xl transition ${
               isNotifOpen
                 ? "bg-surface-container-high text-secondary-fixed shadow-sm"
@@ -95,14 +102,37 @@ export function Navbar({ title = "TikTok Studio IA Pro" }: NavbarProps) {
           <NotificationPopover isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)} />
         </div>
 
-        {/* User avatar réel */}
-        <Link
-          to="/accounts"
-          className="w-8 h-8 rounded-full bg-surface-container border border-surface-container-high text-on-surface-variant hover:text-on-surface hover:border-secondary-fixed transition flex items-center justify-center text-xs shadow-xs"
-          title="Mon Compte"
-        >
-          <User className="w-4 h-4" />
-        </Link>
+        {/* Menu Profil Utilisateur Fonctionnel */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => {
+              setIsUserMenuOpen((prev) => !prev);
+              setIsNotifOpen(false);
+            }}
+            className={`w-8 h-8 rounded-full border transition flex items-center justify-center text-xs shadow-xs overflow-hidden ${
+              isUserMenuOpen
+                ? "border-secondary-fixed ring-2 ring-secondary-fixed/20 bg-surface-container-high"
+                : "border-surface-container-high bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-secondary-fixed/50"
+            }`}
+            aria-label="Menu Profil Utilisateur"
+            aria-expanded={isUserMenuOpen}
+            title="Mon Compte & Paramètres"
+          >
+            {account?.avatarUrl ? (
+              <img src={account.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+            ) : (
+              <User className="w-4 h-4" />
+            )}
+          </button>
+
+          <UserMenuPopover
+            isOpen={isUserMenuOpen}
+            onClose={() => setIsUserMenuOpen(false)}
+            account={account}
+            onDisconnect={() => setAccount(null)}
+          />
+        </div>
       </div>
     </header>
   );
