@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirection — Auto Studio AI</title>
+  <script>
+    (function() {
+      var path = window.location.pathname.toLowerCase();
+      if (path.indexOf("privacy") !== -1) {
+        window.location.replace("/tiktok-auto-studio/privacy.html");
+      } else if (path.indexOf("terms") !== -1) {
+        window.location.replace("/tiktok-auto-studio/terms.html");
+      } else {
+        window.location.replace("/tiktok-auto-studio/");
+      }
+    })();
+  </script>
+</head>
+<body style="background-color: #0F172A; color: #F8FAFC; font-family: sans-serif; text-align: center; padding-top: 50px;">
+  <p>Redirection en cours vers la documentation officielle...</p>
+  <p><a href="/tiktok-auto-studio/privacy.html" style="color: #00F5D4;">Politique de Confidentialité</a> | <a href="/tiktok-auto-studio/terms.html" style="color: #00F5D4;">Conditions d'Utilisation</a></p>
+</body>
+</html>
