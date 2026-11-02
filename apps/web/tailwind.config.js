@@ -8,24 +8,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Obsidian Cyber Studio Tokens (from Stitch Design System)
-        surface: "#111318",
-        "surface-dim": "#111318",
-        "surface-bright": "#37393f",
-        "surface-container-lowest": "#0c0e13",
-        "surface-container-low": "#1a1b21",
-        "surface-container": "#1e1f25",
-        "surface-container-high": "#282a2f",
-        "surface-container-highest": "#33353a",
-        "on-surface": "#e2e2e9",
-        "on-surface-variant": "#94a3b8",
-        outline: "#5d3f40",
+        // Obsidian Cyber Studio Tokens (Optimized Deep Midnight Cyber palette)
+        surface: "#0B0D13",
+        "surface-dim": "#0B0D13",
+        "surface-bright": "#1A2030",
+        "surface-container-lowest": "#06070B",
+        "surface-container-low": "#0F121C",
+        "surface-container": "#141724",
+        "surface-container-high": "#1A2032",
+        "surface-container-highest": "#222A40",
+        "on-surface": "#F1F5F9",
+        "on-surface-variant": "#94A3B8",
+        outline: "#222A40",
         primary: "#ffb3b6",
-        "primary-container": "#ff5168",
+        "primary-container": "#FE2C55",
         "on-primary-container": "#5b0015",
         secondary: "#affffb",
         "secondary-container": "#05ece7",
-        "secondary-fixed": "#35fbf5",
+        "secondary-fixed": "#00F5D4",
         tertiary: "#dec800",
         "tertiary-fixed": "#fde400",
         error: "#ffb4ab",
@@ -34,11 +34,11 @@ export default {
 
         // Studio Legacy aliases
         studio: {
-          bg: "#111318",
-          card: "#1a1b21",
-          border: "#33353a",
-          accent: "#ff5168",
-          cyan: "#35fbf5",
+          bg: "#0B0D13",
+          card: "#141724",
+          border: "#222A40",
+          accent: "#FE2C55",
+          cyan: "#00F5D4",
         },
       },
       fontFamily: {

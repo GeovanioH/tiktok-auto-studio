@@ -87,7 +87,7 @@ export function DashboardPage() {
           speed={0.25}
           squareSize={48}
           direction="diagonal"
-          borderColor="#282a2f"
+          borderColor="#222A40"
           hoverFillColor="rgba(53, 251, 245, 0.12)"
           className="opacity-30"
         />

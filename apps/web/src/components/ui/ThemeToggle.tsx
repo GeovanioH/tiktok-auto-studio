@@ -19,11 +19,13 @@ export function ThemeToggle({ className = "", showLabels = false }: ThemeToggleP
     const root = document.documentElement;
     if (isDark) {
       root.setAttribute("data-theme", "dark");
+      root.classList.add("dark");
       root.classList.remove("light");
       localStorage.setItem("theme", "dark");
     } else {
       root.setAttribute("data-theme", "light");
       root.classList.add("light");
+      root.classList.remove("dark");
       localStorage.setItem("theme", "light");
     }
   }, [isDark]);
