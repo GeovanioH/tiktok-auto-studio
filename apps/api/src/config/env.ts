@@ -2,11 +2,15 @@ import { z } from "zod";
 import dotenv from "dotenv";
 import path from "path";
 
-// Charger .env.local en priorité si présent, sinon .env (support monorepo et sous-dossiers)
-dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
-dotenv.config({ path: path.resolve(process.cwd(), ".env") });
-dotenv.config({ path: path.resolve(process.cwd(), "..", "..", ".env.local") });
-dotenv.config({ path: path.resolve(process.cwd(), "..", "..", ".env") });
+// Charger .env.local en priorité si présent, sinon .env (support monorepo et sous-dossiers avec override hors tests)
+if (process.env.NODE_ENV !== "test") {
+dotenv.config({ path: path.resolve(process.cwd(), ".env.local"), override: true });
+dotenv.config({ path: path.resolve(process.cwd(), ".env"), override: true });
+dotenv.config({ path: path.resolve(process.cwd(), "..", ".env.local"), override: true });
+dotenv.config({ path: path.resolve(process.cwd(), "..", ".env"), override: true });
+dotenv.config({ path: path.resolve(process.cwd(), "..", "..", ".env.local"), override: true });
+dotenv.config({ path: path.resolve(process.cwd(), "..", "..", ".env"), override: true });
+}
 
 export const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
