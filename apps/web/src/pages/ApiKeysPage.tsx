@@ -106,24 +106,24 @@ export function ApiKeysPage() {
       exampleValue: 'TIKTOK_CLIENT_KEY="awXXXXXXXXXXXX"\nTIKTOK_CLIENT_SECRET="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"'
     },
     {
-      id: "cloudflare-r2",
-      name: "Cloudflare R2 (Stockage S3 sur Domaine Vérifié)",
+      id: "supabase-storage",
+      name: "Supabase Storage (Stockage Médias S3)",
       role: "Hébergement public des vidéos 9:16 et carrousels exigé par TikTok",
       envVar: "S3_ACCESS_KEY_ID & S3_SECRET_ACCESS_KEY",
       category: "storage",
       status: "configured",
-      statusLabel: "0$ Bande Passante",
-      portalUrl: "https://dash.cloudflare.com/",
-      portalName: "dash.cloudflare.com",
-      tier: "Gratuit — 10 Go/mois & 0$ frais de sortie",
+      statusLabel: "500 Mo Gratuits",
+      portalUrl: "https://supabase.com/dashboard",
+      portalName: "supabase.com",
+      tier: "Gratuit — 500 Mo & API S3 native",
       description: "L'API TikTok exige que les médias soient servis via une URL HTTPS sur un domaine validé.",
       steps: [
-        "Allez dans « R2 Object Storage » sur Cloudflare et créez le bucket « tiktok-studio-media ».",
-        "Cliquez sur « Manage R2 API Tokens » et créez un token en lecture/écriture.",
-        "Dans « Settings » du bucket, associez votre domaine public (ex: assets.mondomaine.com).",
-        "Enregistrez ce même sous-domaine dans la console développeur TikTok (Verified Domains)."
+        "Créez un projet gratuit sur Supabase et allez dans la section « Storage ».",
+        "Créez un nouveau bucket public nommé « tiktok-studio-media » (Cochez 'Public bucket').",
+        "Dans « Project Settings » > « Storage », générez vos identifiants S3 (S3 Access Keys).",
+        "Copiez l'Endpoint S3, l'Access Key ID et le Secret Access Key dans votre fichier .env."
       ],
-      exampleValue: 'S3_ENDPOINT="https://<ACCOUNT_ID>.r2.cloudflarestorage.com"\nS3_ACCESS_KEY_ID="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"\nS3_SECRET_ACCESS_KEY="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"\nS3_BUCKET_NAME="tiktok-studio-media"\nS3_PUBLIC_VERIFIED_DOMAIN="https://assets.mondomaine.com"'
+      exampleValue: 'S3_ENDPOINT="https://<PROJECT_REF>.supabase.co/storage/v1/s3"\nS3_ACCESS_KEY_ID="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"\nS3_SECRET_ACCESS_KEY="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"\nS3_BUCKET_NAME="tiktok-studio-media"\nS3_PUBLIC_VERIFIED_DOMAIN="https://<PROJECT_REF>.supabase.co/storage/v1/object/public/tiktok-studio-media"'
     },
     {
       id: "crypto",

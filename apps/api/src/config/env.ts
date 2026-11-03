@@ -34,8 +34,8 @@ export const envSchema = z.object({
   TIKTOK_REDIRECT_URI: z.string().url().default("http://localhost:4000/api/auth/tiktok/callback"),
   TIKTOK_AUDIT_APPROVED: z.enum(["true", "false"]).default("false"),
 
-  // Cloudflare R2 / S3
-  S3_ENDPOINT: z.string().url().default("https://example.r2.cloudflarestorage.com"),
+  // Supabase Storage / S3
+  S3_ENDPOINT: z.string().url().default("https://example.supabase.co/storage/v1/s3"),
   S3_ACCESS_KEY_ID: z.string().default("dev_access_key"),
   S3_SECRET_ACCESS_KEY: z.string().default("dev_secret_key"),
   S3_BUCKET_NAME: z.string().default("tiktok-media-dev"),

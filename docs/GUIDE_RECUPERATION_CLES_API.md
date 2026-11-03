@@ -10,7 +10,7 @@
 2. [Google AI Studio (Gemini 1.5 & Imagen 3)](#2-google-ai-studio-gemini-15--imagen-3)
 3. [ElevenLabs (Synthèse Vocale TTS)](#3-elevenlabs-synthèse-vocale-tts)
 4. [TikTok Developer Portal (Login Kit & Content Posting)](#4-tiktok-developer-portal-login-kit--content-posting)
-5. [Stockage Médias S3 / Cloudflare R2 (Domaine Vérifié)](#5-stockage-médias-s3--cloudflare-r2-domaine-vérifié)
+5. [Stockage Médias S3 / Supabase Storage (Domaine Vérifié)](#5-stockage-médias-s3--supabase-storage-domaine-vérifié)
 6. [Clés Cryptographiques Locales (AES-256-GCM & JWT)](#6-clés-cryptographiques-locales-aes-256-gcm--jwt)
 7. [Base de Données PostgreSQL & Cache Redis](#7-base-de-données-postgresql--cache-redis)
 8. [Fichier `.env` Prêt à l'Emploi & Vérification](#8-fichier-env-prêt-à-lemploi--vérification)

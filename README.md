@@ -87,7 +87,7 @@ flowchart TD
     subgraph DataLayer ["Couche Données & Persistance"]
         Postgres[(PostgreSQL 16 - Données Métier & Tokens Chiffrés)]
         Redis[(Redis 7 - Cache de Sessions & Files BullMQ)]
-        S3Storage[(Cloudflare R2 - Domaine Vérifié TikTok)]
+        S3Storage[(Supabase Storage - Domaine Vérifié TikTok)]
         
         NodeServer -->|Prisma ORM| Postgres
         NodeServer --> Redis
@@ -170,7 +170,7 @@ sequenceDiagram
     participant LLM as Moteur LLM (GPT-4o)
     participant ImgAPI as Moteur Image (Flux / DALL-E)
     participant FFmpeg as Worker FFmpeg
-    participant Storage as Stockage S3 / R2 (Vérifié)
+    participant Storage as Stockage Supabase S3 (Vérifié)
 
     Note over User, UI: Clic 1 : Expression du Besoin
     User->>UI: Saisie idée ("3 astuces pour doubler ses ventes") + Format
