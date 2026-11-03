@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { 
   Key, 
   ExternalLink, 
@@ -357,7 +357,7 @@ export function ApiKeysPage() {
         </div>
 
         <a
-          href="/docs/AUDIT_SCREENCAST_GUIDE.md"
+          href="https://github.com/GeovanioH/tiktok-auto-studio/blob/main/docs/AUDIT_SCREENCAST_GUIDE.md"
           target="_blank"
           className="px-4 py-2 rounded-xl bg-pink-500 hover:bg-pink-400 text-white font-bold text-xs transition duration-200 shrink-0"
         >
