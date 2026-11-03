@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { ShinyText } from "../ui/ShinyText";
 import { BrandLogo } from "../ui/BrandLogo";
+import { useQuota } from "../../context/QuotaContext";
 
 interface SidebarProps {
   quotaUsed?: number;
@@ -24,14 +25,15 @@ interface SidebarProps {
 }
 
 export function Sidebar({
-  quotaUsed = 0,
-  quotaMax = 20,
+  quotaUsed: propQuotaUsed,
+  quotaMax: propQuotaMax,
   activeAccountName,
   isCollapsed: externalCollapsed,
   onToggleCollapse,
 }: SidebarProps) {
   const location = useLocation();
   const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const { quotaUsed: ctxQuotaUsed, quotaMax: ctxQuotaMax } = useQuota();
 
   const isCollapsed = externalCollapsed !== undefined ? externalCollapsed : internalCollapsed;
 
@@ -53,7 +55,11 @@ export function Sidebar({
     { to: "/api-keys", label: "Clés API & Setup", icon: KeyRound },
   ];
 
+  // Priorité au contexte réactif global, avec fallback sur les props
+  const quotaUsed = propQuotaUsed !== undefined ? propQuotaUsed : ctxQuotaUsed;
+  const quotaMax = propQuotaMax !== undefined ? propQuotaMax : ctxQuotaMax;
   const quotaPercent = Math.min(100, Math.round((quotaUsed / quotaMax) * 100));
+  const remaining = Math.max(0, quotaMax - quotaUsed);
 
   return (
     <aside
@@ -168,34 +174,47 @@ export function Sidebar({
         </nav>
       </div>
 
-      {/* Quota Inférence */}
+      {/* Quota Génération Interactif */}
       <div className="px-3">
         {!isCollapsed ? (
-          <div className="bg-surface-container border border-surface-container-high rounded-xl p-3 space-y-2 shadow-xs">
+          <Link
+            to="/studio"
+            className="block bg-surface-container border border-surface-container-high hover:border-secondary/50 rounded-xl p-3 space-y-2 shadow-xs transition group cursor-pointer"
+            title="Cliquez pour ouvrir le Studio de Génération IA"
+          >
             <div className="flex items-center justify-between text-xs">
-              <span className="text-on-surface-variant flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider">
-                <Zap className="w-3.5 h-3.5 text-tertiary" />
+              <span className="text-on-surface-variant group-hover:text-on-surface flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider transition">
+                <Zap className="w-3.5 h-3.5 text-secondary-fixed fill-secondary-fixed/20 animate-pulse" />
                 Quota Génération
               </span>
               <span className="font-mono text-secondary-fixed font-bold text-xs">
                 {quotaUsed}/{quotaMax}
               </span>
             </div>
-            <div className="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+            <div className="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden p-0.5">
               <div
-                className="h-full bg-primary-container rounded-full transition-all duration-300"
-                style={{ width: `${quotaPercent}%` }}
+                className="h-full bg-gradient-to-r from-secondary-fixed via-cyan-400 to-primary-container rounded-full transition-all duration-500 ease-out shadow-xs"
+                style={{ width: `${Math.max(quotaUsed > 0 ? 6 : 0, quotaPercent)}%` }}
               />
             </div>
-            <p className="text-[10px] text-on-surface-variant/80">Reset quotidien 00:00 UTC</p>
-          </div>
+            <div className="flex items-center justify-between text-[10px] text-on-surface-variant/80 font-mono">
+              <span>Reset 00:00 UTC</span>
+              <span className="text-secondary font-medium">
+                {remaining === 0 ? "Épuisé aujourd'hui" : `${remaining} restant${remaining > 1 ? "s" : ""}`}
+              </span>
+            </div>
+          </Link>
         ) : (
-          <div
-            className="w-10 h-10 rounded-xl bg-surface-container border border-surface-container-high flex items-center justify-center mx-auto text-tertiary"
-            title={`Quota: ${quotaUsed}/${quotaMax}`}
+          <Link
+            to="/studio"
+            className="w-10 h-10 rounded-xl bg-surface-container border border-surface-container-high hover:border-secondary/40 flex items-center justify-center mx-auto text-secondary-fixed transition group cursor-pointer relative"
+            title={`Quota Génération: ${quotaUsed}/${quotaMax} (${remaining} restants) - Reset 00:00 UTC. Cliquez pour ouvrir le Studio.`}
           >
-            <Zap className="w-4 h-4" />
-          </div>
+            <Zap className="w-4 h-4 fill-secondary-fixed/20 group-hover:scale-110 transition-transform" />
+            {quotaUsed > 0 && (
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-secondary-fixed border border-surface-container" />
+            )}
+          </Link>
         )}
       </div>
     </aside>

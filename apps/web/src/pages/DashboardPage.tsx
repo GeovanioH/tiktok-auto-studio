@@ -14,12 +14,13 @@ import {
 } from "lucide-react";
 import { ShinyText } from "../components/ui/ShinyText";
 import { Squares } from "../components/ui/Squares";
-import { BrandLogo } from "../components/ui/BrandLogo";
 import { api, type PostDto, type TikTokAccountDto } from "../lib/api";
+import { useQuota } from "../context/QuotaContext";
 
 export function DashboardPage() {
   const [posts, setPosts] = useState<PostDto[]>([]);
   const [account, setAccount] = useState<TikTokAccountDto | null>(null);
+  const { quotaUsed, quotaMax, quotaPercent, remainingQuota } = useQuota();
 
   useEffect(() => {
     // Récupération des données réelles sans simulation artificielle
@@ -54,7 +55,8 @@ export function DashboardPage() {
   const scheduledCount = posts.filter((p) => p.status === "SCHEDULED").length;
   const publishedCount = posts.filter((p) => p.status === "PUBLISHED").length;
   const todayStr = new Date().toDateString();
-  const quotaUsedToday = posts.filter((p) => new Date(p.createdAt).toDateString() === todayStr).length;
+  const apiQuotaUsedToday = posts.filter((p) => new Date(p.createdAt).toDateString() === todayStr).length;
+  const effectiveQuotaUsed = Math.max(quotaUsed, apiQuotaUsedToday);
 
   // Dernier post programmé ou publié
   const activePost = posts.find((p) => p.status === "SCHEDULED" || p.status === "PUBLISHED");
@@ -88,32 +90,31 @@ export function DashboardPage() {
               Génération par IA, montage vertical 9:16 avec sous-titres karaoké animés et diffusion programmée sur l'API officielle TikTok Direct Publishing v2.
             </p>
 
-            <div className="pt-2 flex flex-wrap gap-3">
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
                 to="/studio"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-on-primary-container bg-primary-container hover:bg-primary transition shadow-lg shadow-primary-container/20 active:scale-95"
+                className="px-5 py-2.5 rounded-xl bg-primary-container hover:bg-primary text-white text-xs font-bold transition shadow-lg shadow-primary-container/20 flex items-center gap-2 group"
               >
-                <Sparkles className="w-4 h-4" />
-                <span>Créer en 3 Clics</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>Ouvrir le Studio IA</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
+
               <Link
                 to="/calendar"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-on-surface bg-surface-container hover:bg-surface-container-high border border-surface-container-highest transition active:scale-95"
+                className="px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface border border-surface-container-highest text-xs font-semibold transition"
               >
-                <Calendar className="w-4 h-4 text-secondary-fixed" />
-                <span>Planification & Batch 7 Jours</span>
+                Voir le Calendrier
               </Link>
             </div>
           </div>
 
-          {/* Carte Instantanée Réelle (Sans fausse activité si vide) */}
-          <div className="lg:col-span-5 relative flex items-center justify-center">
-            <div className="w-full max-w-sm rounded-2xl bg-surface-container border border-surface-container-high p-5 shadow-2xl backdrop-blur-md space-y-4">
-              <div className="flex items-center justify-between border-b border-surface-container-highest pb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full overflow-hidden border border-surface-container-highest shadow-sm flex items-center justify-center flex-shrink-0">
-                    <BrandLogo size={32} className="w-full h-full" withGlow={false} />
+          {/* Snapshot Interactive Studio Card */}
+          <div className="lg:col-span-5 bg-surface-container/80 backdrop-blur-md border border-surface-container-high p-5 rounded-2xl shadow-xl">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-surface-container-highest">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-secondary-fixed/20 flex items-center justify-center text-secondary-fixed text-xs font-bold font-mono">
+                    {account ? account.displayName?.charAt(0).toUpperCase() || "T" : "—"}
                   </div>
                   <div>
                     <p className="text-xs font-bold text-on-surface">
@@ -211,16 +212,27 @@ export function DashboardPage() {
           </p>
         </div>
 
-        <div className="spotlight-card p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-2 shadow-sm hover:border-tertiary/40 transition">
+        <Link
+          to="/studio"
+          className="spotlight-card p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-2 shadow-sm hover:border-tertiary/50 transition group block cursor-pointer"
+          title="Ouvrir le Studio IA pour générer du contenu"
+        >
           <div className="flex items-center justify-between text-on-surface-variant text-xs">
-            <span className="font-semibold uppercase tracking-wider text-[11px]">Quota IA Quotidien</span>
-            <Zap className="w-4 h-4 text-tertiary" />
+            <span className="font-semibold uppercase tracking-wider text-[11px] group-hover:text-on-surface transition">Quota IA Quotidien</span>
+            <Zap className="w-4 h-4 text-tertiary group-hover:scale-110 transition-transform" />
           </div>
-          <p className="text-3xl font-headline font-black text-on-surface">{quotaUsedToday} / 20</p>
-          <p className="text-[11px] text-on-surface-variant">
-            {quotaUsedToday === 0 ? "0 génération effectuée aujourd'hui" : `${quotaUsedToday} inférence(s) consommée(s)`}
-          </p>
-        </div>
+          <p className="text-3xl font-headline font-black text-on-surface">{effectiveQuotaUsed} / {quotaMax}</p>
+          <div className="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+            <div
+              className="bg-gradient-to-r from-secondary-fixed via-cyan-400 to-primary-container h-full rounded-full transition-all duration-500"
+              style={{ width: `${Math.max(effectiveQuotaUsed > 0 ? 5 : 0, quotaPercent)}%` }}
+            />
+          </div>
+          <div className="text-[11px] text-on-surface-variant flex items-center justify-between font-mono">
+            <span>{effectiveQuotaUsed === 0 ? "0 inférence consommée" : `${effectiveQuotaUsed} utilisée(s)`}</span>
+            <span className="text-secondary-fixed font-bold">{remainingQuota} restant{remainingQuota > 1 ? "s" : ""}</span>
+          </div>
+        </Link>
 
         <div className="spotlight-card p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-2 shadow-sm hover:border-secondary/40 transition">
           <div className="flex items-center justify-between text-on-surface-variant text-xs">

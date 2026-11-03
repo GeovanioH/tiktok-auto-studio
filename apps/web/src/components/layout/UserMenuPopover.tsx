@@ -11,6 +11,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { api, type TikTokAccountDto } from "../../lib/api";
+import { useQuota } from "../../context/QuotaContext";
 
 interface UserMenuPopoverProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ interface UserMenuPopoverProps {
 export function UserMenuPopover({ isOpen, onClose, account, onDisconnect }: UserMenuPopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { quotaUsed, quotaMax, quotaPercent, remainingQuota } = useQuota();
 
   // Fermeture clic extérieur / Escape
   useEffect(() => {
@@ -99,19 +101,31 @@ export function UserMenuPopover({ isOpen, onClose, account, onDisconnect }: User
         </div>
       </div>
 
-      {/* Quota IA Quotidien */}
-      <div className="p-3 bg-surface-container-highest/20 border-b border-surface-container-highest">
+      {/* Quota IA Quotidien Interactif */}
+      <Link
+        to="/studio"
+        onClick={onClose}
+        className="block p-3 bg-surface-container-highest/20 hover:bg-surface-container-highest/40 border-b border-surface-container-highest transition group cursor-pointer"
+        title="Ouvrir le Studio de Génération IA"
+      >
         <div className="flex items-center justify-between text-[11px] mb-1.5">
-          <span className="text-on-surface-variant flex items-center gap-1 font-semibold">
+          <span className="text-on-surface-variant group-hover:text-on-surface flex items-center gap-1 font-semibold transition">
             <Sparkles className="w-3 h-3 text-secondary-fixed" />
             Quota IA Quotidien
           </span>
-          <span className="text-on-surface font-mono font-bold">0 / 20</span>
+          <span className="text-on-surface font-mono font-bold">{quotaUsed} / {quotaMax}</span>
         </div>
-        <div className="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
-          <div className="bg-gradient-to-r from-secondary-fixed to-primary-container h-full w-[0%]" />
+        <div className="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden p-0.5">
+          <div
+            className="bg-gradient-to-r from-secondary-fixed via-cyan-400 to-primary-container h-full rounded-full transition-all duration-500"
+            style={{ width: `${Math.max(quotaUsed > 0 ? 5 : 0, quotaPercent)}%` }}
+          />
         </div>
-      </div>
+        <div className="flex items-center justify-between text-[10px] text-on-surface-variant font-mono mt-1.5">
+          <span>{remainingQuota} restant{remainingQuota > 1 ? "s" : ""}</span>
+          <span className="text-secondary-fixed font-bold">{quotaPercent}% utilisé</span>
+        </div>
+      </Link>
 
       {/* Raccourcis Navigation */}
       <div className="p-1.5 space-y-0.5">

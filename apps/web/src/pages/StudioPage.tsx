@@ -9,10 +9,12 @@ import { ClickSpark } from "../components/ui/ClickSpark";
 import { FlexCarousel } from "../components/ui/FlexCarousel";
 import { api, type PostDto } from "../lib/api";
 import { useNotifications } from "../context/NotificationContext";
+import { useQuota } from "../context/QuotaContext";
 
 export function StudioPage() {
   const navigate = useNavigate();
   const { addNotification } = useNotifications();
+  const { quotaUsed, quotaMax, incrementQuota } = useQuota();
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationStep, setGenerationStep] = useState(1);
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
@@ -72,6 +74,7 @@ export function StudioPage() {
           isAigc: p.isAigc !== undefined ? p.isAigc : true,
         });
       }
+      incrementQuota(1);
       setNotification({ type: "success", text: "Contenu synthétisé avec succès par Gemini !" });
       addNotification({
         title: "Synthèse IA Complétée",
@@ -93,6 +96,7 @@ export function StudioPage() {
         caption: prompt,
         isAigc: true,
       });
+      incrementQuota(1);
       setNotification({
         type: "success",
         text: "Inférence complétée ! Prévisualisation prête pour programmation.",
@@ -182,6 +186,11 @@ export function StudioPage() {
           <div className="h-4 w-px bg-surface-container-highest" />
           <div className="flex items-center gap-1.5 text-on-surface-variant">
             <span>Résolution : <span className="text-secondary-fixed font-bold">1080x1920 (9:16)</span></span>
+          </div>
+          <div className="h-4 w-px bg-surface-container-highest" />
+          <div className="flex items-center gap-1.5 text-on-surface-variant">
+            <Zap className="w-3.5 h-3.5 text-secondary-fixed fill-secondary-fixed/20 animate-pulse" />
+            <span>Quota : <strong className="text-secondary-fixed font-bold">{quotaUsed}/{quotaMax}</strong></span>
           </div>
         </div>
       </div>

@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Navbar } from "./Navbar";
+import { useQuota } from "../../context/QuotaContext";
 
 export function DashboardLayout() {
   const location = useLocation();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const { quotaUsed, quotaMax } = useQuota();
 
   const getTitle = () => {
     switch (location.pathname) {
@@ -29,6 +31,8 @@ export function DashboardLayout() {
       <Sidebar
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        quotaUsed={quotaUsed}
+        quotaMax={quotaMax}
       />
       <div
         className={`flex-1 flex flex-col min-w-0 overflow-hidden transition-all duration-300 ${

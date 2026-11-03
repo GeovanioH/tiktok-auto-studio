@@ -3,10 +3,12 @@ import { CalendarGrid } from "../components/calendar/CalendarGrid";
 import { ScheduleModal } from "../components/studio/ScheduleModal";
 import { api, type PostDto } from "../lib/api";
 import { useNotifications } from "../context/NotificationContext";
+import { useQuota } from "../context/QuotaContext";
 import { Sparkles, CheckCircle2, AlertCircle, Calendar, X, Clock, Lock, ShieldCheck, Zap } from "lucide-react";
 
 export function CalendarPage() {
   const { addNotification } = useNotifications();
+  const { quotaUsed, quotaMax, incrementQuota } = useQuota();
   const [posts, setPosts] = useState<PostDto[]>([]);
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
@@ -31,6 +33,7 @@ export function CalendarPage() {
 
   const handleConfirmSchedule = (isoDate: string) => {
     const formatted = new Date(isoDate).toLocaleString("fr-FR");
+    incrementQuota(1);
     setNotification({
       type: "success",
       text: `Créneau réservé pour le ${formatted}. Rendez-vous dans le Studio pour finaliser !`,
@@ -89,6 +92,7 @@ export function CalendarPage() {
         };
       });
 
+      incrementQuota(newBatchPosts.length);
       setPosts((prev) => [...prev, ...newBatchPosts]);
       setIsGeneratingBatch(false);
       setIsBatchOpen(false);
@@ -109,7 +113,7 @@ export function CalendarPage() {
 
   return (
     <div className="max-w-[1720px] mx-auto space-y-6 pb-12">
-      {/* 1. TOP TELEMETRY STRIP & CONTEXT HUD (Sans simulation fictive) */}
+      {/* 1. TOP TELEMETRY STRIP & CONTEXT HUD */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-surface-container-low px-4 py-3 rounded-2xl border border-surface-container-highest shadow-sm">
         <div className="flex items-center gap-4 flex-wrap text-xs font-mono">
           <div className="flex items-center gap-2">
@@ -129,6 +133,11 @@ export function CalendarPage() {
             <span className="text-secondary font-semibold font-mono">
               {scheduledCount > 0 ? `${scheduledCount} créneau(x) programmé(s)` : "0 créneau programmé"}
             </span>
+          </div>
+          <div className="h-4 w-px bg-surface-container-highest" />
+          <div className="flex items-center gap-1.5 text-on-surface-variant">
+            <Zap className="w-3.5 h-3.5 text-secondary-fixed" />
+            <span>Quota : <strong className="text-secondary-fixed font-bold">{quotaUsed}/{quotaMax}</strong></span>
           </div>
         </div>
 
@@ -159,83 +168,42 @@ export function CalendarPage() {
             <p className="text-sm text-on-surface-variant leading-relaxed">
               Injectez votre thématique directrice. Le moteur dérive 7 scripts haute rétention, génère voix-off et synthèses 9:16, puis programme automatiquement chaque post sur les 7 créneaux à plus forte audience organique.
             </p>
-            <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-[11px] font-mono uppercase text-on-surface-variant font-bold mr-1">Slots ciblés :</span>
-              {["Dim 20h00", "Lun 12h15", "Mar 18h45", "Mer 21h10", "Jeu 19h30", "Ven 17h00", "Sam 11h20"].map((s) => (
-                <span key={s} className="px-2 py-0.5 rounded bg-surface-container-highest text-secondary font-mono text-[11px] font-semibold border border-surface-container-highest">
-                  {s}
-                </span>
-              ))}
+
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
+                <Clock className="w-3.5 h-3.5 text-secondary-fixed" />
+                <span>Pics calibrés : 12h30 • 18h30 • 20h00</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
+                <Lock className="w-3.5 h-3.5 text-primary" />
+                <span>Sécurité : Mode SELF_ONLY activé</span>
+              </div>
             </div>
           </div>
 
-          <div className="w-full xl:w-auto flex flex-col gap-3 flex-shrink-0 min-w-full sm:min-w-[420px]">
-            <div className="bg-surface-container-lowest/80 p-3.5 rounded-xl backdrop-blur-md shadow-inner flex flex-col gap-2 border border-surface-container-highest">
-              <label className="text-xs font-semibold text-on-surface-variant flex items-center justify-between" htmlFor="batch-theme-input">
-                <span>Thème Directeur ou Niche</span>
-                <span className="text-secondary font-mono text-[11px]">Hormozi Formula</span>
-              </label>
-              <div className="relative flex items-center">
-                <span className="material-symbols-outlined absolute left-3 text-secondary text-[18px]">auto_awesome</span>
-                <input
-                  id="batch-theme-input"
-                  type="text"
-                  value={batchTheme}
-                  onChange={(e) => setBatchTheme(e.target.value)}
-                  placeholder="Ex: Intelligence Artificielle & Productivité No-Code..."
-                  className="w-full bg-surface-container-high text-on-surface pl-9 pr-3 py-2 rounded-lg text-xs outline-none focus:ring-1 focus:ring-secondary-fixed transition"
-                />
-              </div>
-              <div className="flex items-center justify-between text-on-surface-variant font-mono text-[10px] px-1">
-                <span>Mode : <strong className="text-on-surface">Auto-Cut + Sous-titres dynamiques</strong></span>
-                <span className="text-tertiary">Format : 9:16 UltraHD</span>
-              </div>
-            </div>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto">
+            <button
+              type="button"
+              onClick={() => setIsScheduleOpen(true)}
+              className="px-5 py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface border border-surface-container-highest text-xs font-semibold transition flex items-center justify-center gap-2 shadow-sm"
+            >
+              <Calendar className="w-4 h-4 text-on-surface-variant" />
+              <span>Programmer Manuellement</span>
+            </button>
 
             <button
-              id="btn-batch-generate"
               type="button"
-              disabled={isGeneratingBatch}
-              onClick={handleGenerateBatch}
-              className="group relative flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary-container text-on-primary-container hover:bg-primary transition-all duration-200 shadow-lg shadow-primary-container/30 active:scale-[0.99] font-headline text-xs font-bold disabled:opacity-50"
+              onClick={() => setIsBatchOpen(true)}
+              className="px-6 py-3 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-headline text-xs font-bold transition shadow-lg shadow-primary-container/25 flex items-center justify-center gap-2"
             >
-              <Zap className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-              <span>{isGeneratingBatch ? "Génération & Planification en cours..." : "Générer & Programmer 7 Jours de Contenu Viral"}</span>
+              <Sparkles className="w-4 h-4" />
+              <span>Lancer le Batch 7 Jours IA</span>
             </button>
           </div>
         </div>
       </section>
 
-      {/* 3. VERROUILLAGE TEMPOREL & BANNIÈRE SÉCURITÉ CONFORME */}
-      <div className="bg-surface-container-high rounded-2xl p-4 lg:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-surface-container-highest shadow-sm">
-        <div className="flex items-start md:items-center gap-4">
-          <div className="w-11 h-11 rounded-xl bg-error-container/30 flex items-center justify-center flex-shrink-0">
-            <Lock className="w-5 h-5 text-primary" />
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className="font-headline text-sm font-bold text-on-surface">
-                Verrouillage Temporel Sécurisé (TikTok API Hard Requirement)
-              </span>
-              <span className="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-mono text-[10px] uppercase font-bold">
-                Strict Rule
-              </span>
-            </div>
-            <p className="text-xs text-on-surface-variant mt-0.5 leading-relaxed">
-              Interdiction absolue d'ordonnancement à moins de <strong className="text-primary font-semibold">5 minutes</strong> dans le futur. Les uploads spontanés sont automatiquement redirigés vers le buffer d'invalidation ou la file draft d'urgence.
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2.5 bg-surface-container-lowest px-4 py-2 rounded-xl flex-shrink-0 border border-surface-container-highest">
-          <Clock className="w-4 h-4 text-secondary" />
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-mono text-on-surface-variant">Seuil d'exclusion immédiat</span>
-            <span className="font-mono text-xs text-on-surface font-bold">+00h 05m 00s (Lock Engine T-300s)</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Notifications */}
+      {/* Notifications Toast Bar */}
       {notification && (
         <div
           className={`flex items-center gap-2.5 p-4 rounded-xl border text-xs font-semibold animate-in fade-in ${
@@ -253,49 +221,75 @@ export function CalendarPage() {
         </div>
       )}
 
-      {/* 4. CALENDRIER ÉDITORIAL SYNCHRONISÉ */}
+      {/* Quick Launch Inline Bar if Batch Active */}
+      <div className="bg-surface-container-low p-4 rounded-2xl border border-surface-container-highest shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="w-9 h-9 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary shrink-0">
+            <Sparkles className="w-4 h-4 text-secondary-fixed" />
+          </div>
+          <div>
+            <h3 className="text-xs font-bold text-on-surface font-headline">
+              Sujet de la Semaine : {batchTheme}
+            </h3>
+            <p className="text-[11px] text-on-surface-variant font-mono">
+              7 vidéos optimisées prêtes à être injectées en un clic
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleGenerateBatch}
+          disabled={isGeneratingBatch}
+          className="w-full md:w-auto px-5 py-2.5 rounded-xl bg-secondary-fixed hover:bg-secondary text-surface-container-lowest text-xs font-bold transition shadow-md flex items-center justify-center gap-2 disabled:opacity-50"
+        >
+          <Sparkles className="w-4 h-4" />
+          <span>{isGeneratingBatch ? "Génération & Planification en cours..." : "Générer & Programmer 7 Jours de Contenu"}</span>
+        </button>
+      </div>
+
+      {/* 3. CALENDRIER HEBDOMADAIRE INTERACTIF AVEC VRAIS POSTS */}
       <CalendarGrid
         posts={posts}
-        onSelectSlot={() => setIsScheduleOpen(true)}
+        onSelectSlot={(_date) => {
+          setIsScheduleOpen(true);
+        }}
       />
 
-      {/* Modale de Programmation Individuelle */}
+      {/* Modale Manuelle */}
       <ScheduleModal
         isOpen={isScheduleOpen}
         onClose={() => setIsScheduleOpen(false)}
         onConfirm={handleConfirmSchedule}
       />
 
-      {/* Modale Batch Studio 7 Jours (Optionnelle si ouvert via navbar) */}
+      {/* Modale Configuration Batch 7 Jours */}
       {isBatchOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
-          <div className="relative w-full max-w-xl bg-surface-container-low border border-surface-container-highest rounded-3xl p-6 shadow-2xl space-y-5">
-            <button
-              type="button"
-              onClick={() => setIsBatchOpen(false)}
-              className="absolute top-5 right-5 text-on-surface-variant hover:text-on-surface transition"
-              aria-label="Fermer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-3 border-b border-surface-container-highest pb-4">
-              <div className="w-10 h-10 rounded-2xl bg-secondary/10 border border-secondary/30 text-secondary flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-secondary-fixed" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-on-surface flex items-center gap-2 font-headline">
-                  <span>Générateur Batch Hebdomadaire (7 Jours en 1 Clic)</span>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in">
+          <div className="w-full max-w-lg bg-surface-container-low border border-surface-container-highest rounded-2xl p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-surface-container-highest">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-secondary-fixed" />
+                <h3 className="font-headline text-sm font-bold text-on-surface">
+                  Pilote Automatique : Batch 7 Jours
                 </h3>
-                <p className="text-xs text-on-surface-variant">
-                  Planifie automatiquement 7 publications réparties sur les pics d'audience TikTok.
-                </p>
               </div>
+              <button
+                type="button"
+                onClick={() => setIsBatchOpen(false)}
+                className="p-1 rounded-lg text-on-surface-variant hover:text-on-surface transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
-            <div className="space-y-3">
-              <label className="text-xs font-semibold text-on-surface-variant" htmlFor="modal-batch-theme">
-                Thème directeur ou consigne pour la semaine :
+            <p className="text-xs text-on-surface-variant leading-relaxed">
+              Planifie automatiquement 7 publications réparties sur les pics d'audience TikTok.
+            </p>
+
+            <div className="space-y-1.5">
+              <label htmlFor="modal-batch-theme" className="text-xs font-bold text-on-surface">
+                Thématique du Batch :
               </label>
               <textarea
                 id="modal-batch-theme"
