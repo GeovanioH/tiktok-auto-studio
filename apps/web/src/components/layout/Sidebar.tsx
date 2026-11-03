@@ -71,7 +71,7 @@ export function Sidebar({
             <button
               type="button"
               onClick={handleToggle}
-              className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition flex items-center justify-center"
+              className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-slate-400/20 dark:hover:bg-white/10 transition flex items-center justify-center"
               aria-label="Déplier la barre latérale"
               title="Déplier la barre latérale"
             >
@@ -95,7 +95,7 @@ export function Sidebar({
             <button
               type="button"
               onClick={handleToggle}
-              className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition flex-shrink-0 ml-1"
+              className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-slate-400/20 dark:hover:bg-white/10 transition flex-shrink-0 ml-1"
               aria-label="Replier la barre latérale"
               title="Replier la barre latérale"
             >
@@ -155,12 +155,12 @@ export function Sidebar({
                 to={link.to}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   isActive
-                    ? "bg-primary-container text-on-primary-container shadow-md shadow-primary-container/20 font-bold"
-                    : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
+                    ? "bg-primary-container text-white shadow-md shadow-primary-container/20 font-bold"
+                    : "text-on-surface-variant hover:text-on-surface hover:bg-slate-400/20 dark:hover:bg-white/10"
                 } ${isCollapsed ? "justify-center px-0" : ""}`}
                 title={isCollapsed ? link.label : undefined}
               >
-                <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-on-primary-container" : ""}`} />
+                <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-white" : ""}`} />
                 {!isCollapsed && <span className="truncate">{link.label}</span>}
               </Link>
             );
