@@ -61,26 +61,6 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Top Strip Réel & Neutre (Sans simulation de SLA / Latence) */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-surface-container-low px-4 py-2.5 rounded-2xl border border-surface-container-highest shadow-xs">
-        <div className="flex items-center gap-2.5">
-          <span className="w-2 h-2 rounded-full bg-secondary-fixed"></span>
-          <span className="text-xs font-mono font-semibold text-on-surface">
-            Studio TikTok IA — Prêt pour la création
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4 text-xs font-mono text-on-surface-variant">
-          <span className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-secondary-fixed" />
-            <span>Sécurité AES-256-GCM</span>
-          </span>
-          <span className="hidden sm:inline text-[11px] text-on-surface-variant/80">
-            TikTok Direct Publishing v2
-          </span>
-        </div>
-      </div>
-
       {/* Hero Banner avec Grille Animée Squares & Snapshot Studio */}
       <div className="relative overflow-hidden rounded-3xl bg-surface-container-low border border-surface-container-highest p-6 sm:p-8 shadow-2xl">
         <Squares
