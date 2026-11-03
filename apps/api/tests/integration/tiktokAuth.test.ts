@@ -26,7 +26,9 @@ describe("Apps/API - TikTok OAuth2 PKCE & Token Rotation Integration Tests", () 
 
     it("doit dériver un code_challenge déterministe via SHA-256 Base64URL", () => {
       const verifier = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
-      const challenge = generateCodeChallenge(verifier);
+      const challenge = generateCodeChallenge(verifier, "base64url");
+      const hexChallenge = generateCodeChallenge(verifier, "hex");
+      expect(hexChallenge).toMatch(/^[0-9a-f]{64}$/);
 
       const expected = crypto.createHash("sha256").update(verifier).digest("base64url");
       expect(challenge).toBe(expected);
@@ -42,7 +44,9 @@ describe("Apps/API - TikTok OAuth2 PKCE & Token Rotation Integration Tests", () 
     it("doit générer une URL de connexion complète avec S256 et scopes requis", () => {
       const state = generateStateToken();
       const verifier = generateCodeVerifier();
-      const challenge = generateCodeChallenge(verifier);
+      const challenge = generateCodeChallenge(verifier, "base64url");
+      const hexChallenge = generateCodeChallenge(verifier, "hex");
+      expect(hexChallenge).toMatch(/^[0-9a-f]{64}$/);
 
       const authUrl = tiktokClient.getAuthorizationUrl(state, challenge);
 
