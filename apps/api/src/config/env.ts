@@ -34,11 +34,17 @@ export const envSchema = z.object({
   TIKTOK_REDIRECT_URI: z.string().url().default("http://localhost:4000/api/auth/tiktok/callback"),
   TIKTOK_AUDIT_APPROVED: z.enum(["true", "false"]).default("false"),
 
+  // Supabase
+  SUPABASE_URL: z.string().url().default("https://example.supabase.co"),
+  SUPABASE_PUBLISHABLE_KEY: z.string().default("dev_supabase_publishable_key"),
+  SUPABASE_SECRET_KEY: z.string().default("dev_supabase_secret_key"),
+  SUPABASE_JWKS_URL: z.string().url().default("https://example.supabase.co/auth/v1/.well-known/jwks.json"),
+
   // Supabase Storage / S3
   S3_ENDPOINT: z.string().url().default("https://example.supabase.co/storage/v1/s3"),
   S3_ACCESS_KEY_ID: z.string().default("dev_access_key"),
   S3_SECRET_ACCESS_KEY: z.string().default("dev_secret_key"),
-  S3_BUCKET_NAME: z.string().default("tiktok-media-dev"),
+  S3_BUCKET_NAME: z.string().default("tiktok-studio-media"),
   S3_PUBLIC_VERIFIED_DOMAIN: z.string().url().default("https://assets.mondomaine-verifie.com"),
 
   // Fournisseurs IA
