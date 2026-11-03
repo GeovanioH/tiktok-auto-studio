@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+﻿import { useState, useEffect } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { PromptForm } from "../components/studio/PromptForm";
 import { TikTokPreview, type SubtitleStyle } from "../components/studio/TikTokPreview";
 import { ScheduleModal } from "../components/studio/ScheduleModal";
@@ -13,6 +13,8 @@ import { useQuota } from "../context/QuotaContext";
 
 export function StudioPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const passedPrompt = (location.state as { prompt?: string } | null)?.prompt;
   const { addNotification } = useNotifications();
   const { quotaUsed, quotaMax, incrementQuota } = useQuota();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -34,6 +36,15 @@ export function StudioPage() {
     caption: "Top 3 Erreurs qui tuent votre conversion TikTok en 2026 : et voilà comment résoudre ce problème immédiatement. #pourtoi #ia #businesstok",
     isAigc: true,
   });
+
+  useEffect(() => {
+    if (passedPrompt) {
+      setCurrentPost((prev) => ({
+        ...prev,
+        caption: passedPrompt,
+      }));
+    }
+  }, [passedPrompt]);
 
   const carouselItems = (currentPost.mediaUrls && currentPost.mediaUrls.length > 0)
     ? currentPost.mediaUrls.map((url, idx) => ({
