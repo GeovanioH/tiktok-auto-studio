@@ -167,7 +167,7 @@ export function StudioPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-[1720px] mx-auto pb-12">
+    <div className="space-y-6 max-w-[1720px] mx-auto pb-16">
       {/* Top HUD Status Bar (Stitch Design) */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-surface-container-low px-4 py-3 rounded-2xl border border-surface-container-highest shadow-md">
         <div className="flex items-center gap-3">
@@ -408,65 +408,86 @@ export function StudioPage() {
         </SpotlightCard>
       )}
 
-      {/* MODULE 8: Sticky Bottom Action Bar (Stitch Design) */}
-      <div className="sticky bottom-4 z-40 bg-surface-container-low/95 backdrop-blur-xl p-4 rounded-2xl border border-surface-container-highest shadow-2xl flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
-            <Zap className="w-5 h-5 text-secondary-fixed" />
-          </div>
-          <div>
-            <div className="text-xs font-bold text-on-surface font-headline">
-              Pipeline d'automatisation prêt
+      {/* MODULE 8: Dock Flottant Cyber-Glassmorphism (Centré, Haute Lisibilité & Réfraction) */}
+      <div className="sticky bottom-4 z-40 w-full max-w-5xl mx-auto px-2 sm:px-4 pointer-events-none">
+        <div className="glass-dock rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 px-4 sm:px-6 flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 sm:gap-4 pointer-events-auto">
+          {/* Section Infos & Télémétrie */}
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-secondary-fixed/15 border border-secondary-fixed/30 flex items-center justify-center text-secondary-fixed shadow-[0_0_15px_rgba(0,245,212,0.25)] shrink-0">
+              <Zap className="w-5 h-5 fill-secondary-fixed/20 animate-pulse" />
             </div>
-            <div className="text-[11px] font-mono text-on-surface-variant">
-              3/3 Clics complétés • 1080x1920 • 60 FPS • Audio Ducking actif
+            <div className="flex flex-col min-w-0">
+              <div className="text-xs sm:text-sm font-bold text-on-surface font-headline truncate flex items-center gap-2">
+                <span>Pipeline d'automatisation prêt</span>
+                <span className="w-2 h-2 rounded-full bg-secondary-fixed animate-ping hidden sm:inline-block" />
+              </div>
+              <div className="text-[10px] sm:text-[11px] font-mono text-on-surface-variant flex items-center gap-1.5 flex-wrap">
+                <span className="font-semibold text-secondary-fixed">3/3 Clics complétés</span>
+                <span className="text-on-surface-variant/40">•</span>
+                <span>1080×1920 (9:16)</span>
+                <span className="text-on-surface-variant/40">•</span>
+                <span>60 FPS</span>
+                <span className="text-on-surface-variant/40">•</span>
+                <span className="text-secondary font-medium">Audio Ducking -14dB</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex items-center gap-2.5 flex-wrap">
-          <Link
-            to="/simulator"
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition border border-surface-container-highest"
-          >
-            <Smartphone className="w-3.5 h-3.5 text-secondary" />
-            <span>Tester dans le Simulateur 9:16</span>
-          </Link>
+          {/* Groupe d'actions rapides (alignement horizontal fluide) */}
+          <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap justify-start lg:justify-end shrink-0">
+            <Link
+              to="/simulator"
+              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-surface-container/60 hover:bg-surface-container-high text-on-surface text-xs font-semibold transition-all border border-white/10 hover:border-secondary-fixed/40 backdrop-blur-md shadow-xs shrink-0 group"
+              title="Tester le rendu sur smartphone dans le Simulateur 9:16"
+            >
+              <Smartphone className="w-3.5 h-3.5 text-secondary-fixed group-hover:scale-110 transition-transform" />
+              <span>Simulateur 9:16</span>
+            </Link>
 
-          <button
-            type="button"
-            onClick={() =>
-              setNotification({ type: "success", text: "Brouillon sauvegardé dans vos posts !" })
-            }
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition border border-surface-container-highest"
-          >
-            <Save className="w-3.5 h-3.5 text-on-surface-variant" />
-            <span>Sauvegarder Brouillon</span>
-          </button>
-
-          <ClickSpark sparkColor="#fe2c55" sparkCount={10}>
             <button
               type="button"
-              onClick={handleDirectPublish}
-              disabled={isPublishing || isGenerating}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container-highest hover:bg-surface-bright text-on-surface text-xs font-semibold transition border border-surface-container-highest disabled:opacity-50"
+              onClick={() => {
+                setNotification({ type: "success", text: "Brouillon sauvegardé dans vos posts !" });
+                addNotification({
+                  title: "Brouillon Sauvegardé",
+                  message: "Votre post a été sauvegardé dans vos brouillons.",
+                  type: "info",
+                  link: "/posts",
+                });
+              }}
+              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-surface-container/60 hover:bg-surface-container-high text-on-surface text-xs font-semibold transition-all border border-white/10 backdrop-blur-md shadow-xs shrink-0"
+              title="Sauvegarder en brouillon"
             >
-              <Send className="w-3.5 h-3.5 text-primary" />
-              <span>Publier Maintenant</span>
+              <Save className="w-3.5 h-3.5 text-on-surface-variant" />
+              <span>Brouillon</span>
             </button>
-          </ClickSpark>
 
-          <ClickSpark sparkColor="#35fbf5" sparkCount={10}>
-            <button
-              type="button"
-              onClick={() => setIsScheduleOpen(true)}
-              disabled={isPublishing || isGenerating}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-headline text-xs font-bold transition shadow-lg shadow-primary-container/25 disabled:opacity-50"
-            >
-              <Calendar className="w-4 h-4" />
-              <span>Programmer la Publication</span>
-            </button>
-          </ClickSpark>
+            <ClickSpark sparkColor="#fe2c55" sparkCount={8}>
+              <button
+                type="button"
+                onClick={handleDirectPublish}
+                disabled={isPublishing || isGenerating}
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-secondary-fixed/10 hover:bg-secondary-fixed/20 text-secondary-fixed hover:text-secondary text-xs font-bold transition-all border border-secondary-fixed/30 backdrop-blur-md shadow-[0_0_15px_rgba(0,245,212,0.12)] disabled:opacity-50 shrink-0"
+                title="Publier immédiatement sur TikTok v2"
+              >
+                <Send className="w-3.5 h-3.5 text-secondary-fixed" />
+                <span>Publier Direct</span>
+              </button>
+            </ClickSpark>
+
+            <ClickSpark sparkColor="#35fbf5" sparkCount={12}>
+              <button
+                type="button"
+                onClick={() => setIsScheduleOpen(true)}
+                disabled={isPublishing || isGenerating}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-container via-[#ff3b65] to-primary hover:brightness-110 text-white font-headline text-xs font-extrabold transition-all shadow-[0_4px_25px_rgba(254,44,85,0.45)] hover:shadow-[0_4px_30px_rgba(254,44,85,0.65)] disabled:opacity-50 shrink-0 hover:scale-[1.02] active:scale-[0.98]"
+                title="Ouvrir le calendrier pour programmer la diffusion"
+              >
+                <Calendar className="w-4 h-4 text-white" />
+                <span>Programmer la Publication</span>
+              </button>
+            </ClickSpark>
+          </div>
         </div>
       </div>
 
