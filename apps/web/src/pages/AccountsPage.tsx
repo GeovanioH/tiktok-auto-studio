@@ -13,7 +13,20 @@ export function AccountsPage() {
   const [notification, setNotification] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
-    if (searchParams.get("status") === "connected" || searchParams.get("open_id")) {
+    const errorParam = searchParams.get("error");
+    const errorDesc = searchParams.get("error_description");
+    if (errorParam) {
+      setNotification({
+        type: "error",
+        text: `Échec d'authentification TikTok [${errorParam}] : ${errorDesc || "Vérifiez que votre compte est bien ajouté aux 'Target Users' du Sandbox."}`,
+      });
+      addNotification({
+        title: `Erreur TikTok (${errorParam})`,
+        message: errorDesc || "Assurez-vous que votre compte TikTok est bien enregistré dans les Target Users du Sandbox.",
+        type: "error",
+        link: "/accounts",
+      });
+    } else if (searchParams.get("status") === "connected" || searchParams.get("open_id") || searchParams.get("status") === "success") {
       setNotification({
         type: "success",
         text: "Compte connecté avec succès à l'API officielle TikTok v2 !",
@@ -197,7 +210,15 @@ export function AccountsPage() {
               Autorisez TikTok Auto-Studio à publier automatiquement vos vidéos et carrousels via l'API officielle sécurisée par PKCE RFC 7636.
             </p>
           </div>
-          <TikTokLoginButton />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <TikTokLoginButton />
+            <a
+              href="/api/auth/tiktok/login?basicOnly=true"
+              className="text-xs text-on-surface-variant hover:text-primary transition-colors px-3 py-2 border border-surface-container-highest rounded-lg bg-surface-container hover:bg-surface-container-high"
+            >
+              Tester avec profil uniquement (sans droit vidéo)
+            </a>
+          </div>
         </div>
       )}
 

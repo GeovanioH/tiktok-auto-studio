@@ -11,6 +11,8 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
    * Déclenche le flux PKCE OAuth2 et redirige vers TikTok Login Kit.
    */
   server.get("/login", async (request, reply) => {
+    const { basicOnly } = request.query as { basicOnly?: string };
+    const customScopes = basicOnly === "true" ? ["user.info.basic"] : undefined;
     const codeVerifier = generateCodeVerifier();
     const codeChallenge = generateCodeChallenge(codeVerifier);
     const state = generateStateToken();
@@ -31,7 +33,7 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
       maxAge: 600
     });
 
-    const authUrl = tiktokClient.getAuthorizationUrl(state, codeChallenge);
+    const authUrl = tiktokClient.getAuthorizationUrl(state, codeChallenge, customScopes);
 
     // Si demande JSON explicite
     if (request.headers.accept?.includes("application/json")) {
@@ -46,10 +48,12 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
    * Réceptionne le code temporaire, valide le state anti-CSRF, chiffre les tokens et stocke le profil créateur.
    */
   server.get("/callback", async (request, reply) => {
-    const query = request.query as { code?: string; state?: string; error?: string };
+    const query = request.query as { code?: string; state?: string; error?: string; error_description?: string };
 
     if (query.error) {
-      return reply.redirect(`${env.FRONTEND_URL}/accounts?error=${encodeURIComponent(query.error)}`);
+      server.log.warn({ query }, "[TikTok Callback] Error returned by TikTok OAuth");
+      const errDesc = query.error_description || (query.error === "server_error" ? "Le serveur TikTok a refusé la session. Vérifiez que votre compte personnel est bien ajouté dans 'Target Users' du Sandbox." : "");
+      return reply.redirect(`${env.FRONTEND_URL}/accounts?error=${encodeURIComponent(query.error)}&error_description=${encodeURIComponent(errDesc)}`);
     }
 
     const stateCookie = request.cookies.oauth_state;
@@ -74,7 +78,12 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
 
     // Récupération des données utilisateur et des capacités créateur
     const userInfo = await tiktokClient.getUserInfo(tokens.access_token);
-    const creatorInfo = await tiktokClient.getCreatorInfo(tokens.access_token);
+    let creatorInfo = { max_video_post_duration_sec: 60, privacy_level_options: ["SELF_ONLY"] };
+    try {
+      creatorInfo = await tiktokClient.getCreatorInfo(tokens.access_token);
+    } catch (err) {
+      server.log.warn({ err }, "creator_info/query non disponible en mode sandbox, utilisation des limites par défaut.");
+    }
 
     // Recherche d'un utilisateur par défaut ou associé
     const firstUser = await prisma.user.findFirst();

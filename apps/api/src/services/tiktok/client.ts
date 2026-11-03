@@ -25,8 +25,8 @@ export class TikTokClient {
   /**
    * Construit l'URL de consentement officielle TikTok v2 avec PKCE et scopes requis.
    */
-  getAuthorizationUrl(state: string, codeChallenge: string): string {
-    const scopes = ["user.info.basic", "video.publish", "video.upload"].join(",");
+  getAuthorizationUrl(state: string, codeChallenge: string, customScopes?: string[]): string {
+    const scopes = (customScopes && customScopes.length > 0 ? customScopes : ["user.info.basic", "video.publish", "video.upload"]).join(",");
     const params = new URLSearchParams({
       client_key: env.TIKTOK_CLIENT_KEY,
       scope: scopes,
