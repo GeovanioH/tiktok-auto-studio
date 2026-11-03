@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Sparkles, 
@@ -9,8 +9,7 @@ import {
   Zap, 
   KeyRound, 
   ChevronLeft, 
-  ChevronRight,
-  Smartphone
+  ChevronRight
 } from "lucide-react";
 import { ShinyText } from "../ui/ShinyText";
 import { BrandLogo } from "../ui/BrandLogo";
@@ -48,7 +47,6 @@ export function Sidebar({
   const navLinks = [
     { to: "/", label: "Tableau de Bord & Analytics", icon: LayoutDashboard },
     { to: "/studio", label: "Studio Créatif IA", icon: Sparkles },
-    { to: "/simulator", label: "Simulateur 9:16", icon: Smartphone },
     { to: "/calendar", label: "Planification & Automatisation", icon: Calendar },
     { to: "/posts", label: "Historique & Relances", icon: ListVideo },
     { to: "/accounts", label: "Comptes & Sécurité v2", icon: UserCheck },

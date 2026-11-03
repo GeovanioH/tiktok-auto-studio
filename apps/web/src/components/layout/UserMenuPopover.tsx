@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+﻿import { useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { 
   User, 
@@ -6,7 +6,6 @@ import {
   Key, 
   LogOut, 
   Sparkles, 
-  Smartphone, 
   ListVideo, 
   ChevronRight
 } from "lucide-react";
@@ -149,18 +148,6 @@ export function UserMenuPopover({ isOpen, onClose, account, onDisconnect }: User
           <div className="flex items-center gap-2.5">
             <Key className="w-4 h-4 text-tertiary" />
             <span>Clés API & Coffre AES-256</span>
-          </div>
-          <ChevronRight className="w-3.5 h-3.5 text-on-surface-variant group-hover:translate-x-0.5 transition" />
-        </Link>
-
-        <Link
-          to="/simulator"
-          onClick={onClose}
-          className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-on-surface hover:bg-surface-container-high transition group"
-        >
-          <div className="flex items-center gap-2.5">
-            <Smartphone className="w-4 h-4 text-primary-container" />
-            <span>Simulateur 9:16 iPhone 15</span>
           </div>
           <ChevronRight className="w-3.5 h-3.5 text-on-surface-variant group-hover:translate-x-0.5 transition" />
         </Link>

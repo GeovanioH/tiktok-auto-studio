@@ -1,9 +1,9 @@
 ﻿import { useState, useEffect } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { PromptForm } from "../components/studio/PromptForm";
 import { TikTokPreview, type SubtitleStyle } from "../components/studio/TikTokPreview";
 import { ScheduleModal } from "../components/studio/ScheduleModal";
-import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, Layers, ChevronDown, ChevronUp, Smartphone } from "lucide-react";
+import { Send, Calendar, Save, CheckCircle2, AlertCircle, Zap, Layers, ChevronDown, ChevronUp } from "lucide-react";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { ClickSpark } from "../components/ui/ClickSpark";
 import { FlexCarousel } from "../components/ui/FlexCarousel";
@@ -446,14 +446,6 @@ export function StudioPage() {
 
           {/* Groupe d'actions rapides (alignement horizontal fluide) */}
           <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap justify-start lg:justify-end shrink-0">
-            <Link
-              to="/simulator"
-              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-surface-container/60 hover:bg-surface-container-high text-on-surface text-xs font-semibold transition-all border border-white/10 hover:border-secondary-fixed/40 backdrop-blur-md shadow-xs shrink-0 group"
-              title="Tester le rendu sur smartphone dans le Simulateur 9:16"
-            >
-              <Smartphone className="w-3.5 h-3.5 text-secondary-fixed group-hover:scale-110 transition-transform" />
-              <span>Simulateur 9:16</span>
-            </Link>
 
             <button
               type="button"

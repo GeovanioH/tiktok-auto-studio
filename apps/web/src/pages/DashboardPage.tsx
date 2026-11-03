@@ -11,7 +11,6 @@ import {
   Clock, 
   Plus, 
   Video, 
-  Smartphone, 
   Flame, 
   Activity, 
   TrendingUp, 
@@ -213,11 +212,11 @@ export function DashboardPage() {
               </Link>
 
               <Link
-                to="/simulator"
+                to="/posts"
                 className="px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface border border-surface-container-highest text-xs font-semibold transition flex items-center gap-2"
               >
-                <Smartphone className="w-3.5 h-3.5 text-secondary-fixed" />
-                <span>Simulateur 9:16</span>
+                <ListVideo className="w-3.5 h-3.5 text-secondary-fixed" />
+                <span>Historique des Posts</span>
               </Link>
 
               <Link
@@ -455,7 +454,7 @@ export function DashboardPage() {
 
         {/* KPI 4 : Score Viral & Safe-Area */}
         <Link
-          to="/simulator"
+          to="/studio"
           className="spotlight-card p-5 rounded-2xl bg-surface-container-low border border-surface-container-highest space-y-3 shadow-sm hover:border-secondary-fixed/40 transition group block"
         >
           <div className="flex items-center justify-between text-on-surface-variant text-xs">
@@ -631,10 +630,10 @@ export function DashboardPage() {
             )}
 
             <Link
-              to={activeTab === "SCHEDULE" ? "/calendar" : activeTab === "ANALYTICS" ? "/simulator" : "/api-keys"}
+              to={activeTab === "SCHEDULE" ? "/calendar" : activeTab === "ANALYTICS" ? "/studio" : "/api-keys"}
               className="text-xs font-semibold text-secondary-fixed hover:text-secondary flex items-center gap-1 transition"
             >
-              <span>{activeTab === "SCHEDULE" ? "Vue Calendrier Complète" : activeTab === "ANALYTICS" ? "Tester au simulateur" : "Gérer les clés"}</span>
+              <span>{activeTab === "SCHEDULE" ? "Vue Calendrier Complète" : activeTab === "ANALYTICS" ? "Ouvrir le Studio IA" : "Gérer les clés"}</span>
               <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
@@ -891,13 +890,6 @@ export function DashboardPage() {
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <Link
-                      to="/simulator"
-                      className="p-2 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-secondary-fixed text-xs transition"
-                      title="Tester au simulateur 9:16"
-                    >
-                      <Smartphone className="w-4 h-4" />
-                    </Link>
                     <Link
                       to="/studio"
                       className="p-2 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface text-xs transition"
