@@ -77,7 +77,19 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
     const refreshExpiresAt = new Date(Date.now() + (tokens.refresh_expires_in || 31536000) * 1000);
 
     // Récupération des données utilisateur et des capacités créateur
-    const userInfo = await tiktokClient.getUserInfo(tokens.access_token);
+    let userInfo = {
+      open_id: tokens.open_id || "tiktok_creator",
+      display_name: "Créateur TikTok",
+      username: "createur_tiktok",
+      avatar_url: "",
+      union_id: undefined as string | undefined
+    };
+    try {
+      const fetched = await tiktokClient.getUserInfo(tokens.access_token);
+      userInfo = { ...userInfo, ...fetched };
+    } catch (err) {
+      server.log.warn({ err }, "Échec getUserInfo (scope profil non accordé), conservation des identifiants token.");
+    }
     let creatorInfo = { max_video_post_duration_sec: 60, privacy_level_options: ["SELF_ONLY"] };
     try {
       creatorInfo = await tiktokClient.getCreatorInfo(tokens.access_token);

@@ -104,7 +104,8 @@ export class TikTokClient {
    * Récupère le profil de base de l'utilisateur TikTok connecté.
    */
   async getUserInfo(accessToken: string): Promise<TikTokUserInfo> {
-    const fields = ["open_id", "union_id", "avatar_url", "display_name", "username"].join(",");
+    // Champs officiels autorisés par user.info.basic (username exige user.info.profile)
+    const fields = ["open_id", "union_id", "avatar_url", "display_name"].join(",");
     const response = await fetch(`${this.baseUrl}/user/info/?fields=${fields}`, {
       method: "GET",
       headers: {
@@ -118,7 +119,11 @@ export class TikTokClient {
       throw new TikTokApiException("/user/info/", response.status, json.error?.code, json.error?.message);
     }
 
-    return json.data.user;
+    const user = json.data.user;
+    return {
+      ...user,
+      username: user?.username || user?.display_name || "createur_tiktok"
+    };
   }
 
   /**
