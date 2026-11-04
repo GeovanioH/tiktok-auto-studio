@@ -87,19 +87,29 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
     try {
       const fetched = await tiktokClient.getUserInfo(tokens.access_token);
       userInfo = { ...userInfo, ...fetched };
-    } catch (err) {
+    } catch (err: any) {
       server.log.warn({ err }, "Échec getUserInfo (scope profil non accordé), conservation des identifiants token.");
     }
     let creatorInfo = { max_video_post_duration_sec: 60, privacy_level_options: ["SELF_ONLY"] };
     try {
       creatorInfo = await tiktokClient.getCreatorInfo(tokens.access_token);
-    } catch (err) {
+    } catch (err: any) {
       server.log.warn({ err }, "creator_info/query non disponible en mode sandbox, utilisation des limites par défaut.");
     }
-
-    // Recherche d'un utilisateur par défaut ou associé
-    const firstUser = await prisma.user.findFirst();
-    const userId = firstUser?.id || "default_system_user";
+    // Recherche d'un utilisateur existant ou création d'un compte local par défaut
+    let firstUser = await prisma.user.findFirst();
+    if (!firstUser) {
+      firstUser = await prisma.user.create({
+        data: {
+          id: "default_system_user",
+          email: "creator@studio.local",
+          passwordHash: "local_dev_password_hash",
+          fullName: "Créateur TikTok",
+          role: "ADMIN"
+        }
+      });
+    }
+    const userId = firstUser.id;
 
     // Sauvegarde en base PostgreSQL
     await prisma.tikTokAccount.upsert({
@@ -162,7 +172,7 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
     try {
       const plainAccessToken = decryptToken(account.encryptedAccessToken);
       await tiktokClient.revokeAccess(plainAccessToken);
-    } catch (err) {
+    } catch (err: any) {
       server.log.warn({ err }, "Échec de la révocation distante TikTok, poursuite de la purge locale.");
     }
 
@@ -171,5 +181,75 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
     });
 
     return { success: true };
+  });
+  /**
+   * GET /api/auth/tiktok/status
+   */
+  server.get("/status", async () => {
+    const account = await prisma.tikTokAccount.findFirst({
+      orderBy: { updatedAt: "desc" }
+    });
+
+    if (!account) {
+      return { connected: false, account: null };
+    }
+
+    return {
+      connected: true,
+      account: {
+        id: account.id,
+        openId: account.openId,
+        username: account.username,
+        displayName: account.displayName,
+        avatarUrl: account.avatarUrl,
+        isCreatorInfoVerified: account.isCreatorInfoVerified,
+        tokenExpiresAt: account.tokenExpiresAt.toISOString(),
+        refreshExpiresAt: account.refreshExpiresAt.toISOString()
+      }
+    };
+  });
+
+  /**
+   * POST /api/auth/tiktok/rotate
+   */
+  server.post("/rotate", async (request, reply) => {
+    const account = await prisma.tikTokAccount.findFirst({
+      orderBy: { updatedAt: "desc" }
+    });
+
+    if (!account) {
+      return reply.status(404).send({ error: "NO_ACTIVE_ACCOUNT", message: "Aucun compte TikTok connecté." });
+    }
+
+    try {
+      const plainRefreshToken = decryptToken(account.encryptedRefreshToken);
+      const newTokens = await tiktokClient.refreshAccessToken(plainRefreshToken);
+
+      const encryptedAccessToken = encryptToken(newTokens.access_token);
+      const encryptedRefreshToken = encryptToken(newTokens.refresh_token);
+      const tokenExpiresAt = new Date(Date.now() + (newTokens.expires_in || 86400) * 1000);
+      const refreshExpiresAt = new Date(Date.now() + (newTokens.refresh_expires_in || 31536000) * 1000);
+
+      const updated = await prisma.tikTokAccount.update({
+        where: { id: account.id },
+        data: {
+          encryptedAccessToken,
+          encryptedRefreshToken,
+          tokenExpiresAt,
+          refreshExpiresAt
+        }
+      });
+
+      return {
+        success: true,
+        account: {
+          id: updated.id,
+          tokenExpiresAt: updated.tokenExpiresAt.toISOString(),
+          refreshExpiresAt: updated.refreshExpiresAt.toISOString()
+        }
+      };
+    } catch (err: any) {
+      return reply.status(500).send({ error: "ROTATION_FAILED", message: err.message || "Échec rotation" });
+    }
   });
 };
