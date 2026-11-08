@@ -33,7 +33,21 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
       maxAge: 600
     });
 
-    const authUrl = tiktokClient.getAuthorizationUrl(state, codeChallenge, customScopes);
+    const host = request.headers.host || "";
+    const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
+    const dynamicRedirectUri = isLocal
+      ? `http://${host}/api/auth/tiktok/callback`
+      : env.TIKTOK_REDIRECT_URI;
+
+    reply.setCookie("oauth_redirect_uri", dynamicRedirectUri, {
+      path: "/",
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 600
+    });
+
+    const authUrl = tiktokClient.getAuthorizationUrl(state, codeChallenge, customScopes, dynamicRedirectUri);
 
     // Si demande JSON explicite
     if (request.headers.accept?.includes("application/json")) {
@@ -68,7 +82,8 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
     }
 
     // Échange du code d'autorisation contre les tokens officiels
-    const tokens = await tiktokClient.exchangeCodeForToken(query.code, verifierCookie);
+    const redirectUriCookie = request.cookies.oauth_redirect_uri;
+    const tokens = await tiktokClient.exchangeCodeForToken(query.code, verifierCookie, redirectUriCookie);
 
     // Chiffrement militaire immédiat au repos
     const encryptedAccessToken = encryptToken(tokens.access_token);
@@ -147,6 +162,7 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
     // Nettoyage des cookies de transition
     reply.clearCookie("oauth_state", { path: "/" });
     reply.clearCookie("code_verifier", { path: "/" });
+    reply.clearCookie("oauth_redirect_uri", { path: "/" });
 
     return reply.redirect(`${env.FRONTEND_URL}/accounts?status=success`);
   });

@@ -25,13 +25,13 @@ export class TikTokClient {
   /**
    * Construit l'URL de consentement officielle TikTok v2 avec PKCE et scopes requis.
    */
-  getAuthorizationUrl(state: string, codeChallenge: string, customScopes?: string[]): string {
+  getAuthorizationUrl(state: string, codeChallenge: string, customScopes?: string[], redirectUri?: string): string {
     const scopes = (customScopes && customScopes.length > 0 ? customScopes : ["user.info.basic", "video.publish", "video.upload"]).join(",");
     const params = new URLSearchParams({
       client_key: env.TIKTOK_CLIENT_KEY,
       scope: scopes,
       response_type: "code",
-      redirect_uri: env.TIKTOK_REDIRECT_URI,
+      redirect_uri: redirectUri || env.TIKTOK_REDIRECT_URI,
       state,
       code_challenge: codeChallenge,
       code_challenge_method: "S256"
@@ -43,13 +43,13 @@ export class TikTokClient {
   /**
    * Échange le code d'autorisation contre des jetons d'accès et de rafraîchissement.
    */
-  async exchangeCodeForToken(code: string, codeVerifier: string): Promise<TikTokOAuthTokenResponse> {
+  async exchangeCodeForToken(code: string, codeVerifier: string, redirectUri?: string): Promise<TikTokOAuthTokenResponse> {
     const body = new URLSearchParams({
       client_key: env.TIKTOK_CLIENT_KEY,
       client_secret: env.TIKTOK_CLIENT_SECRET,
       code,
       grant_type: "authorization_code",
-      redirect_uri: env.TIKTOK_REDIRECT_URI,
+      redirect_uri: redirectUri || env.TIKTOK_REDIRECT_URI,
       code_verifier: codeVerifier
     });
 
