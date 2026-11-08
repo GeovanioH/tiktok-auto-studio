@@ -17,7 +17,8 @@
     "db:migrate": "pnpm --filter @tiktok-studio/api prisma migrate dev",
     "db:generate": "pnpm --filter @tiktok-studio/api db:generate",
     "db:seed": "pnpm --filter @tiktok-studio/api prisma db seed",
-    "cli": "pnpm --filter @tiktok-studio/api cli"
+    "cli": "pnpm --filter @tiktok-studio/api cli",
+    "post:launch": "pnpm --filter @tiktok-studio/api tsx src/cli/launch-post.ts"
   },
   "devDependencies": {
     "@types/node": "^20.17.0",
