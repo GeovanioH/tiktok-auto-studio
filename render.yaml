@@ -1,54 +1,42 @@
-# ==============================================================================
-# TIKTOK AUTO STUDIO — RENDER BLUEPRINT (INFRASTRUCTURE AS CODE)
-# Déploiement en 1 clic : Web Service + Base PostgreSQL + Cache Redis
-# ==============================================================================
+databases:
+  - name: tiktok-studio-db
+    databaseName: tiktok_studio
+    user: tiktok_user
+    plan: free
+    region: frankfurt
 
 services:
-  # Service Web Principal (Fastify API + React SPA unifiés)
   - type: web
     name: tiktok-auto-studio
-    env: docker
-    dockerfilePath: ./Dockerfile
-    plan: starter
-    region: frankfurt # ou oregon
-    healthCheckPath: /health
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: corepack enable && pnpm install && pnpm db:generate && pnpm build:prod
+    startCommand: node apps/api/dist/index.js
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 4000
       - key: DATABASE_URL
         fromDatabase:
-          name: tiktok-postgres
-          property: connectionString
-      - key: REDIS_URL
-        fromRedis:
-          name: tiktok-redis
+          name: tiktok-studio-db
           property: connectionString
       - key: ENCRYPTION_MASTER_KEY
-        generateValue: true
+        value: a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90
       - key: JWT_SECRET
-        generateValue: true
+        value: super_secret_jwt_key_pour_sessions_http_only_32_caracteres
       - key: TIKTOK_CLIENT_KEY
-        sync: false # À renseigner dans la console Render
+        value: sbawh9wuryslikhxqs
       - key: TIKTOK_CLIENT_SECRET
-        sync: false # À renseigner dans la console Render
-      - key: TIKTOK_REDIRECT_URI
-        sync: false # Ex: https://tiktok-auto-studio.onrender.com/api/auth/tiktok/callback
+        value: 9fXZAzKapXsTfmUcn8896ngVocPaWEhk
       - key: TIKTOK_AUDIT_APPROVED
         value: "false"
-
-# Base de Données Relationnelle Managée
-databases:
-  - name: tiktok-postgres
-    plan: free # ou starter
-    region: frankfurt
-    databaseName: tiktok_studio
-    user: postgres
-
-# Cache Redis & File de Tâches BullMQ Managé
-redis:
-  - name: tiktok-redis
-    plan: free # ou starter
-    region: frankfurt
-    maxmemoryPolicy: noeviction
+      - key: SUPABASE_URL
+        value: "https://rwxyghhzzapubgwwgpfs.supabase.co"
+      - key: SUPABASE_PUBLISHABLE_KEY
+        value: "sb_publishable_DAILsS3w7q2zTEdPtEeLTQ_utI36jB1"
+      - key: SUPABASE_SECRET_KEY
+        value: "sb_secret_N8oYLxZy9qyXjR8W49Jbgw_M9z-GNao"
+      - key: S3_BUCKET_NAME
+        value: "tiktok-studio-media"
+      - key: S3_PUBLIC_VERIFIED_DOMAIN
+        value: "https://rwxyghhzzapubgwwgpfs.supabase.co/storage/v1/object/public/tiktok-studio-media"
