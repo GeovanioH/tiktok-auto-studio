@@ -1,4 +1,6 @@
 import "../config/env";
+import fs from "fs";
+import path from "path";
 import { prisma } from "../services/db/prisma";
 import { executeTikTokPublish } from "../services/tiktok/publisher";
 import { getValidAccessToken } from "../services/tiktok/tokenManager";
@@ -76,26 +78,40 @@ async function runPublishWorkflow(account: any, captionArg?: string) {
 
   // 1. Enregistrement du post en base
   console.log(`\n1️⃣ Enregistrement du post dans PostgreSQL (Render Cloud)...`);
+  const candidateVideoPaths = [
+    path.resolve(process.cwd(), "apps/web/public/test-video.mp4"),
+    path.resolve(__dirname, "../../../apps/web/public/test-video.mp4"),
+    path.resolve(__dirname, "../../web/public/test-video.mp4"),
+    path.resolve(process.cwd(), "test-video.mp4")
+  ];
+  const videoPath = candidateVideoPaths.find((p) => fs.existsSync(p)) || candidateVideoPaths[0];
+  if (!fs.existsSync(videoPath)) {
+    throw new Error(`Vidéo de test introuvable : ${videoPath}`);
+  }
+  const videoStat = fs.statSync(videoPath);
+  const videoSize = videoStat.size;
+
   const post = await prisma.post.create({
     data: {
       userId: account.userId,
       accountId: account.id,
       title: "Test Publication Sandbox",
       caption,
-      postType: "PHOTO",
+      postType: "VIDEO",
       privacyLevel: "SELF_ONLY",
       isAigc: true,
       status: "PROCESSING",
       mediaAssets: {
         create: [
           {
-            mediaType: "IMAGE",
-            mimeType: "image/jpeg",
-            s3Key: "public/tiktok-icon-1024.jpg",
-            publicVerifiedUrl: `${env.S3_PUBLIC_VERIFIED_DOMAIN}/tiktok-icon-1024.jpg`,
-            fileSizeByte: 112392,
-            widthPx: 1024,
-            heightPx: 1024,
+            mediaType: "VIDEO",
+            mimeType: "video/mp4",
+            s3Key: videoPath,
+            publicVerifiedUrl: `${env.S3_PUBLIC_VERIFIED_DOMAIN}/test-video.mp4`,
+            fileSizeByte: videoSize,
+            widthPx: 1080,
+            heightPx: 1920,
+            durationSeconds: 4,
             sequenceOrder: 0
           }
         ]
@@ -106,7 +122,7 @@ async function runPublishWorkflow(account: any, captionArg?: string) {
   console.log(`   └─ Post ID créé : ${post.id}`);
 
   // 2. Transmission vers l'API TikTok v2
-  console.log(`\n2️⃣ Transmission vers l'API TikTok v2 (/post/publish/content/init/)...`);
+  console.log(`\n2️⃣ Transmission vers l'API TikTok v2 (/post/publish/video/init/)...`);
   let publishId: string;
   try {
     publishId = await executeTikTokPublish(post.id);

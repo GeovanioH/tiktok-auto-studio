@@ -1,3 +1,4 @@
+import fs from "fs";
 import { prisma } from "../db/prisma";
 import { getValidAccessToken } from "./tokenManager";
 import { env } from "../../config/env";
@@ -118,16 +119,24 @@ export async function executeTikTokPublish(postId: string): Promise<string> {
     const { publish_id, upload_url } = initData.data;
 
     // Téléversement binaire vers le CDN TikTok
-    const videoStream = await fetch(videoAsset.publicVerifiedUrl);
-    const videoBuffer = await videoStream.arrayBuffer();
+    let videoBuffer: Buffer;
+    if (videoAsset.s3Key && fs.existsSync(videoAsset.s3Key)) {
+      videoBuffer = fs.readFileSync(videoAsset.s3Key);
+    } else if (videoAsset.publicVerifiedUrl && videoAsset.publicVerifiedUrl.startsWith("http")) {
+      const videoStream = await fetch(videoAsset.publicVerifiedUrl);
+      videoBuffer = Buffer.from(await videoStream.arrayBuffer());
+    } else {
+      throw new Error(`Média vidéo introuvable : ${videoAsset.s3Key || videoAsset.publicVerifiedUrl}`);
+    }
+
 
     const uploadRes = await fetch(upload_url, {
       method: "PUT",
       headers: {
         "Content-Type": "video/mp4",
-        "Content-Range": `bytes 0-${videoAsset.fileSizeByte - 1}/${videoAsset.fileSizeByte}`
+        "Content-Range": `bytes 0-${videoBuffer.length - 1}/${videoBuffer.length}`
       },
-      body: videoBuffer
+      body: new Uint8Array(videoBuffer)
     });
 
     if (!uploadRes.ok) {
