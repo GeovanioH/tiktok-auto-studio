@@ -15,7 +15,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "db:migrate": "pnpm --filter @tiktok-studio/api prisma migrate dev",
-    "db:generate": "pnpm --filter @tiktok-studio/api prisma generate",
+    "db:generate": "pnpm --filter @tiktok-studio/api db:generate",
     "db:seed": "pnpm --filter @tiktok-studio/api prisma db seed",
     "cli": "pnpm --filter @tiktok-studio/api cli"
   },
