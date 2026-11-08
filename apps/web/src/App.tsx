@@ -1,5 +1,5 @@
-﻿import { useEffect } from "react";
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NotificationProvider } from "./context/NotificationContext";
 import { QuotaProvider } from "./context/QuotaContext";
@@ -37,6 +37,10 @@ export default function App() {
       }
     };
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    if (window.location.hash && window.location.hash.startsWith("#/")) {
+      const cleanPath = window.location.hash.replace(/^#/, "");
+      window.history.replaceState(null, "", cleanPath);
+    }
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
@@ -44,7 +48,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <NotificationProvider>
         <QuotaProvider>
-          <HashRouter>
+          <BrowserRouter>
             <Routes>
               {/* Pages légales accessibles publiquement hors dashboard */}
               <Route path="/privacy" element={<PrivacyPage />} />
@@ -62,7 +66,7 @@ export default function App() {
 
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </HashRouter>
+          </BrowserRouter>
         </QuotaProvider>
       </NotificationProvider>
     </QueryClientProvider>

@@ -80,11 +80,12 @@ async function bootstrap() {
     await server.register(fastifyStatic, {
       root: resolvedWebDist,
       prefix: "/",
-      wildcard: false
+
     });
 
     server.setNotFoundHandler((req, reply) => {
-      if (req.raw.url && req.raw.url.startsWith("/api")) {
+      const url = req.raw.url || "";
+      if (url.startsWith("/api") || url.startsWith("/assets/")) {
         return reply.code(404).send({
           statusCode: 404,
           error: "Not Found",
