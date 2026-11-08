@@ -37,10 +37,21 @@ async function waitForTikTokAccount() {
 
   while (true) {
     attempt++;
-    const account = await prisma.tikTokAccount.findFirst({
-      orderBy: { updatedAt: "desc" },
-      include: { user: true }
-    });
+    let account = null;
+    try {
+      account = await prisma.tikTokAccount.findFirst({
+        orderBy: { updatedAt: "desc" },
+        include: { user: true }
+      });
+    } catch (err: any) {
+      try {
+        await prisma.$disconnect();
+      } catch (_) {}
+      const timeStr = new Date().toLocaleTimeString();
+      process.stdout.write(`\r[${timeStr}] Reconnexion base... (Tentative #${attempt})`);
+      await sleep(3000);
+      continue;
+    }
 
     if (account) {
       console.log(`\n✨ COMPTE TIKTOK DÉTECTÉ AVEC SUCCÈS (Tentative #${attempt}) !`);
@@ -162,10 +173,15 @@ async function main() {
   console.log(`================================================================`);
 
   // Vérification de compte ou boucle d'attente
-  let account = await prisma.tikTokAccount.findFirst({
-    orderBy: { updatedAt: "desc" },
-    include: { user: true }
-  });
+  let account = null;
+  try {
+    account = await prisma.tikTokAccount.findFirst({
+      orderBy: { updatedAt: "desc" },
+      include: { user: true }
+    });
+  } catch (_) {
+    try { await prisma.$disconnect(); } catch (_) {}
+  }
 
   if (!account) {
     account = await waitForTikTokAccount();
