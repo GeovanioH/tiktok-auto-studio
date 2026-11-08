@@ -12,6 +12,7 @@ import { AccountsPage } from "./pages/AccountsPage";
 import { ApiKeysPage } from "./pages/ApiKeysPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { TermsPage } from "./pages/TermsPage";
+import { ErrorBoundary } from "./components/common/ErrorBoundary";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,38 +38,36 @@ export default function App() {
       }
     };
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    if (window.location.hash && window.location.hash.startsWith("#/")) {
-      const cleanPath = window.location.hash.replace(/^#/, "");
-      window.history.replaceState(null, "", cleanPath);
-    }
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <NotificationProvider>
-        <QuotaProvider>
-          <BrowserRouter>
-            <Routes>
-              {/* Pages légales accessibles publiquement hors dashboard */}
-              <Route path="/privacy" element={<PrivacyPage />} />
-              <Route path="/terms" element={<TermsPage />} />
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <NotificationProvider>
+          <QuotaProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* Pages légales accessibles publiquement hors dashboard */}
+                <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="/terms" element={<TermsPage />} />
 
-              {/* Dashboard principal */}
-              <Route element={<DashboardLayout />}>
-                <Route path="/" element={<DashboardPage />} />
-                <Route path="/studio" element={<StudioPage />} />
-                <Route path="/calendar" element={<CalendarPage />} />
-                <Route path="/posts" element={<PostsPage />} />
-                <Route path="/accounts" element={<AccountsPage />} />
-                <Route path="/api-keys" element={<ApiKeysPage />} />
-              </Route>
+                {/* Dashboard principal */}
+                <Route element={<DashboardLayout />}>
+                  <Route path="/" element={<DashboardPage />} />
+                  <Route path="/studio" element={<StudioPage />} />
+                  <Route path="/calendar" element={<CalendarPage />} />
+                  <Route path="/posts" element={<PostsPage />} />
+                  <Route path="/accounts" element={<AccountsPage />} />
+                  <Route path="/api-keys" element={<ApiKeysPage />} />
+                </Route>
 
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </BrowserRouter>
-        </QuotaProvider>
-      </NotificationProvider>
-    </QueryClientProvider>
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </BrowserRouter>
+          </QuotaProvider>
+        </NotificationProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }

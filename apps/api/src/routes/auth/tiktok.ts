@@ -219,6 +219,7 @@ export const tiktokAuthRoutes: FastifyPluginAsync = async (server) => {
         displayName: account.displayName,
         avatarUrl: account.avatarUrl,
         isCreatorInfoVerified: account.isCreatorInfoVerified,
+        scopes: ["user.info.basic", "video.publish", "video.upload"],
         tokenExpiresAt: account.tokenExpiresAt.toISOString(),
         refreshExpiresAt: account.refreshExpiresAt.toISOString()
       }

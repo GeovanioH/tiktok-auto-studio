@@ -136,7 +136,7 @@ export function AccountsPage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-surface-container-highest pb-6">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-secondary-fixed">
-                <img src={account.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                <img src={account.avatarUrl || "https://p16-va-tiktok.ibyteimg.com/obj/musically-maliva-obj/default_avatar.jpeg"} alt="Avatar" className="w-full h-full object-cover" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ export function AccountsPage() {
                 Scopes Accordés par ByteDance :
               </span>
               <ul className="space-y-1 text-on-surface-variant font-mono text-[11px]">
-                {account.scopes.map((s) => (
+                {(account.scopes || ["user.info.basic", "video.publish", "video.upload"]).map((s) => (
                   <li key={s} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>
                     <span>{s}</span>
