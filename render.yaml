@@ -11,7 +11,7 @@ services:
     runtime: node
     plan: free
     region: frankfurt
-    buildCommand: npm install -g pnpm && pnpm install && pnpm db:generate && pnpm build:prod
+    buildCommand: pnpm install && pnpm db:generate && pnpm build:prod
     startCommand: node apps/api/dist/index.js
     envVars:
       - key: NODE_ENV
