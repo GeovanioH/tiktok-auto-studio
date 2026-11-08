@@ -18,7 +18,8 @@
     "db:generate": "pnpm --filter @tiktok-studio/api db:generate",
     "db:seed": "pnpm --filter @tiktok-studio/api prisma db seed",
     "cli": "pnpm --filter @tiktok-studio/api cli",
-    "post:launch": "pnpm --filter @tiktok-studio/api tsx src/cli/launch-post.ts"
+    "post:launch": "pnpm --filter @tiktok-studio/api tsx src/cli/launch-post.ts",
+    "post:loop": "pnpm --filter @tiktok-studio/api tsx src/cli/launch-post.ts --loop"
   },
   "devDependencies": {
     "@types/node": "^20.17.0",

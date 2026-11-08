@@ -39,4 +39,4 @@ services:
       - key: S3_BUCKET_NAME
         value: "tiktok-studio-media"
       - key: S3_PUBLIC_VERIFIED_DOMAIN
-        value: "https://rwxyghhzzapubgwwgpfs.supabase.co/storage/v1/object/public/tiktok-studio-media"
+        value: "https://tiktok-auto-studio.onrender.com"
