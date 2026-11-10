@@ -26,7 +26,7 @@ interface SidebarProps {
 export function Sidebar({
   quotaUsed: propQuotaUsed,
   quotaMax: propQuotaMax,
-  activeAccountName,
+  activeAccountName: _activeAccountName,
   isCollapsed: externalCollapsed,
   onToggleCollapse,
 }: SidebarProps) {
@@ -106,45 +106,6 @@ export function Sidebar({
               <ChevronLeft className="w-4 h-4" />
             </button>
           </div>
-        )}
-
-        <div className="h-px w-full bg-surface-container-highest opacity-60" />
-
-        {/* Compte Actif ou État Non Lié */}
-        {!isCollapsed ? (
-          <Link
-            to="/accounts"
-            className="bg-surface-container border border-surface-container-high hover:border-secondary/40 rounded-xl p-2.5 flex items-center justify-between shadow-xs transition group"
-          >
-            <div className="flex items-center gap-2 overflow-hidden">
-              <div className="w-7 h-7 rounded-full bg-surface-container-highest border border-surface-container-high flex items-center justify-center text-on-surface text-xs font-bold flex-shrink-0">
-                {activeAccountName ? activeAccountName.replace("@", "").charAt(0).toUpperCase() : "—"}
-              </div>
-              <div className="overflow-hidden">
-                <p className="text-xs font-bold text-on-surface truncate group-hover:text-secondary-fixed transition">
-                  {activeAccountName || "Aucun compte lié"}
-                </p>
-                <p className="text-[10px] text-on-surface-variant flex items-center gap-1 font-mono">
-                  {activeAccountName ? (
-                    <>
-                      <span className="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>
-                      <span>TikTok API v2</span>
-                    </>
-                  ) : (
-                    <span>Cliquer pour lier</span>
-                  )}
-                </p>
-              </div>
-            </div>
-          </Link>
-        ) : (
-          <Link to="/accounts" className="flex justify-center" title={activeAccountName || "Lier un compte"}>
-            <div
-              className="w-8 h-8 rounded-full bg-surface-container-highest border border-surface-container-high flex items-center justify-center text-on-surface text-xs font-bold shadow-sm"
-            >
-              {activeAccountName ? activeAccountName.replace("@", "").charAt(0).toUpperCase() : "+"}
-            </div>
-          </Link>
         )}
 
         {/* Navigation Items */}
